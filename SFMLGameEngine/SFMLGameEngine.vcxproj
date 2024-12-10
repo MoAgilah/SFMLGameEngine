@@ -87,6 +87,19 @@
   <ItemGroup>
     <Text Include="..\Resources\ReadMe.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\sfml-audio-d-2.dll" />
+    <None Include="bin\Debug\sfml-graphics-d-2.dll" />
+    <None Include="bin\Debug\sfml-network-d-2.dll" />
+    <None Include="bin\Debug\sfml-system-d-2.dll" />
+    <None Include="bin\Debug\sfml-window-d-2.dll" />
+    <None Include="bin\Release\openal32.dll" />
+    <None Include="bin\Release\sfml-audio-2.dll" />
+    <None Include="bin\Release\sfml-graphics-2.dll" />
+    <None Include="bin\Release\sfml-network-2.dll" />
+    <None Include="bin\Release\sfml-system-2.dll" />
+    <None Include="bin\Release\sfml-window-2.dll" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

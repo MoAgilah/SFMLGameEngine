@@ -58,6 +58,9 @@
     <Filter Include="Resource Files\Fonts">
       <UniqueIdentifier>{e32d38ed-5c6e-40ab-84cb-ac0ada0ec330}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Dlls">
+      <UniqueIdentifier>{1f717415-dd62-4b44-86f6-a43dcf74cc5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -249,5 +252,40 @@
     <Font Include="..\Resources\Fonts\arial.ttf">
       <Filter>Resource Files\Fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\sfml-audio-d-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-graphics-d-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-network-d-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-system-d-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-window-d-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Release\openal32.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Release\sfml-audio-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Release\sfml-graphics-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Release\sfml-network-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Release\sfml-system-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="bin\Release\sfml-window-2.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
   </ItemGroup>
 </Project>
