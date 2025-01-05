@@ -6,6 +6,11 @@ FrameWork::FrameWork(const std::string& windowTitle)
 	GameConstants::WindowTitle = windowTitle;
 }
 
+void FrameWork::SetInitialGameState(GameState* state)
+{
+	m_gameMgr.GetGameStateMgr()->ChangeState(state);
+}
+
 int FrameWork::Run()
 {
 	float t = 0.0f;
@@ -13,7 +18,7 @@ int FrameWork::Run()
 
 	auto& window = m_gameMgr.GetRenderWindow();
 
-	window.create(sf::VideoMode((int)GameConstants::ScreenDim.x, (int)GameConstants::ScreenDim.y), "SFML Game Engine");
+	window.create(sf::VideoMode((int)GameConstants::ScreenDim.x, (int)GameConstants::ScreenDim.y), GameConstants::WindowTitle);
 	window.setFramerateLimit(GameConstants::FPS);
 
 	sf::Clock clock;
