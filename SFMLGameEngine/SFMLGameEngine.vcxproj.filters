@@ -249,11 +249,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\Resources\Fonts\arial.ttf">
-      <Filter>Resource Files\Fonts</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="bin\Debug\sfml-audio-d-2.dll">
       <Filter>Resource Files\Dlls</Filter>
     </None>
@@ -287,5 +282,10 @@
     <None Include="bin\Release\sfml-window-2.dll">
       <Filter>Resource Files\Dlls</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\Resources\Fonts\arial.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

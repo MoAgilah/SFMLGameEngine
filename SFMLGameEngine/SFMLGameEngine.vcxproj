@@ -82,9 +82,6 @@
     <ClInclude Include="Code\Utilities\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\Resources\Fonts\arial.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="..\Resources\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +96,9 @@
     <None Include="bin\Release\sfml-network-2.dll" />
     <None Include="bin\Release\sfml-system-2.dll" />
     <None Include="bin\Release\sfml-window-2.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\Resources\Fonts\arial.ttf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

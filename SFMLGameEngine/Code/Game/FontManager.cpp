@@ -2,5 +2,5 @@
 
 FontManager::FontManager()
 {
-	m_standardFont.loadFromFile("../Resources/Fonts/arial.ttf");
+	m_standardFont.loadFromFile("../SFMLGameEngine/Resources/Fonts/arial.ttf");
 }
