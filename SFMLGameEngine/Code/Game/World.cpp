@@ -74,10 +74,6 @@ void World::CheckIsInView()
 		object->SetActive(camera.IsInView(object->GetAABB()));
 }
 
-void World::AddObject(const sf::Vector2f& pos)
-{
-}
-
 void World::AddEnemies()
 {
 }

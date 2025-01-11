@@ -16,27 +16,27 @@ public:
 	World();
 	~World() = default;
 
-	void Update(float deltaTime);
+	virtual void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
 	void ResetLevel();
 
 	void CheckIsInView();
 
-	void AddObject(const sf::Vector2f& pos);
-
-	void AddEnemies();
-	void AddObjects();
-	void AddForeGroundSprites();
+	virtual void AddEnemies();
+	virtual void AddObjects();
+	virtual void AddForeGroundSprites();
 
 private:
 
-	void AddGUI();
-	void UpdateGUI();
+	virtual void AddGUI();
+	virtual void UpdateGUI();
 
-	std::array<sf::Text, (int)Texts::Max> m_texts;
+protected:
+
 	AABB m_foregroundBox;
 	Sprite m_backgroundSpr;
-	std::array<Sprite, (int)Sprites::Max> m_sprites;
+	std::vector<sf::Text> m_texts;
+	std::vector<Sprite> m_sprites;
 	std::vector<std::shared_ptr<Enemy>> m_enemies;
 	std::vector<std::shared_ptr<Object>> m_objects;
 };
