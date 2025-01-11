@@ -16,3 +16,13 @@ sf::Music* SoundManager::GetMusic(const std::string& name)
 {
 	return m_musicLoader.GetResource(name);
 }
+
+void SoundManager::AddSounds(fs::path path)
+{
+	m_soundLoader.LoadResources(path);
+}
+
+void SoundManager::AddMusic(fs::path path)
+{
+	m_musicLoader.LoadResources(path);
+}

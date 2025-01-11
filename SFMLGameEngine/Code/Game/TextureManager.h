@@ -10,6 +10,8 @@ public:
 
 	sf::Texture* GetTexture(const std::string& name);
 
+	void AddTextures(fs::path path);
+
 private:
 
 	ResourceLoader<sf::Texture> m_loader;

@@ -10,3 +10,8 @@ sf::Font* FontManager::GetFont(const std::string& name)
 {
 	return m_loader.GetResource(name);
 }
+
+void FontManager::AddFonts(fs::path path)
+{
+	m_loader.LoadResources(path);
+}

@@ -1,11 +1,13 @@
 #pragma once
 
-#include <fstream>
 #include <string>
-#include <vector>
 #include <map>
 #include <memory>
 #include<optional>
+#include <filesystem>
+namespace fs = std::filesystem;
+
+
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -13,60 +15,38 @@ template<typename T>
 class ResourceLoader
 {
 public:
+	ResourceLoader() = default;
 	ResourceLoader(const std::string& FilePaths);
 	~ResourceLoader() = default;
 
-	void LoadResources(const std::vector<std::string>& keys, const std::vector<std::string>& paths);
-
 	T* GetResource(std::string name);
+	void LoadResources(fs::path path);
 
 private:
-
 
 	std::map<std::string, std::unique_ptr<T>> m_resources;
 };
 
 template<typename T>
-ResourceLoader<T>::ResourceLoader(const std::string& FilePaths)
+ResourceLoader<T>::ResourceLoader(const std::string& path)
 {
-	std::ifstream file(FilePaths);
-	std::string line;
-	std::vector<std::string> lines;
-
-	if (file.is_open())
-	{
-		while (getline(file, line))
-			lines.push_back(line);
-
-		file.close();
-	}
-
-	std::vector<std::string> keys;
-	std::vector<std::string> paths;
-	for (auto& l : lines)
-	{
-		auto pos = l.find(" ");
-		keys.push_back(l.substr(0, pos));
-		paths.push_back(l.substr(pos + 1));
-	}
-
-	LoadResources(keys, paths);
+	LoadResources(path);
 }
 
 template<typename T>
-inline void ResourceLoader<T>::LoadResources(const std::vector<std::string>& keys, const std::vector<std::string>& paths)
+inline void ResourceLoader<T>::LoadResources(fs::path path)
 {
-	if (keys.size() != paths.size())
-		return;
+	if (!fs::exists(path))
+		fs::create_directory(path);
 
-	std::size_t size = keys.size();
-
-	for (std::size_t i = 0; i < size; i++)
+	for (const auto& entry : fs::directory_iterator(path))
 	{
-		m_resources.emplace(keys[i], std::make_unique<T>());
-		m_resources.find(keys[i])->second->loadFromFile(paths[i]);
+		auto filename = entry.path().filename().replace_extension().string();
+		m_resources.emplace(filename, std::make_unique<T>());
+		m_resources.find(filename)->second->loadFromFile(entry.path().string());
 	}
 }
+
 namespace
 {
 	std::optional<sf::Shader::Type> ShaderTypeFromFileExtension(const std::string& fileExt)
@@ -89,42 +69,34 @@ namespace
 }
 
 template<>
-inline void ResourceLoader<sf::Shader>::LoadResources(const std::vector<std::string>& keys, const std::vector<std::string>& paths)
+inline void ResourceLoader<sf::Shader>::LoadResources(fs::path path)
 {
-	if (keys.size() != paths.size())
-		return;
+	if (!fs::exists(path))
+		fs::create_directory(path);
 
-	std::size_t size = keys.size();
-
-	for (std::size_t i = 0; i < size; i++)
+	for (const auto& entry : fs::directory_iterator(path))
 	{
-		auto pos = paths[i].find(".");
-		auto type = ShaderTypeFromFileExtension(paths[i].substr(pos + 1));
+		auto type = ShaderTypeFromFileExtension(entry.path().extension().string());
 		if (type)
 		{
-			m_resources.emplace(keys[i], std::make_unique<sf::Shader>());
-			m_resources.find(keys[i])->second->loadFromFile(paths[i], *type);
+			auto filename = entry.path().filename().replace_extension().string();
+			m_resources.emplace(filename, std::make_unique<sf::Shader>());
+			m_resources.find(filename)->second->loadFromFile(entry.path().string(), *type);
 		}
 	}
 }
 
 template<>
-inline void ResourceLoader<sf::Music>::LoadResources(const std::vector<std::string>& keys, const std::vector<std::string>& paths)
+inline void ResourceLoader<sf::Music>::LoadResources(fs::path path)
 {
-	if (keys.size() != paths.size())
-		return;
+	if (!fs::exists(path))
+		fs::create_directory(path);
 
-	std::size_t size = keys.size();
-
-	for (std::size_t i = 0; i < size; i++)
+	for (const auto& entry : fs::directory_iterator(path))
 	{
-		auto pos = paths[i].find(".");
-		auto type = ShaderTypeFromFileExtension(paths[i].substr(pos + 1));
-		if (type)
-		{
-			m_resources.emplace(keys[i], std::make_unique<sf::Music>());
-			m_resources.find(keys[i])->second->openFromFile(paths[i]);
-		}
+		auto filename = entry.path().filename().replace_extension().string();
+		m_resources.emplace(filename, std::make_unique<sf::Music>());
+		m_resources.find(filename)->second->openFromFile(entry.path().string());
 	}
 }
 

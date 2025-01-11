@@ -9,6 +9,7 @@
 #include "FontManager.h"
 #include "TextureManager.h"
 #include "ShaderManager.h"
+#include "SoundManager.h"
 #include "World.h"
 #include "../Collisions/CollisionManager.h"
 #include "../GameStates/GameStateMgr.h"
@@ -37,6 +38,7 @@ public:
 	InputManager& GetInputManager() { return m_inputManager; }
 	FontManager& GetFontMgr() { return m_fontManager; }
 	ShaderManager& GetShaderMgr() { return m_shaderManager; }
+	SoundManager& GetSoundMgr() { return m_soundManager; }
 	TextureManager& GetTextureMgr() { return m_texureManager; }
 	CollisionManager* GetCollisionMgr() { return m_collisionManager.get(); }
 	GameStateMgr* GetGameStateMgr() { return &m_stateManager; }
@@ -50,6 +52,7 @@ private:
 	InputManager						m_inputManager;
 	FontManager							m_fontManager;
 	ShaderManager						m_shaderManager;
+	SoundManager						m_soundManager;
 	TextureManager						m_texureManager;
 	GameStateMgr						m_stateManager;
 	std::unique_ptr<World>				m_world;

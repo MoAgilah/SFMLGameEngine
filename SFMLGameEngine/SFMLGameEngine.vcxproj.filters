@@ -61,9 +61,6 @@
     <Filter Include="Resource Files\Dlls">
       <UniqueIdentifier>{1f717415-dd62-4b44-86f6-a43dcf74cc5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Filepaths">
-      <UniqueIdentifier>{e0cf39aa-2005-4dc8-8645-fe8bb9817cf3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -250,26 +247,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Resources\ReadMe.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="..\Resources\FilePaths\FontFilePaths.txt">
-      <Filter>Resource Files\Filepaths</Filter>
-    </Text>
-    <Text Include="..\Resources\FilePaths\ShaderFilePaths.txt">
-      <Filter>Resource Files\Filepaths</Filter>
-    </Text>
-    <Text Include="..\Resources\FilePaths\SoundFilePaths.txt">
-      <Filter>Resource Files\Filepaths</Filter>
-    </Text>
-    <Text Include="..\Resources\FilePaths\TextureFilePaths.txt">
-      <Filter>Resource Files\Filepaths</Filter>
-    </Text>
-    <Text Include="..\Resources\FilePaths\MusicFilePaths.txt">
-      <Filter>Resource Files\Filepaths</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="bin\Debug\sfml-audio-d-2.dll">
       <Filter>Resource Files\Dlls</Filter>
     </None>
@@ -303,10 +280,18 @@
     <None Include="bin\Release\sfml-window-2.dll">
       <Filter>Resource Files\Dlls</Filter>
     </None>
+    <None Include="bin\Debug\openal32.dll">
+      <Filter>Resource Files\Dlls</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\Resources\Fonts\arial.ttf">
+    <Text Include="Resources\ReadMe.txt">
       <Filter>Resource Files\Fonts</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Fonts\Arial.ttf">
+      <Filter>Resource Files</Filter>
     </Font>
   </ItemGroup>
 </Project>

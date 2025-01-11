@@ -10,3 +10,8 @@ sf::Texture* TextureManager::GetTexture(const std::string& name)
 {
 	return m_loader.GetResource(name);
 }
+
+void TextureManager::AddTextures(fs::path path)
+{
+	m_loader.LoadResources(path);
+}

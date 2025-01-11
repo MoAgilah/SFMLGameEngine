@@ -83,14 +83,7 @@
     <ClInclude Include="Code\Utilities\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Resources\FilePaths\FontFilePaths.txt" />
-    <Text Include="..\Resources\FilePaths\MusicFilePaths.txt" />
-    <Text Include="..\Resources\FilePaths\ShaderFilePaths.txt" />
-    <Text Include="..\Resources\FilePaths\SoundFilePaths.txt" />
-    <Text Include="..\Resources\FilePaths\TextureFilePaths.txt" />
-    <Text Include="..\Resources\ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="bin\Debug\openal32.dll" />
     <None Include="bin\Debug\sfml-audio-d-2.dll" />
     <None Include="bin\Debug\sfml-graphics-d-2.dll" />
     <None Include="bin\Debug\sfml-network-d-2.dll" />
@@ -104,7 +97,10 @@
     <None Include="bin\Release\sfml-window-2.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\Resources\Fonts\arial.ttf" />
+    <Text Include="Resources\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Fonts\Arial.ttf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
