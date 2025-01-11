@@ -9,11 +9,11 @@ public:
 	FrameWork(const std::string& windowTitle = GameConstants::WindowTitle);
 	~FrameWork() = default;
 
-	void SetInitialGameState(GameState* state);
+	virtual void Initialise();
 
 	int Run();
 
-private:
+protected:
 
 	GameManager m_gameMgr;
 };

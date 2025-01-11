@@ -6,9 +6,8 @@ FrameWork::FrameWork(const std::string& windowTitle)
 	GameConstants::WindowTitle = windowTitle;
 }
 
-void FrameWork::SetInitialGameState(GameState* state)
+void FrameWork::Initialise()
 {
-	m_gameMgr.GetGameStateMgr()->ChangeState(state);
 }
 
 int FrameWork::Run()
