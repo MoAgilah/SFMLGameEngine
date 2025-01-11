@@ -9,7 +9,7 @@
 
 Grid::Grid()
 {
-	auto& font = GameManager::Get()->GetFontMgr().GetStandardFont();
+	auto font = GameManager::Get()->GetFontMgr().GetFont("Standard");
 
 	//create grid for entire level
 	for (int y = 0; y < 15; y++)

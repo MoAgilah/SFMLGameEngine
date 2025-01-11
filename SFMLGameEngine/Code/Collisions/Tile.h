@@ -15,7 +15,7 @@ class Tile
 {
 public:
 	Tile();
-	Tile(int gX, int gY, const sf::Font& font);
+	Tile(int gX, int gY, sf::Font* font);
 	~Tile() = default;
 
 	std::string_view GetID() const { return m_id; }

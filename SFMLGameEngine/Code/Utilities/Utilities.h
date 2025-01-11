@@ -1,15 +1,16 @@
 #pragma once
 
+#include <string>
 #include <array>
 #include <SFML/Graphics.hpp>
 #include "Point.h"
 #include "../Collisions/AABB.h"
 #include "../Game/TextureManager.h"
 
-bool IsPlayerObject(TexID id);
-bool IsBoxObject(TexID id);
-bool IsEnemyObject(TexID id);
-bool IsCollectableObject(TexID id);
+bool IsPlayerObject(const std::string& texID);
+bool IsBoxObject(const std::string& texID);
+bool IsEnemyObject(const std::string& texID);
+bool IsCollectableObject(const std::string& texID);
 
 struct Line
 {

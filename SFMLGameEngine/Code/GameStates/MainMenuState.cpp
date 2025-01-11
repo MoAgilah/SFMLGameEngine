@@ -22,7 +22,7 @@ MainMenuState::MainMenuState(GameManager* gameMgr)
 
 void MainMenuState::Initialise()
 {
-	m_backgroundSpr.SetTexture(TexID::None);
+	m_backgroundSpr.SetTexture("");
 	m_backgroundSpr.SetScale(sf::Vector2f(GameConstants::Scale));
 	m_backgroundSpr.SetOrigin(sf::Vector2f(0, 0));
 }

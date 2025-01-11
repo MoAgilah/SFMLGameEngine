@@ -27,7 +27,7 @@ class Tile;
 class Object
 {
 public:
-	Object(TexID sprId, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, const sf::Vector2f& boxSize);
 	Object(AnimatedSprite* sprite, const sf::Vector2f& boxSize);
 	virtual ~Object() = default;
 
@@ -44,8 +44,8 @@ public:
 	Sprite* GetSprite() { return m_sprite.get(); }
 	AABB* GetAABB() { return m_aabb.get(); }
 
-	TexID GetID() const { return m_type; }
-	void SetID(TexID id) { m_type = id; }
+	const std::string& GetID() const { return m_texID; }
+	void SetID(const std::string& texID) { m_texID = texID; }
 
 	virtual bool GetActive() const { return m_active; }
 	void SetActive(bool act) { m_active = act; }
@@ -67,7 +67,7 @@ public:
 
 private:
 
-	TexID m_type = TexID::None;
+	std::string m_texID;
 	bool m_active = false;
 	bool m_direction = true;
 	int m_objectID = 0;
@@ -80,7 +80,7 @@ private:
 class DynamicObject : public Object
 {
 public:
-	DynamicObject(TexID sprId, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, const sf::Vector2f& boxSize);
 	DynamicObject(AnimatedSprite* sprite, const sf::Vector2f& boxSize);
 	~DynamicObject() override = default;
 

@@ -1,23 +1,16 @@
 #pragma once
 
-#include <map>
-#include <SFML/Graphics.hpp>
-
-enum class TexID
-{
-	None = -1,
-};
+#include "../Code/Utilities/ResourceLoader.h"
 
 class TextureManager
 {
 public:
-	TextureManager() = default;
+	TextureManager();
 	~TextureManager() = default;
 
-	const sf::Texture& GetTexture(TexID id);
-	void AddTextures(TexID id);
+	sf::Texture* GetTexture(const std::string& name);
 
 private:
 
-	std::map<TexID, sf::Texture> m_textureMap;
+	ResourceLoader<sf::Texture> m_loader;
 };

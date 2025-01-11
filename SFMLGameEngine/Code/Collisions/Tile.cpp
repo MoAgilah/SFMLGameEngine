@@ -7,7 +7,7 @@ Tile::Tile()
 	m_aabb.SetOutlineColour(sf::Color::Black);
 }
 
-Tile::Tile(int x, int y, const sf::Font& font)
+Tile::Tile(int x, int y, sf::Font* font)
 	: m_hasFont(true)
 {
 	m_colNum = x;
@@ -17,7 +17,7 @@ Tile::Tile(int x, int y, const sf::Font& font)
 
 	m_aabb.SetOutlineColour(sf::Color::Black);
 
-	m_text.setFont(font);
+	m_text.setFont(*font);
 	m_text.setCharacterSize(12);
 	m_text.setOrigin(6, 6);
 	m_text.setStyle(sf::Text::Bold);

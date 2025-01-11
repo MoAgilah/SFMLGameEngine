@@ -61,6 +61,9 @@
     <Filter Include="Resource Files\Dlls">
       <UniqueIdentifier>{1f717415-dd62-4b44-86f6-a43dcf74cc5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Filepaths">
+      <UniqueIdentifier>{e0cf39aa-2005-4dc8-8645-fe8bb9817cf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -242,10 +245,28 @@
     <ClInclude Include="Code\Framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Utilities\ResourceLoader.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Resources\ReadMe.txt">
       <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\Resources\FilePaths\FontFilePaths.txt">
+      <Filter>Resource Files\Filepaths</Filter>
+    </Text>
+    <Text Include="..\Resources\FilePaths\ShaderFilePaths.txt">
+      <Filter>Resource Files\Filepaths</Filter>
+    </Text>
+    <Text Include="..\Resources\FilePaths\SoundFilePaths.txt">
+      <Filter>Resource Files\Filepaths</Filter>
+    </Text>
+    <Text Include="..\Resources\FilePaths\TextureFilePaths.txt">
+      <Filter>Resource Files\Filepaths</Filter>
+    </Text>
+    <Text Include="..\Resources\FilePaths\MusicFilePaths.txt">
+      <Filter>Resource Files\Filepaths</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

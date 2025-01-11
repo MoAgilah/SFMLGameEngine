@@ -10,12 +10,12 @@ class Sprite
 {
 public:
 	Sprite() = default;
-	explicit Sprite(TexID id);
+	explicit Sprite(const std::string& texId);
 	virtual ~Sprite() = default;
 
-	TexID GetTexID() const { return m_texID; }
+	std::string_view GetTexID() const { return m_texID; }
 
-	void SetTexture(TexID id);
+	void SetTexture(const std::string& texId);
 
 	void Render(sf::RenderWindow& window) const { window.draw(m_sprite); }
 
@@ -39,7 +39,7 @@ public:
 
 private:
 
-	TexID m_texID;
+	std::string m_texID;
 	sf::Sprite m_sprite;
 	sf::Vector2u m_frameSize;
 };
@@ -53,8 +53,8 @@ struct Range
 class AnimatedSprite : public Sprite
 {
 public:
-	AnimatedSprite(TexID id, int rows, int columns, float framesPerSec, bool symmetrical, float animationSpeed);
-	AnimatedSprite(TexID id, float framesPerSec, bool symmetrical, float animationSpeed);
+	AnimatedSprite(const std::string& texId, int rows, int columns, float framesPerSec, bool symmetrical, float animationSpeed);
+	AnimatedSprite(const std::string& texId, float framesPerSec, bool symmetrical, float animationSpeed);
 	~AnimatedSprite() final = default;
 
 	void Update(float dt);

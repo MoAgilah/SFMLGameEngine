@@ -4,18 +4,18 @@
 #include "../Game/Constants.h"
 #include "../Game/GameManager.h"
 
-Sprite::Sprite(TexID id)
+Sprite::Sprite(const std::string& id)
 {
 	SetTexture(id);
 }
 
-void Sprite::SetTexture(TexID id)
+void Sprite::SetTexture(const std::string& texId)
 {
-	m_texID = id;
+	m_texID = texId;
 
 	try
 	{
-		m_sprite.setTexture(GameManager::Get()->GetTextureMgr().GetTexture(m_texID), true);
+		m_sprite.setTexture(*GameManager::Get()->GetTextureMgr().GetTexture(m_texID), true);
 	}
 	catch (const std::invalid_argument& e)
 	{
@@ -35,15 +35,15 @@ void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int curren
 	SetOrigin(sf::Vector2f((float)m_frameSize.x / 2.f, (float)m_frameSize.y / 2.f));
 }
 
-AnimatedSprite::AnimatedSprite(TexID id, int rows, int columns, float framesPerSec, bool symmetrical, float animSpeed)
-	: Sprite(id), m_animSpeed(animSpeed), m_framesPerSecond(framesPerSec / 1000.0f), m_symmetrical(symmetrical)
+AnimatedSprite::AnimatedSprite(const std::string& texId, int rows, int columns, float framesPerSec, bool symmetrical, float animSpeed)
+	: Sprite(texId), m_animSpeed(animSpeed), m_framesPerSecond(framesPerSec / 1000.0f), m_symmetrical(symmetrical)
 {
 	//set single frame size
 	SetFrameSize(sf::Vector2u(GetTextureSize().x / columns, GetTextureSize().y / rows), m_frame.m_current, m_animation.m_current);
 }
 
-AnimatedSprite::AnimatedSprite(TexID id, float framesPerSec, bool symmetrical, float animSpeed)
-	: Sprite(id), m_animSpeed(animSpeed), m_framesPerSecond(framesPerSec / 1000.0f), m_symmetrical(symmetrical)
+AnimatedSprite::AnimatedSprite(const std::string& texId, float framesPerSec, bool symmetrical, float animSpeed)
+	: Sprite(texId), m_animSpeed(animSpeed), m_framesPerSecond(framesPerSec / 1000.0f), m_symmetrical(symmetrical)
 {
 }
 

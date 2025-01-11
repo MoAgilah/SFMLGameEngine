@@ -1,14 +1,14 @@
 #include "Enemy.h"
 #include "../Game/GameManager.h"
 
-Enemy::Enemy(TexID sprId, const sf::Vector2f& boxSize, int maxLives)
-	: DynamicObject(sprId, boxSize), m_numLives(maxLives), m_maxLives(m_numLives),
+Enemy::Enemy(const std::string& texID, const sf::Vector2f& boxSize, int maxLives)
+	: DynamicObject(texID, boxSize), m_numLives(maxLives), m_maxLives(m_numLives),
 	m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
 {
 }
 
-Enemy::Enemy(TexID sprId, const sf::Vector2f& boxSize, AnimationData animData, int maxLives)
-	: DynamicObject(new AnimatedSprite(sprId, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed), boxSize),
+Enemy::Enemy(const std::string& texID, const sf::Vector2f& boxSize, AnimationData animData, int maxLives)
+	: DynamicObject(new AnimatedSprite(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed), boxSize),
 	m_numLives(maxLives), m_maxLives(m_numLives), m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
 {
 }

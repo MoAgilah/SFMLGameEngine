@@ -118,34 +118,32 @@ bool Capsule::IntersectsCircle(const Circle & circle) const
 	return dist2 <= r * r;
 }
 
-bool IsPlayerObject(TexID id)
+bool IsPlayerObject(const std::string& texID)
 {
-	return id == TexID::None;
+	return texID == "";
 }
 
-bool IsBoxObject(TexID id)
+bool IsBoxObject(const std::string& texID)
 {
-	return id == TexID::None;
+	return texID == "";
 }
 
-std::array<TexID, 5> enemyObject =
+std::vector<std::string> enemyObject =
 {
-	TexID::None
 };
 
-bool IsEnemyObject(TexID id)
+bool IsEnemyObject(const std::string& texID)
 {
-	return std::find(enemyObject.begin(), enemyObject.end(), id) != enemyObject.end();
+	return std::find(enemyObject.begin(), enemyObject.end(), texID) != enemyObject.end();
 }
 
-std::array<TexID, 5> collectableObject =
+std::vector<std::string> collectableObject =
 {
-	TexID::None
 };
 
-bool IsCollectableObject(TexID id)
+bool IsCollectableObject(const std::string& texID)
 {
-	return std::find(collectableObject.begin(), collectableObject.end(), id) != collectableObject.end();
+	return std::find(collectableObject.begin(), collectableObject.end(), texID) != collectableObject.end();
 }
 
 float GetXDist(const Point& p1, const Point& p2)

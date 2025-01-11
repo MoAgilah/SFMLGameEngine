@@ -11,14 +11,13 @@
 
 namespace
 {
-	std::array<TexID, 1> canCollideWithTile =
+	std::vector<std::string> canCollideWithTile =
 	{
-		TexID::None
 	};
 
-	bool CanCollideWithTile(TexID id)
+	bool CanCollideWithTile(const std::string& texID)
 	{
-		return std::find(canCollideWithTile.begin(), canCollideWithTile.end(), id) != canCollideWithTile.end();
+		return std::find(canCollideWithTile.begin(), canCollideWithTile.end(), texID) != canCollideWithTile.end();
 	}
 
 	void SortCollidedTiles(std::vector<std::shared_ptr<Tile>> collidedWith)
@@ -32,19 +31,22 @@ namespace
 			});
 	}
 
-	bool IsDynamicCollectable(TexID id)
+	std::vector<std::string> dynamicCollectables =
 	{
-		return TexID::None == id;
-	}
-
-	std::array<TexID, 1> dynamicObject =
-	{
-		TexID::None
 	};
 
-	bool IsDynamicObject(TexID id)
+	bool IsDynamicCollectable(const std::string& texID)
 	{
-		return std::find(dynamicObject.begin(), dynamicObject.end(), id) != dynamicObject.end();
+		return std::find(dynamicCollectables.begin(), dynamicCollectables.end(), texID) != dynamicCollectables.end();
+	}
+
+	std::vector<std::string> dynamicObject =
+	{
+	};
+
+	bool IsDynamicObject(const std::string& texId)
+	{
+		return std::find(dynamicObject.begin(), dynamicObject.end(), texId) != dynamicObject.end();
 	}
 
 	float GetYOffSet(float pDistX, float lDistY, float slopeY, float currY, float tileHeight)

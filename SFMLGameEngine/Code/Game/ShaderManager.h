@@ -1,14 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <map>
-#include <SFML/Graphics.hpp>
-
-enum class ShaderID
-{
-	None = -1,
-	Max,
-};
+#include "../Utilities/ResourceLoader.h"
 
 class ShaderManager
 {
@@ -16,11 +8,9 @@ public:
 	ShaderManager();
 	~ShaderManager() = default;
 
-	sf::Shader* GetShader(ShaderID id);
+	sf::Shader* GetShader(const std::string& name);
 
 private:
 
-	void AddShaders();
-
-	std::map<ShaderID, std::unique_ptr<sf::Shader>> m_ShaderMap;
+	ResourceLoader<sf::Shader> m_loader;
 };

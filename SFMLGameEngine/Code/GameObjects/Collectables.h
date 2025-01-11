@@ -8,7 +8,7 @@ class Player;
 class StaticCollectable : public Object
 {
 public:
-	StaticCollectable(TexID sprID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	StaticCollectable(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
 	StaticCollectable(AnimatedSprite* sprite, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
 	~StaticCollectable() override = default;
 
@@ -27,7 +27,7 @@ private:
 class DynamicCollectable : public DynamicObject
 {
 public:
-	DynamicCollectable(TexID sprID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	DynamicCollectable(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
 	~DynamicCollectable() override = default;
 
 	bool GetActive() const final { return !GetCollected() && Object::GetActive(); }

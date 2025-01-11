@@ -19,7 +19,7 @@ int FrameWork::Run()
 	auto& window = m_gameMgr.GetRenderWindow();
 
 	window.create(sf::VideoMode((int)GameConstants::ScreenDim.x, (int)GameConstants::ScreenDim.y), GameConstants::WindowTitle);
-	window.setFramerateLimit(GameConstants::FPS);
+	window.setFramerateLimit((int)GameConstants::FPS);
 
 	sf::Clock clock;
 	sf::Event event;

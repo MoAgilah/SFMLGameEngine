@@ -1,13 +1,12 @@
 #include "FontManager.h"
+#include "../Game/Constants.h"
 
 FontManager::FontManager()
+	: m_loader(GameConstants::FontFilePaths)
 {
-	m_standardFont.loadFromFile("../SFMLGameEngine/Resources/Fonts/arial.ttf");
 }
 
-void FontManager::AddFont(std::string path)
+sf::Font* FontManager::GetFont(const std::string& name)
 {
-	sf::Font font;
-	font.loadFromFile(path);
-	m_fonts.push_back(font);
+	return m_loader.GetResource(name);
 }

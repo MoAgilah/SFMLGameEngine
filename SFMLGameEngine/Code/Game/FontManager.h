@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <SFML/Graphics.hpp>
+#include "../Utilities/ResourceLoader.h"
 
 class FontManager
 {
@@ -9,14 +8,9 @@ public:
 	FontManager();
 	~FontManager() = default;
 
-	void AddFont(std::string path);
-
-
-	const sf::Font& GetStandardFont() { return m_standardFont; }
-	const sf::Font& GetMenuFont() { return m_standardFont; }
+	sf::Font* GetFont(const std::string& name);
 
 private:
 
-	sf::Font m_standardFont;
-	std::vector<sf::Font> m_fonts;
+	ResourceLoader<sf::Font> m_loader;
 };

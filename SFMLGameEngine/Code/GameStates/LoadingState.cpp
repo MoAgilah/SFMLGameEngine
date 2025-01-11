@@ -16,7 +16,7 @@ LoadingState::LoadingState(GameManager* gameMgr)
 
 void LoadingState::Initialise()
 {
-	m_backgroundSpr.SetTexture(TexID::None);
+	m_backgroundSpr.SetTexture("");
 	m_backgroundSpr.SetScale(sf::Vector2f(GameConstants::Scale));
 	m_backgroundSpr.SetOrigin(sf::Vector2f(0, 0));
 

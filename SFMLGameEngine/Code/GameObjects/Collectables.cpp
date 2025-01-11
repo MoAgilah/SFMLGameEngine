@@ -1,8 +1,8 @@
 #include "Collectables.h"
 #include "../Game/GameManager.h"
 
-StaticCollectable::StaticCollectable(TexID sprID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
-	: Object(sprID, boxSize)
+StaticCollectable::StaticCollectable(const std::string& texId, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+	: Object(texId, boxSize)
 {
 	SetInitialDirection(true);
 	SetDirection(GetInitialDirection());
@@ -21,8 +21,8 @@ StaticCollectable::StaticCollectable(AnimatedSprite* sprite, const sf::Vector2f&
 	GetAABB()->Update(GetPosition());
 }
 
-DynamicCollectable::DynamicCollectable(TexID sprID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
-	: DynamicObject(sprID, boxSize)
+DynamicCollectable::DynamicCollectable(const std::string& texId, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+	: DynamicObject(texId, boxSize)
 {
 	SetInitialDirection(false);
 	SetDirection(GetInitialDirection());

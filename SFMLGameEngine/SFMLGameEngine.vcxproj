@@ -79,9 +79,15 @@
     <ClInclude Include="Code\UI\FlashingText.h" />
     <ClInclude Include="Code\UI\Menu.h" />
     <ClInclude Include="Code\Utilities\Point.h" />
+    <ClInclude Include="Code\Utilities\ResourceLoader.h" />
     <ClInclude Include="Code\Utilities\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\Resources\FilePaths\FontFilePaths.txt" />
+    <Text Include="..\Resources\FilePaths\MusicFilePaths.txt" />
+    <Text Include="..\Resources\FilePaths\ShaderFilePaths.txt" />
+    <Text Include="..\Resources\FilePaths\SoundFilePaths.txt" />
+    <Text Include="..\Resources\FilePaths\TextureFilePaths.txt" />
     <Text Include="..\Resources\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

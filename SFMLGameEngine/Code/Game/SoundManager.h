@@ -1,29 +1,18 @@
 #pragma once
 
-#include <map>
-#include <SFML/Audio.hpp>
-#include <string>
-
-enum class SoundID
-{
-	None = -1,
-};
+#include "../Utilities/ResourceLoader.h"
 
 class SoundManager
 {
 public:
-	SoundManager() = default;
+	SoundManager();
 	~SoundManager() = default;
 
-	sf::SoundBuffer* GetSound(SoundID id);
-	void AddSound(SoundID id);
-
-	sf::Music* GetMusic() { return&m_music; }
-	bool SetMusic(std::string music);
+	sf::SoundBuffer* GetSound(const std::string& name);
+	sf::Music* GetMusic(const std::string& name);
 
 private:
 
-	bool m_musicSet = false;
-	sf::Music m_music;
-	std::map<SoundID, sf::SoundBuffer> m_soundMap;
+	ResourceLoader<sf::SoundBuffer> m_soundLoader;
+	ResourceLoader<sf::Music> m_musicLoader;
 };

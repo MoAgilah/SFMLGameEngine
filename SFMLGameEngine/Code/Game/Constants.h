@@ -13,4 +13,9 @@ public:
 	static Point ScreenDim;
 	static Point Scale;
 	static std::string WindowTitle;
+	static std::string FontFilePaths;
+	static std::string ShaderFilePaths;
+	static std::string SoundFilePaths;
+	static std::string MusicFilePaths;
+	static std::string TextureFilePaths;
 };
