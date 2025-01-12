@@ -1,8 +1,18 @@
 #include "Box.h"
 #include "../Game/GameManager.h"
 
-Box::Box(AnimatedSprite* sprite, const sf::Vector2f& initPos)
-	: Object(sprite, sf::Vector2f(16,16))
+Box::Box(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+	: Object(texID, boxSize)
+{
+	SetInitialDirection(true);
+	SetDirection(GetInitialDirection());
+	SetInitialPosition(initPos);
+	SetPosition(GetInitialPosition());
+	GetAABB()->Update(GetPosition());
+}
+
+Box::Box(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+	: Object(texID, animData, boxSize)
 {
 	SetInitialDirection(true);
 	SetDirection(GetInitialDirection());

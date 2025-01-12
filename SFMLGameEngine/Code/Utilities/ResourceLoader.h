@@ -103,9 +103,7 @@ inline void ResourceLoader<sf::Music>::LoadResources(fs::path path)
 template<typename T>
 inline T* ResourceLoader<T>::GetResource(std::string name)
 {
-	std::map<std::string, std::unique_ptr<T>> resources;
-
-	if (auto search = resources.find(name); search != resources.end())
+	if (auto search = m_resources.find(name); search != m_resources.end())
 		return search->second.get();
 
 	return nullptr;

@@ -28,7 +28,7 @@ class Object
 {
 public:
 	Object(const std::string& texID, const sf::Vector2f& boxSize);
-	Object(AnimatedSprite* sprite, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
 	virtual ~Object() = default;
 
 	virtual void Update(float deltaTime) = 0;
@@ -81,7 +81,7 @@ class DynamicObject : public Object
 {
 public:
 	DynamicObject(const std::string& texID, const sf::Vector2f& boxSize);
-	DynamicObject(AnimatedSprite* sprite, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
 	~DynamicObject() override = default;
 
 	void Reset() override;

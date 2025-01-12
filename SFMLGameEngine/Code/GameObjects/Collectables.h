@@ -9,7 +9,7 @@ class StaticCollectable : public Object
 {
 public:
 	StaticCollectable(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
-	StaticCollectable(AnimatedSprite* sprite, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	StaticCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
 	~StaticCollectable() override = default;
 
 	bool GetActive() const final { return !GetCollected() && Object::GetActive(); }
@@ -28,6 +28,7 @@ class DynamicCollectable : public DynamicObject
 {
 public:
 	DynamicCollectable(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	DynamicCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
 	~DynamicCollectable() override = default;
 
 	bool GetActive() const final { return !GetCollected() && Object::GetActive(); }

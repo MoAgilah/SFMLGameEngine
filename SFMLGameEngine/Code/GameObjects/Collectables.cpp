@@ -11,8 +11,8 @@ StaticCollectable::StaticCollectable(const std::string& texId, const sf::Vector2
 	GetAABB()->Update(GetPosition());
 }
 
-StaticCollectable::StaticCollectable(AnimatedSprite* sprite, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
-	: Object(sprite, boxSize)
+StaticCollectable::StaticCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+	: Object(texID, animData, boxSize)
 {
 	SetInitialDirection(true);
 	SetDirection(GetInitialDirection());
@@ -23,6 +23,16 @@ StaticCollectable::StaticCollectable(AnimatedSprite* sprite, const sf::Vector2f&
 
 DynamicCollectable::DynamicCollectable(const std::string& texId, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
 	: DynamicObject(texId, boxSize)
+{
+	SetInitialDirection(false);
+	SetDirection(GetInitialDirection());
+	SetInitialPosition(initPos);
+	SetPosition(GetInitialPosition());
+	GetAABB()->Update(GetPosition());
+}
+
+DynamicCollectable::DynamicCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+	: DynamicObject(texID, animData, boxSize)
 {
 	SetInitialDirection(false);
 	SetDirection(GetInitialDirection());

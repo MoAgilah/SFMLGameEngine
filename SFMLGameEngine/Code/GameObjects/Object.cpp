@@ -14,10 +14,10 @@ Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
-Object::Object(AnimatedSprite* sprite, const sf::Vector2f& boxSize)
-	: m_texID(sprite->GetTexID())
+Object::Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize)
+	: m_texID(texID)
 {
-	m_sprite.reset(std::move(sprite));
+	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_aabb = std::make_unique<AABB>(boxSize);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
@@ -65,8 +65,8 @@ DynamicObject::DynamicObject(const std::string& texID, const sf::Vector2f& boxSi
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
 
-DynamicObject::DynamicObject(AnimatedSprite* sprite, const sf::Vector2f& boxSize)
-	: Object(sprite, boxSize)
+DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize)
+	: Object(texID, animData, boxSize)
 {
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
