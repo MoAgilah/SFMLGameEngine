@@ -76,7 +76,7 @@ void Tile::Render(sf::RenderWindow& window)
 		window.draw(line, 2, sf::Lines);
 	}
 
-	window.draw(m_aabb.GetBox()->GetRect());
+	m_aabb.Render(window);
 
 	if (m_hasFont)
 		window.draw(m_text);

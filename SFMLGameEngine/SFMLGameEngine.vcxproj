@@ -21,10 +21,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\AABB.cpp" />
+    <ClCompile Include="Code\Collisions\BoundingVolume.cpp" />
     <ClCompile Include="Code\Collisions\CollisionManager.cpp" />
     <ClCompile Include="Code\Collisions\Grid.cpp" />
+    <ClCompile Include="Code\Collisions\BC.cpp" />
     <ClCompile Include="Code\Collisions\Tile.cpp" />
-    <ClCompile Include="Code\Drawables\GraphicsObjects.cpp" />
     <ClCompile Include="Code\Drawables\Sprite.cpp" />
     <ClCompile Include="Code\Framework.cpp" />
     <ClCompile Include="Code\GameObjects\Box.cpp" />
@@ -53,10 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\AABB.h" />
+    <ClInclude Include="Code\Collisions\BoundingVolume.h" />
     <ClInclude Include="Code\Collisions\CollisionManager.h" />
     <ClInclude Include="Code\Collisions\Grid.h" />
+    <ClInclude Include="Code\Collisions\BC.h" />
     <ClInclude Include="Code\Collisions\Tile.h" />
-    <ClInclude Include="Code\Drawables\GraphicsObject.h" />
     <ClInclude Include="Code\Drawables\Sprite.h" />
     <ClInclude Include="Code\Framework.h" />
     <ClInclude Include="Code\GameObjects\Box.h" />

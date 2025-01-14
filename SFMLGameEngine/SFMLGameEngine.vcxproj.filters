@@ -156,8 +156,11 @@
     <ClCompile Include="Code\Framework.cpp">
       <Filter>Source Files\Code</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Drawables\GraphicsObjects.cpp">
-      <Filter>Source Files\Code\Drawables</Filter>
+    <ClCompile Include="Code\Collisions\BoundingVolume.cpp">
+      <Filter>Source Files\Code\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Collisions\BC.cpp">
+      <Filter>Source Files\Code\Collisions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,8 +257,11 @@
     <ClInclude Include="Code\Framework.h">
       <Filter>Header Files\Code</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Drawables\GraphicsObject.h">
-      <Filter>Header Files\Code\Drawables</Filter>
+    <ClInclude Include="Code\Collisions\BoundingVolume.h">
+      <Filter>Header Files\Code\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Collisions\BC.h">
+      <Filter>Header Files\Code\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

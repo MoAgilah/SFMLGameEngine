@@ -34,7 +34,7 @@ public:
 	const sf::Vector2f& GetOrigin() { return m_aabb.GetOrigin(); }
 
 	AABB* GetAABB() { return &m_aabb; }
-	const sf::RectangleShape& GetRect() { return m_aabb.GetRect(); }
+	sf::RectangleShape* GetRect() { return m_aabb.GetRect(); }
 	Line GetSlope(int bgn, int end) { return Line(m_slope, bgn, end); }
 	Line GetEdge() const { return m_edge; }
 

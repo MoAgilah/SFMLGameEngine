@@ -1,15 +1,33 @@
 #include "Object.h"
 #include <format>
 #include <iostream>
+#include "../Collisions/AABB.h"
+#include "../Collisions/BC.h"
 #include "../Game/GameManager.h"
 
 int Object::s_objectNum = 0;
+
+Object::Object(const std::string& texID, float circleRadius)
+{
+	m_sprite = std::make_unique<Sprite>(texID);
+	m_colVolume = std::make_unique<BC>(circleRadius);
+	m_objectID = s_objectNum++;
+	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
+}
 
 Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
 	: m_texID(texID)
 {
 	m_sprite = std::make_unique<Sprite>(texID);
-	m_aabb = std::make_unique<AABB>(boxSize);
+	m_colVolume = std::make_unique<AABB>(boxSize);
+	m_objectID = s_objectNum++;
+	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
+}
+
+Object::Object(const std::string& texID, const AnimationData& animData, float circleRadius)
+{
+	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
+	m_colVolume = std::make_unique<BC>(circleRadius);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -18,7 +36,7 @@ Object::Object(const std::string& texID, const AnimationData& animData, const sf
 	: m_texID(texID)
 {
 	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
-	m_aabb = std::make_unique<AABB>(boxSize);
+	m_colVolume = std::make_unique<AABB>(boxSize);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -27,13 +45,14 @@ void Object::Render(sf::RenderWindow& window)
 {
 	m_sprite->Render(window);
 #if defined _DEBUG
-	m_aabb->Render(window);
+	m_colVolume->Render(window);
 #endif
 }
 
 bool Object::Intersects(Object* obj)
 {
-	return GetAABB()->Intersects(obj->GetAABB());
+	/*return GetColVolume()->Intersects(obj->GetColVolume());*/
+	return false;
 }
 
 void Object::Reset()
@@ -41,7 +60,7 @@ void Object::Reset()
 	m_active = false;
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(sf::Vector2f(GetPosition().x, GetPosition().y + 3.5f));
+	GetColVolume()->Update(sf::Vector2f(GetPosition().x, GetPosition().y + 3.5f));
 }
 
 void Object::SetDirection(bool dir)
@@ -59,8 +78,20 @@ void Object::SetDirection(bool dir)
 	}
 }
 
+DynamicObject::DynamicObject(const std::string& texID, float circleRadius)
+	: Object(texID, circleRadius)
+{
+	m_physicsCtrl = std::make_unique<PhysicsController>();
+}
+
 DynamicObject::DynamicObject(const std::string& texID, const sf::Vector2f& boxSize)
 	: Object(texID, boxSize)
+{
+	m_physicsCtrl = std::make_unique<PhysicsController>();
+}
+
+DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius)
+	: Object(texID, animData, circleRadius)
 {
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
@@ -148,13 +179,13 @@ void DynamicObject::SetSlideRight(bool right)
 void DynamicObject::Move(float x, float y)
 {
 	GetSprite()->Move(x, y);
-	GetAABB()->Move(sf::Vector2f(x, y));
+	GetColVolume()->Move(sf::Vector2f(x, y));
 }
 
 void DynamicObject::Move(const sf::Vector2f& pos)
 {
 	GetSprite()->Move(pos.x, pos.y);
-	GetAABB()->Move(pos);
+	GetColVolume()->Move(pos);
 }
 
 void DynamicObject::CheckForHorizontalBounds(float deltaTime)

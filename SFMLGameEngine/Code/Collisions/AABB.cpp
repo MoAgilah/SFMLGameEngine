@@ -6,32 +6,31 @@
 int AABB::s_count = 0;
 
 AABB::AABB()
+	: BoundingVolume(sf::Vector2f(16, 16))
 {
 	m_boxNumber = s_count++;
-	m_rect.setFillColor(sf::Color::Transparent);
-	m_rect.setOutlineColor(sf::Color::Red);
-	m_rect.setOutlineThickness(1);
-	Reset(sf::Vector2f(16, 16));
-	Update(sf::Vector2f());
+	m_shape->setFillColor(sf::Color::Transparent);
+	m_shape->setOutlineColor(sf::Color::Red);
+	m_shape->setOutlineThickness(1);
+	Set();
+	Update(GetPosition());
 }
 
 AABB::AABB(const sf::Vector2f& size)
+	: BoundingVolume(sf::Vector2f(size))
 {
 	m_boxNumber = s_count++;
-	m_rect.setFillColor(sf::Color::Transparent);
-	m_rect.setOutlineColor(sf::Color::Red);
-	m_rect.setOutlineThickness(1);
-	Reset(size);
-	Update(sf::Vector2f());
+	m_shape->setFillColor(sf::Color::Transparent);
+	m_shape->setOutlineColor(sf::Color::Red);
+	m_shape->setOutlineThickness(1);
+	Set();
+	Update(GetPosition());
 }
 
 void AABB::Reset(const sf::Vector2f& size)
 {
-	m_rect.setSize(size);
-	m_rect.setScale(GameConstants::Scale);
-	m_rect.setOrigin(size * 0.5f);
-	m_extents[0] = (m_rect.getSize().x * GameConstants::Scale.x) / 2;
-	m_extents[1] = (m_rect.getSize().y * GameConstants::Scale.y) / 2;
+	GetRect()->setSize(size);
+	Set();
 }
 
 void AABB::Update(const sf::Vector2f& pos)
@@ -45,7 +44,7 @@ void AABB::Update(const sf::Vector2f& pos)
 	m_max = m_center + m_extents;
 }
 
-float AABB::SqDistPointAABB(Point p)
+float AABB::SqDistPoint(Point p)
 {
 	float sqDist = 0.0f;
 
@@ -112,18 +111,6 @@ bool AABB::IntersectsMoving(AABB* box, const Point& va, const Point& vb, float& 
 	return true;
 }
 
-void AABB::Move(float x, float y)
-{
-	m_rect.move(sf::Vector2f(x, y));
-	Update(GetPosition());
-}
-
-void AABB::Move(const sf::Vector2f& pos)
-{
-	m_rect.move(pos);
-	Update(GetPosition());
-}
-
 Line AABB::GetSide(Side side)
 {
 	switch (side)
@@ -156,4 +143,12 @@ Point AABB::GetPoint(Side side)
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
 	}
+}
+
+void AABB::Set()
+{
+	m_shape->setScale(GameConstants::Scale);
+	m_shape->setOrigin(GetRect()->getSize() * 0.5f);
+	m_extents[0] = (GetRect()->getSize().x * GameConstants::Scale.x) / 2;
+	m_extents[1] = (GetRect()->getSize().y * GameConstants::Scale.y) / 2;
 }

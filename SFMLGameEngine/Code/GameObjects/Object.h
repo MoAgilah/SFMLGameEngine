@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../Collisions/AABB.h"
+#include "../Collisions/BoundingVolume.h"
 #include "../Drawables/Sprite.h"
 #include "../Game/Constants.h"
 #include "../Game/PhysicsController.h"
@@ -27,7 +28,9 @@ class Tile;
 class Object
 {
 public:
+	Object(const std::string& texID, float circleRadius);
 	Object(const std::string& texID, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, const AnimationData& animData, float circleRadius);
 	Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
 	virtual ~Object() = default;
 
@@ -42,7 +45,8 @@ public:
 
 	AnimatedSprite* GetAnimSpr() { return static_cast<AnimatedSprite*>(GetSprite()); }
 	Sprite* GetSprite() { return m_sprite.get(); }
-	AABB* GetAABB() { return m_aabb.get(); }
+	AABB* GetAABB() { return (AABB*)m_colVolume.get(); }
+	BoundingVolume* GetColVolume() { return m_colVolume.get(); }
 
 	const std::string& GetID() const { return m_texID; }
 	void SetID(const std::string& texID) { m_texID = texID; }
@@ -73,14 +77,16 @@ private:
 	int m_objectID = 0;
 	static int s_objectNum;
 	SpawnData m_spawnData;
-	std::unique_ptr<AABB> m_aabb;
+	std::unique_ptr<BoundingVolume> m_colVolume;
 	std::unique_ptr<Sprite> m_sprite;
 };
 
 class DynamicObject : public Object
 {
 public:
+	DynamicObject(const std::string& texID, float circleRadius);
 	DynamicObject(const std::string& texID, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius);
 	DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
 	~DynamicObject() override = default;
 
