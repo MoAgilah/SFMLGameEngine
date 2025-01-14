@@ -30,8 +30,8 @@ public:
 	void SetActive(bool vis) { m_visible = vis; }
 
 	void SetPosition(sf::Vector2f pos);
-	const sf::Vector2f& GetPosition() { return m_aabb.GetPosition(); }
-	const sf::Vector2f& GetOrigin() { return m_aabb.GetOrigin(); }
+	Point GetPosition() { return m_aabb.GetPosition(); }
+	Point GetOrigin() { return m_aabb.GetOrigin(); }
 
 	AABB* GetAABB() { return &m_aabb; }
 	sf::RectangleShape* GetRect() { return m_aabb.GetRect(); }

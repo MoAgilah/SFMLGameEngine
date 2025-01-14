@@ -5,7 +5,7 @@ BoundingVolume::BoundingVolume(float radius)
 	m_shape = std::make_unique<sf::CircleShape>(radius);
 }
 
-BoundingVolume::BoundingVolume(const sf::Vector2f& size)
+BoundingVolume::BoundingVolume(const Point& size)
 {
 	m_shape = std::make_unique<sf::RectangleShape>(size);
 }
@@ -16,7 +16,7 @@ void BoundingVolume::Move(float x, float y)
 	Update(GetPosition());
 }
 
-void BoundingVolume::Move(const sf::Vector2f& pos)
+void BoundingVolume::Move(const Point& pos)
 {
 	m_shape->move(pos);
 	Update(GetPosition());

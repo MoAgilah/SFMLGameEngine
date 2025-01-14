@@ -1,39 +1,40 @@
 #include "AABB.h"
 #include <limits>
+#include "../Collisions/BC.h"
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
 
 int AABB::s_count = 0;
 
 AABB::AABB()
-	: BoundingVolume(sf::Vector2f(16, 16))
+	: BoundingVolume(Point(16, 16))
 {
 	m_boxNumber = s_count++;
 	m_shape->setFillColor(sf::Color::Transparent);
 	m_shape->setOutlineColor(sf::Color::Red);
-	m_shape->setOutlineThickness(1);
+	m_shape->setOutlineThickness(5);
 	Set();
 	Update(GetPosition());
 }
 
-AABB::AABB(const sf::Vector2f& size)
+AABB::AABB(const Point& size)
 	: BoundingVolume(sf::Vector2f(size))
 {
 	m_boxNumber = s_count++;
 	m_shape->setFillColor(sf::Color::Transparent);
 	m_shape->setOutlineColor(sf::Color::Red);
-	m_shape->setOutlineThickness(1);
+	m_shape->setOutlineThickness(5);
 	Set();
 	Update(GetPosition());
 }
 
-void AABB::Reset(const sf::Vector2f& size)
+void AABB::Reset(const Point& size)
 {
 	GetRect()->setSize(size);
 	Set();
 }
 
-void AABB::Update(const sf::Vector2f& pos)
+void AABB::Update(const Point& pos)
 {
 	SetPosition(pos);
 
@@ -42,6 +43,11 @@ void AABB::Update(const sf::Vector2f& pos)
 
 	m_min = m_center - m_extents;
 	m_max = m_center + m_extents;
+}
+
+void AABB::Render(sf::RenderWindow& window)
+{
+	window.draw(*GetRect());
 }
 
 float AABB::SqDistPoint(Point p)
@@ -58,6 +64,17 @@ float AABB::SqDistPoint(Point p)
 	return sqDist;
 }
 
+bool AABB::Intersects(const Point& pnt) const
+{
+	if (pnt.x >= m_min.x &&
+		pnt.x <= m_max.x &&
+		pnt.y >= m_min.y &&
+		pnt.y <= m_max.y)
+		return true;
+
+	return false;
+}
+
 bool AABB::Intersects(AABB* box)
 {
 	for (size_t i = 0; i < 2; i++)
@@ -70,6 +87,17 @@ bool AABB::Intersects(AABB* box)
 
 	// Overlapping on all axes means AABBs are intersecting
 	return true;
+}
+
+bool AABB::Intersects(BC* circle)
+{
+	// Compute squared distance between sphere center and AABB
+	float sqDist = SqDistPoint(circle->GetCenter());
+	float radius = circle->GetRadius();
+
+	// Sphere and AABB intersect if the (squared) distance
+	// between them is less than the (squared) sphere radius
+	return sqDist <= radius * radius;
 }
 
 bool AABB::IntersectsMoving(AABB* box, const Point& va, const Point& vb, float& tfirst, float& tlast)

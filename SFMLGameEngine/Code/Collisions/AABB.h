@@ -13,16 +13,20 @@ class AABB : public BoundingVolume
 {
 public:
 	AABB();
-	AABB(const sf::Vector2f& size);
+	AABB(const Point& size);
 	~AABB() = default;
 
-	void Reset(const sf::Vector2f& size);
+	void Reset(const Point& size);
 
-	void Update(const sf::Vector2f& pos);
+	void Update(const Point& pos);
+	void Render(sf::RenderWindow& window) override;
 
 	float SqDistPoint(Point p);
 
-	bool Intersects(AABB* box);
+	bool Intersects(const Point& pnt) const override;
+	bool Intersects(AABB* box) override;
+	bool Intersects(BC* circle) override;
+
 	bool IntersectsMoving(AABB* box, const Point& va, const Point& vb, float& tfirst, float& tlast);
 
 	AABB* Get() { return this; }
