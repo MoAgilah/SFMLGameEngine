@@ -32,6 +32,11 @@ int AABB::s_count = 0;
 
 AABB::AABB()
 {
+	m_boxNumber = s_count++;
+	MakeRectangleShape(Point(16,16));
+	SetOrigin(Point(8, 8));
+	SetOutlineColour(sf::Color::Red);
+	SetOutlineThickness(2);
 }
 
 AABB::AABB(const sf::Vector2f& size)
