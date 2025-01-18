@@ -91,6 +91,7 @@ public:
 	sf::CircleShape* GetCircle() = delete;
 
 protected:
+
 	void MakeCircleShape() = delete;
 
 private:
@@ -104,10 +105,7 @@ private:
 	Point m_overlap;
 };
 
-namespace
-{
-	BC CalculateMinimumBoundingCircle(AABB* box);
-}
+BC CalculateMinimumBoundingCircle(AABB* box);
 
 class BC : public BoundingVolume
 {

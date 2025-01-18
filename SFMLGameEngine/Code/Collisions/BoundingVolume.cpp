@@ -41,6 +41,7 @@ AABB::AABB()
 	Reset(m_size);
 	Update(GetPosition());
 
+	SetFillColour(sf::Color::Transparent);
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -53,6 +54,7 @@ AABB::AABB(const sf::Vector2f& size)
 	Reset(m_size);
 	Update(GetPosition());
 
+	SetFillColour(sf::Color::Transparent);
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -65,6 +67,7 @@ AABB::AABB(const sf::Vector2f& size, const sf::Vector2f& pos)
 	Reset(m_size);
 	Update(pos);
 
+	SetFillColour(sf::Color::Transparent);
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -212,39 +215,24 @@ Point AABB::GetPoint(Side side)
 	}
 }
 
-namespace {
-	BC CalculateMinimumBoundingCircle(AABB* box)
-	{
-		Point corners[4] = {
-			{box->GetMin().x, box->GetMin().y}, // Bottom-left
-			{box->GetMax().x, box->GetMin().y}, // Bottom-right
-			{box->GetMin().x, box->GetMax().y}, // Top-left
-			{box->GetMax().x, box->GetMax().y}  // Top-right
-		};
+BC CalculateMinimumBoundingCircle(AABB* box)
+{
+	// Get the min and max points of the AABB
+	Point minPoint = box->GetMin();
+	Point maxPoint = box->GetMax();
 
-		// Find the pair of extremal points that are farthest apart
-		double maxDistance = 0.0;
-		Point p1, p2;
-		for (int i = 0; i < 4; ++i)
-		{
-			for (int j = i + 1; j < 4; ++j)
-			{
-				double dist = pnt::distance(corners[i], corners[j]);
-				if (dist > maxDistance)
-				{
-					maxDistance = dist;
-					p1 = corners[i];
-					p2 = corners[j];
-				}
-			}
-		}
+	// Calculate the center of the AABB
+	Point center;
+	center.x = (minPoint.x + maxPoint.x) / 2.0f;
+	center.y = (minPoint.y + maxPoint.y) / 2.0f;
 
-		Point center;
-		center.x = (float)((p1.x + p2.x) / 2.0);
-		center.y = (float)((p1.y + p2.y) / 2.0);
+	// Calculate the radius as half the diagonal distance of the AABB
+	float dx = maxPoint.x - minPoint.x;
+	float dy = maxPoint.y - minPoint.y;
+	float radius = std::sqrtf(dx * dx + dy * dy) / 2.0f;
 
-		return BC((float)(maxDistance / 2.0), center);
-	}
+	// Return the bounding circle
+	return BC(radius, center);
 }
 
 int BC::s_count = 0;
@@ -257,6 +245,7 @@ BC::BC()
 	Reset(m_radius);
 	Update(GetPosition());
 
+	SetFillColour(sf::Color::Transparent);
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -269,6 +258,7 @@ BC::BC(float radius)
 	Reset(m_radius);
 	Update(GetPosition());
 
+	SetFillColour(sf::Color::Transparent);
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -281,6 +271,7 @@ BC::BC(float radius, const sf::Vector2f& pos)
 	Reset(m_radius);
 	Update(pos);
 
+	SetFillColour(sf::Color::Transparent);
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
