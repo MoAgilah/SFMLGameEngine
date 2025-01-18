@@ -47,8 +47,8 @@ public:
 
 protected:
 
-	void MakeCircleShape(float radius);
-	void MakeRectangleShape(const Point& size);
+	void MakeCircleShape();
+	void MakeRectangleShape();
 
 	Point m_center;
 
@@ -91,15 +91,13 @@ public:
 	sf::CircleShape* GetCircle() = delete;
 
 protected:
-
-	void MakeCircleShape(float radius) = delete;
+	void MakeCircleShape() = delete;
 
 private:
 
-	void SetSize(const Point& size);
-
 	int m_boxNumber;
 	static int s_count;
+	Point m_size;
 	Point m_min;
 	Point m_max;
 	Point m_extents;
@@ -136,12 +134,9 @@ public:
 	sf::RectangleShape* GetRect() = delete;
 
 protected:
-
-	void MakeRectangleShape(const Point& size) = delete;
+	void MakeRectangleShape() = delete;
 
 private:
-
-	void SetRadius(float radius);
 
 	int m_circleNumber;
 	static int s_count;

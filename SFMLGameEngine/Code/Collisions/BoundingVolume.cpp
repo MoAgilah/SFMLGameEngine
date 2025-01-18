@@ -1,4 +1,5 @@
 #include "BoundingVolume.h"
+#include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
 
 void BoundingVolume::Render(sf::RenderWindow& window)
@@ -18,49 +19,61 @@ void BoundingVolume::Move(const Point& pos)
 	Update(GetPosition());
 }
 
-void BoundingVolume::MakeCircleShape(float radius)
+void BoundingVolume::MakeCircleShape()
 {
-	m_shape = std::make_unique<sf::CircleShape>(radius);
+	m_shape = std::make_unique<sf::CircleShape>();
+	m_shape->setScale(GameConstants::Scale);
 }
 
-void BoundingVolume::MakeRectangleShape(const Point& size)
+void BoundingVolume::MakeRectangleShape()
 {
-	m_shape = std::make_unique<sf::RectangleShape>(size);
+	m_shape = std::make_unique<sf::RectangleShape>();
+	m_shape->setScale(GameConstants::Scale);
 }
 
 int AABB::s_count = 0;
 
 AABB::AABB()
+	: m_size(16,16)
 {
 	m_boxNumber = s_count++;
-	MakeRectangleShape(Point(16,16));
-	SetOrigin(Point(8, 8));
+	MakeRectangleShape();
+	Reset(m_size);
+	Update(GetPosition());
+
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
 
 AABB::AABB(const sf::Vector2f& size)
+	: m_size(size)
 {
 	m_boxNumber = s_count++;
-	MakeRectangleShape(size);
-	SetOrigin(size * 0.5f);
+	MakeRectangleShape();
+	Reset(m_size);
+	Update(GetPosition());
+
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
 
 AABB::AABB(const sf::Vector2f& size, const sf::Vector2f& pos)
+	: m_size(size)
 {
 	m_boxNumber = s_count++;
-	MakeRectangleShape(size);
-	SetPosition(pos);
-	SetOrigin(size * 0.5f);
+	MakeRectangleShape();
+	Reset(m_size);
+	Update(pos);
+
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
 
 void AABB::Reset(const Point& size)
 {
-	SetSize(size);
+	GetRect()->setSize(size);
+	m_extents[0] = (size.x * GameConstants::Scale.x) * 0.5f;
+	m_extents[1] = (size.y * GameConstants::Scale.y) * 0.5f;
 	SetOrigin(size * 0.5f);
 }
 
@@ -199,11 +212,6 @@ Point AABB::GetPoint(Side side)
 	}
 }
 
-void AABB::SetSize(const Point& size)
-{
-	GetRect()->setSize(size);
-}
-
 namespace {
 	BC CalculateMinimumBoundingCircle(AABB* box)
 	{
@@ -245,8 +253,10 @@ BC::BC()
 	: m_radius(16)
 {
 	m_circleNumber = s_count++;
-	MakeCircleShape(m_radius);
-	SetOrigin(Point(m_radius, m_radius));
+	MakeCircleShape();
+	Reset(m_radius);
+	Update(GetPosition());
+
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -255,8 +265,10 @@ BC::BC(float radius)
 	: m_radius(radius)
 {
 	m_circleNumber = s_count++;
-	MakeCircleShape(m_radius);
-	SetOrigin(Point(m_radius, m_radius));
+	MakeCircleShape();
+	Reset(m_radius);
+	Update(GetPosition());
+
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
@@ -265,16 +277,17 @@ BC::BC(float radius, const sf::Vector2f& pos)
 	: m_radius(radius)
 {
 	m_circleNumber = s_count++;
-	MakeCircleShape(m_radius);
-	SetPosition(pos);
-	SetOrigin(Point(m_radius, m_radius));
+	MakeCircleShape();
+	Reset(m_radius);
+	Update(pos);
+
 	SetOutlineColour(sf::Color::Red);
 	SetOutlineThickness(2);
 }
 
 void BC::Reset(float radius)
 {
-	SetRadius(radius);
+	GetCircle()->setRadius(radius);
 	SetOrigin(Point(radius, radius));
 }
 
@@ -348,9 +361,4 @@ bool BC::IntersectsMoving(BC* circle, const Point& va, const Point& vb, float& t
 	tfirst = (-b - std::sqrt(d)) / a;
 
 	return true;
-}
-
-void BC::SetRadius(float radius)
-{
-	GetCircle()->setRadius(radius);
 }
