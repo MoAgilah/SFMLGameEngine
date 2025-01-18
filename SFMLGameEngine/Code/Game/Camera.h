@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../Collisions/AABB.h"
+#include "../Collisions/BoundingVolume.h"
 
 class Camera
 {

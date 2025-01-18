@@ -1,6 +1,6 @@
 #include "World.h"
 #include "GameManager.h"
-#include "../Collisions/AABB.h"
+#include "../Collisions/BoundingVolume.h"
 #include "../Game/Constants.h"
 #include "../Game/Camera.h"
 

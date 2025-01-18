@@ -4,8 +4,9 @@
 #include <array>
 #include <SFML/Graphics.hpp>
 #include "Point.h"
-#include "../Collisions/AABB.h"
 #include "../Game/TextureManager.h"
+
+class AABB;
 
 bool IsPlayerObject(const std::string& texID);
 bool IsBoxObject(const std::string& texID);

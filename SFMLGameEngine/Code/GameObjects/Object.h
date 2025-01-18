@@ -4,7 +4,6 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-#include "../Collisions/AABB.h"
 #include "../Collisions/BoundingVolume.h"
 #include "../Drawables/Sprite.h"
 #include "../Game/Constants.h"
@@ -45,7 +44,8 @@ public:
 
 	AnimatedSprite* GetAnimSpr() { return static_cast<AnimatedSprite*>(GetSprite()); }
 	Sprite* GetSprite() { return m_sprite.get(); }
-	AABB* GetAABB() { return (AABB*)m_colVolume.get(); }
+	AABB* GetAABB() { return static_cast<AABB*>(m_colVolume.get()); }
+	BC* GetBC() { return static_cast<BC*>(m_colVolume.get()); }
 	BoundingVolume* GetColVolume() { return m_colVolume.get(); }
 
 	const std::string& GetID() const { return m_texID; }

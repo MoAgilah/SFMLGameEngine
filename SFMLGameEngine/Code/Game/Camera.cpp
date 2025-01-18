@@ -4,7 +4,6 @@
 
 Camera::Camera()
 {
-
 	// initialise m_camera view
 	m_camera.reset(sf::FloatRect(0, 0, GameConstants::ScreenDim.x, GameConstants::ScreenDim.y));
 	m_camera.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));

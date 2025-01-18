@@ -1,8 +1,6 @@
 #include "Object.h"
 #include <format>
 #include <iostream>
-#include "../Collisions/AABB.h"
-#include "../Collisions/BC.h"
 #include "../Game/GameManager.h"
 
 int Object::s_objectNum = 0;
@@ -51,7 +49,6 @@ void Object::Render(sf::RenderWindow& window)
 
 bool Object::Intersects(Object* obj)
 {
-	/*return GetColVolume()->Intersects(obj->GetColVolume());*/
 	return false;
 }
 
@@ -60,7 +57,7 @@ void Object::Reset()
 	m_active = false;
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
-	GetColVolume()->Update(sf::Vector2f(GetPosition().x, GetPosition().y + 3.5f));
+	m_colVolume->Update(sf::Vector2f(GetPosition().x, GetPosition().y + 3.5f));
 }
 
 void Object::SetDirection(bool dir)

@@ -1,6 +1,5 @@
 #include "Utilities.h"
-#include "Point.h"
-
+#include "../Collisions/BoundingVolume.h"
 
 namespace
 {
@@ -64,9 +63,10 @@ Circle::Circle(const Point& position, float radius)
 	: center(position), radius(radius)
 {}
 
-Circle::Circle(AABB* box, float radius)
-	: Circle(box->GetPoint(Side::Bottom) - Point(radius,radius), radius)
-{}
+Circle::Circle(AABB * box, float radius)
+	: Circle(box->GetPoint(Side::Bottom) - Point(radius, radius), radius)
+{
+}
 
 bool Circle::IntersectsPoint(const Point& pnt) const
 {

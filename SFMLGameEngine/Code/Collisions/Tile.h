@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "../Collisions/AABB.h"
+#include "../Collisions/BoundingVolume.h"
 #include "../Utilities/Utilities.h"
 
 enum Types
