@@ -82,6 +82,48 @@ float Line::CalculateAngle() const
 	return angleInDegrees;
 }
 
+float Line::SqDistPointSegment(const Point& p)
+{
+	Point es = end - start;
+	Point ps = p - start;
+	Point pe = p - end;
+
+	float e = Dot(ps, es);
+
+	// Handle cases where c projects outside ab
+	if (e <= 0.0f)
+		return Dot(ps, ps);
+
+	float f = Dot(es, es);
+	if (e >= f)
+		return Dot(pe, pe);
+
+	// Handle cases where c projects onto ab
+	return Dot(ps, ps) - e * e / f;
+}
+
+Point Line::ClosestPointOnLineSegment(const Point& pnt) const
+{
+	Point AB = end - start;
+	Point AP = pnt - start;
+
+	double abLengthSquared = pnt::lengthSquared(AB);
+	if (abLengthSquared == 0.0)
+	{
+		// A and B are the same point
+		return start;
+	}
+
+	// Projection factor (t)
+	double t = pnt::dot(AP, AB) / abLengthSquared;
+
+	// Clamp t to [0, 1] to stay within the segment
+	t = std::max(0.0, std::min(1.0, t));
+
+	// Compute the closest point
+	return { start.x + t * AB.x, start.y + t * AB.y };
+}
+
 bool Line::IsPointAboveLine(const Point & pnt) const
 {
 	float s = (end.x - start.x) * (pnt.y - start.y) - (end.y - start.y) * (pnt.x - start.x);

@@ -25,6 +25,9 @@ public:
 	virtual bool Intersects(BoundingBox* box) = 0;
 	virtual bool Intersects(BoundingCircle* circle) = 0;
 
+	virtual bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
+	virtual bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
+
 	virtual void SetPosition(const Point& pos) { m_shape->setPosition(pos); }
 	virtual Point GetPosition() { return m_shape->getPosition(); }
 
@@ -73,7 +76,8 @@ public:
 	bool Intersects(BoundingBox* box)  override;
 	bool Intersects(BoundingCircle* circle)  override;
 
-	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast);
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	const Point& GetMin() const { return m_min; }
 	const Point& GetMax() const { return m_max; }
@@ -119,7 +123,8 @@ public:
 	bool Intersects(BoundingBox* box)  override;
 	bool Intersects(BoundingCircle* circle)  override;
 
-	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	float GetRadius() const { return m_radius; }
 
@@ -153,6 +158,9 @@ public:
 	bool Intersects(const Point& pnt) const override;
 	bool Intersects(BoundingBox* box)  override;
 	bool Intersects(BoundingCircle* circle)  override;
+
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
 
 	BoundingCapsule* Get() { return this; }
 	sf::CircleShape* GetCircle() = delete;

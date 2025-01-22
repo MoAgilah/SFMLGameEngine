@@ -176,6 +176,11 @@ bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Poin
 	return true;
 }
 
+bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	return false;
+}
+
 Line BoundingBox::GetSide(Side side)
 {
 	switch (side)
@@ -303,6 +308,11 @@ bool BoundingCircle::Intersects(BoundingCircle* circle)
 	// Spheres intersect if squared distance is less than squared sum of radii
 	float radiusSum = m_radius + circle->m_radius;
 	return dist2 <= radiusSum * radiusSum;
+}
+
+bool BoundingCircle::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	return false;
 }
 
 bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -443,17 +453,43 @@ void BoundingCapsule::Update(const Point& pos)
 
 bool BoundingCapsule::Intersects(const Point& pnt) const
 {
-	return false;
+	auto clsPnt = m_segment.ClosestPointOnLineSegment(pnt);
+
+	BoundingCircle circle(m_radius, clsPnt);
+
+	return circle.Intersects(pnt);
 }
 
 bool BoundingCapsule::Intersects(BoundingBox* box)
 {
-	return false;
+	auto clsPnt = m_segment.ClosestPointOnLineSegment(box->GetCenter());
+
+	BoundingCircle circle(m_radius, clsPnt);
+
+	return circle.Intersects(box);
 }
 
 bool BoundingCapsule::Intersects(BoundingCircle* circle)
 {
+	float r = circle->GetRadius() + m_radius;
+
+	float dist2 = m_segment.SqDistPointSegment(circle->GetCenter());
+
+	return dist2 <= r * r;
+}
+
+bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
 	return false;
+}
+
+bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	auto clsPnt = m_segment.ClosestPointOnLineSegment(circle1->GetCenter());
+
+	BoundingCircle circle2(m_radius, clsPnt);
+
+	return circle2.IntersectsMoving(circle1, va, vb, tfirst, tlast);
 }
 
 void BoundingCapsule::MakeCapsuleShape()

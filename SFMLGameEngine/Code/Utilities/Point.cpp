@@ -122,6 +122,11 @@ Point::operator sf::Vector2f() const
 	return sf::Vector2f(x, y);
 }
 
+float pnt::lengthSquared(const Point& p)
+{
+	return p.x * p.x + p.y * p.y;
+}
+
 float pnt::dot(const Point& p1, const Point& p2)
 {
 	return p1.x * p2.x + p1.y * p2.y;

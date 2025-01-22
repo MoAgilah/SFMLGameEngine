@@ -20,6 +20,9 @@ struct Line
 	Point GetMidPoint() const;
 	float CalculateAngle() const;
 
+	float SqDistPointSegment(const Point& p);
+	Point ClosestPointOnLineSegment(const Point& pnt) const;
+
 	bool IsPointAboveLine(const Point& pnt) const;
 	bool IntersectsPoint(const Point& pnt) const;
 

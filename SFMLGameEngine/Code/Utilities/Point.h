@@ -35,6 +35,7 @@ public:
 
 namespace pnt
 {
+	float lengthSquared(const Point& p);
 	float dot(const Point& p1, const Point& p2);
 	float distance(const Point& p1, const Point& p2);
 	float length(const Point& p);
