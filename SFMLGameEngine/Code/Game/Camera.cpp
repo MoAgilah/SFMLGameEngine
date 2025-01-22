@@ -34,12 +34,12 @@ void Camera::Reset(sf::RenderWindow& window)
 	Update();
 }
 
-bool Camera::IsInView(AABB* box)
+bool Camera::IsInView(BoundingBox* box)
 {
 	return box->Intersects(&m_viewBox);
 }
 
-bool Camera::CheckVerticalBounds(AABB* box)
+bool Camera::CheckVerticalBounds(BoundingBox* box)
 {
 	return box->GetPosition().y > (m_camera.getCenter().y + (GameConstants::ScreenDim.y * 0.5f)) - (box->GetExtents().y * 2);
 }

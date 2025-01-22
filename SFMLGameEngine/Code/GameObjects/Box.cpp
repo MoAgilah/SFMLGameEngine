@@ -8,7 +8,7 @@ Box::Box(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector
 	SetDirection(GetInitialDirection());
 	SetInitialPosition(initPos);
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(GetPosition());
+	GetBoundingBox()->Update(GetPosition());
 }
 
 Box::Box(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
@@ -18,7 +18,7 @@ Box::Box(const std::string& texID, const AnimationData& animData, const sf::Vect
 	SetDirection(GetInitialDirection());
 	SetInitialPosition(initPos);
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(GetPosition());
+	GetBoundingBox()->Update(GetPosition());
 }
 
 void Box::Reset()

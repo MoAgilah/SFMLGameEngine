@@ -24,7 +24,7 @@ GameManager::~GameManager()
 void GameManager::CheckInView()
 {
 	for (auto& tile : m_collisionManager->GetGrid())
-		tile->SetActive(m_camera.IsInView(tile->GetAABB()));
+		tile->SetActive(m_camera.IsInView(tile->GetBoundingBox()));
 
 	m_world->CheckIsInView();
 }

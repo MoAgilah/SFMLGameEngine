@@ -8,7 +8,7 @@ StaticCollectable::StaticCollectable(const std::string& texId, const sf::Vector2
 	SetDirection(GetInitialDirection());
 	SetInitialPosition(initPos);
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(GetPosition());
+	GetBoundingBox()->Update(GetPosition());
 }
 
 StaticCollectable::StaticCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
@@ -18,7 +18,7 @@ StaticCollectable::StaticCollectable(const std::string& texID, const AnimationDa
 	SetDirection(GetInitialDirection());
 	SetInitialPosition(initPos);
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(GetPosition());
+	GetBoundingBox()->Update(GetPosition());
 }
 
 DynamicCollectable::DynamicCollectable(const std::string& texId, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
@@ -28,7 +28,7 @@ DynamicCollectable::DynamicCollectable(const std::string& texId, const sf::Vecto
 	SetDirection(GetInitialDirection());
 	SetInitialPosition(initPos);
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(GetPosition());
+	GetBoundingBox()->Update(GetPosition());
 }
 
 DynamicCollectable::DynamicCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
@@ -38,5 +38,5 @@ DynamicCollectable::DynamicCollectable(const std::string& texID, const Animation
 	SetDirection(GetInitialDirection());
 	SetInitialPosition(initPos);
 	SetPosition(GetInitialPosition());
-	GetAABB()->Update(GetPosition());
+	GetBoundingBox()->Update(GetPosition());
 }

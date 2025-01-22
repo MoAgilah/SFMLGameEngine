@@ -33,7 +33,7 @@ private:
 
 protected:
 
-	AABB m_foregroundBox;
+	BoundingBox m_foregroundBox;
 	Sprite m_backgroundSpr;
 	std::vector<sf::Text> m_texts;
 	std::vector<Sprite> m_sprites;

@@ -1,5 +1,34 @@
 #include "Utilities.h"
+#include <numbers>
 #include "../Collisions/BoundingVolume.h"
+
+bool IsPlayerObject(const std::string& texID)
+{
+	return texID == "";
+}
+
+bool IsBoxObject(const std::string& texID)
+{
+	return texID == "";
+}
+
+std::vector<std::string> enemyObject =
+{
+};
+
+bool IsEnemyObject(const std::string& texID)
+{
+	return std::find(enemyObject.begin(), enemyObject.end(), texID) != enemyObject.end();
+}
+
+std::vector<std::string> collectableObject =
+{
+};
+
+bool IsCollectableObject(const std::string& texID)
+{
+	return std::find(collectableObject.begin(), collectableObject.end(), texID) != collectableObject.end();
+}
 
 namespace
 {
@@ -31,11 +60,27 @@ namespace
 
 Line::Line(const Point& start, const Point& end)
 	: start(start), end(end)
-{}
+{
+}
 
 Line::Line(const sf::ConvexShape& tri, int bgn, int end)
 	: Line(tri.getPoint(bgn), tri.getPoint(end))
 {}
+
+Point Line::GetMidPoint() const
+{
+	float x = (start.x + end.x) / 2.f;
+	float y = (start.y + end.y) / 2.f;
+
+	return Point(x, y);
+}
+
+float Line::CalculateAngle() const
+{
+	float angleInDegrees = atan2(DistY(), DistX()) * (180.f / std::numbers::pi_v<float>);
+
+	return angleInDegrees;
+}
 
 bool Line::IsPointAboveLine(const Point & pnt) const
 {
@@ -59,6 +104,17 @@ bool Line::IntersectsPoint(const Point& pnt) const
 	return d1 + d2 >= lineLen - buffer && d1 + d2 <= lineLen + buffer;
 }
 
+float GetXDist(const Point& p1, const Point& p2)
+{
+	return p2.x - p1.x;
+}
+
+float GetYDist(const Point& p1, const Point& p2)
+{
+	return p2.y - p1.y;
+}
+
+/*
 Circle::Circle(const Point& position, float radius)
 	: center(position), radius(radius)
 {}
@@ -117,41 +173,4 @@ bool Capsule::IntersectsCircle(const Circle & circle) const
 
 	return dist2 <= r * r;
 }
-
-bool IsPlayerObject(const std::string& texID)
-{
-	return texID == "";
-}
-
-bool IsBoxObject(const std::string& texID)
-{
-	return texID == "";
-}
-
-std::vector<std::string> enemyObject =
-{
-};
-
-bool IsEnemyObject(const std::string& texID)
-{
-	return std::find(enemyObject.begin(), enemyObject.end(), texID) != enemyObject.end();
-}
-
-std::vector<std::string> collectableObject =
-{
-};
-
-bool IsCollectableObject(const std::string& texID)
-{
-	return std::find(collectableObject.begin(), collectableObject.end(), texID) != collectableObject.end();
-}
-
-float GetXDist(const Point& p1, const Point& p2)
-{
-	return p2.x - p1.x;
-}
-
-float GetYDist(const Point& p1, const Point& p2)
-{
-	return p2.y - p1.y;
-}
+*/

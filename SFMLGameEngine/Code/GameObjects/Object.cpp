@@ -8,7 +8,7 @@ int Object::s_objectNum = 0;
 Object::Object(const std::string& texID, float circleRadius)
 {
 	m_sprite = std::make_unique<Sprite>(texID);
-	m_colVolume = std::make_unique<BC>(circleRadius);
+	m_colVolume = std::make_unique<BoundingCircle>(circleRadius);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -17,7 +17,7 @@ Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
 	: m_texID(texID)
 {
 	m_sprite = std::make_unique<Sprite>(texID);
-	m_colVolume = std::make_unique<AABB>(boxSize);
+	m_colVolume = std::make_unique<BoundingBox>(boxSize);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -25,7 +25,7 @@ Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
 Object::Object(const std::string& texID, const AnimationData& animData, float circleRadius)
 {
 	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
-	m_colVolume = std::make_unique<BC>(circleRadius);
+	m_colVolume = std::make_unique<BoundingCircle>(circleRadius);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -34,7 +34,7 @@ Object::Object(const std::string& texID, const AnimationData& animData, const sf
 	: m_texID(texID)
 {
 	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
-	m_colVolume = std::make_unique<AABB>(boxSize);
+	m_colVolume = std::make_unique<BoundingBox>(boxSize);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }

@@ -28,19 +28,19 @@ void Grid::SetTilePosition()
 	int begin = x;
 
 	//first row
-	sf::Vector2f pos(m_grid.front()->GetAABB()->GetExtents());
+	sf::Vector2f pos(m_grid.front()->GetBoundingBox()->GetExtents());
 	m_grid[x]->SetPosition(pos);
 
 	for (x = x + 1; x < 313; x++)
 	{
-		pos = sf::Vector2f(pos.x + (m_grid.front()->GetAABB()->GetExtents().x * 2), pos.y);
+		pos = sf::Vector2f(pos.x + (m_grid.front()->GetBoundingBox()->GetExtents().x * 2), pos.y);
 		m_grid[x]->SetPosition(pos);
 	}
 
 	//remaining rows
 	for (int i = 0; i < 14; i++)
 	{
-		pos = sf::Vector2f(m_grid[begin]->GetPosition().x, m_grid[begin]->GetPosition().y + (m_grid.front()->GetAABB()->GetExtents().y * 2));
+		pos = sf::Vector2f(m_grid[begin]->GetPosition().x, m_grid[begin]->GetPosition().y + (m_grid.front()->GetBoundingBox()->GetExtents().y * 2));
 		m_grid[x]->SetPosition(pos);
 		begin = x;
 
@@ -48,7 +48,7 @@ void Grid::SetTilePosition()
 
 		for (x = x + 1; x < 313 * val; x++)
 		{
-			pos = sf::Vector2f(pos.x + (m_grid.front()->GetAABB()->GetExtents().x * 2), pos.y);
+			pos = sf::Vector2f(pos.x + (m_grid.front()->GetBoundingBox()->GetExtents().x * 2), pos.y);
 			m_grid[x]->SetPosition(pos);
 		}
 	}

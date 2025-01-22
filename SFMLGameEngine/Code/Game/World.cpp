@@ -68,10 +68,10 @@ void World::CheckIsInView()
 	auto& camera = GameManager::Get()->GetCamera();
 
 	for (auto& enemy : m_enemies)
-		enemy->SetActive(camera.IsInView(enemy->GetAABB()));
+		enemy->SetActive(camera.IsInView(enemy->GetBoundingBox()));
 
 	for (auto& object : m_objects)
-		object->SetActive(camera.IsInView(object->GetAABB()));
+		object->SetActive(camera.IsInView(object->GetBoundingBox()));
 }
 
 void World::AddEnemies()

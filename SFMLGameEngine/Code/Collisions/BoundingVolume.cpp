@@ -1,4 +1,5 @@
 #include "BoundingVolume.h"
+#include <numbers>
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
 
@@ -23,56 +24,50 @@ void BoundingVolume::MakeCircleShape()
 {
 	m_shape = std::make_unique<sf::CircleShape>();
 	m_shape->setScale(GameConstants::Scale);
+	m_shape->setFillColor(sf::Color::Transparent);
+	m_shape->setOutlineColor(sf::Color::Red);
+	m_shape->setOutlineThickness(2);
 }
 
 void BoundingVolume::MakeRectangleShape()
 {
 	m_shape = std::make_unique<sf::RectangleShape>();
 	m_shape->setScale(GameConstants::Scale);
+	m_shape->setFillColor(sf::Color::Transparent);
+	m_shape->setOutlineColor(sf::Color::Red);
+	m_shape->setOutlineThickness(2);
 }
 
-int AABB::s_count = 0;
+int BoundingBox::s_count = 0;
 
-AABB::AABB()
-	: m_size(16,16)
+BoundingBox::BoundingBox()
+	: m_size(16, 16)
 {
 	m_boxNumber = s_count++;
 	MakeRectangleShape();
 	Reset(m_size);
-	Update(GetPosition());
-
-	SetFillColour(sf::Color::Transparent);
-	SetOutlineColour(sf::Color::Red);
-	SetOutlineThickness(2);
+	Update(Point(10, 10));
 }
 
-AABB::AABB(const sf::Vector2f& size)
+BoundingBox::BoundingBox(const sf::Vector2f& size)
 	: m_size(size)
 {
 	m_boxNumber = s_count++;
 	MakeRectangleShape();
 	Reset(m_size);
 	Update(GetPosition());
-
-	SetFillColour(sf::Color::Transparent);
-	SetOutlineColour(sf::Color::Red);
-	SetOutlineThickness(2);
 }
 
-AABB::AABB(const sf::Vector2f& size, const sf::Vector2f& pos)
+BoundingBox::BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos)
 	: m_size(size)
 {
 	m_boxNumber = s_count++;
 	MakeRectangleShape();
 	Reset(m_size);
 	Update(pos);
-
-	SetFillColour(sf::Color::Transparent);
-	SetOutlineColour(sf::Color::Red);
-	SetOutlineThickness(2);
 }
 
-void AABB::Reset(const Point& size)
+void BoundingBox::Reset(const Point& size)
 {
 	GetRect()->setSize(size);
 	m_extents[0] = (size.x * GameConstants::Scale.x) * 0.5f;
@@ -80,7 +75,7 @@ void AABB::Reset(const Point& size)
 	SetOrigin(size * 0.5f);
 }
 
-void AABB::Update(const Point& pos)
+void BoundingBox::Update(const Point& pos)
 {
 	SetPosition(pos);
 	SetCenter(GetPosition());
@@ -88,7 +83,7 @@ void AABB::Update(const Point& pos)
 	m_max = GetCenter() + m_extents;
 }
 
-float AABB::SqDistPoint(Point p)
+float BoundingBox::SqDistPoint(Point p)
 {
 	float sqDist = 0.0f;
 
@@ -102,7 +97,7 @@ float AABB::SqDistPoint(Point p)
 	return sqDist;
 }
 
-bool AABB::Intersects(const Point& pnt) const
+bool BoundingBox::Intersects(const Point& pnt) const
 {
 	if (pnt.x >= m_min.x &&
 		pnt.x <= m_max.x &&
@@ -113,7 +108,7 @@ bool AABB::Intersects(const Point& pnt) const
 	return false;
 }
 
-bool AABB::Intersects(AABB* box)
+bool BoundingBox::Intersects(BoundingBox* box)
 {
 	for (size_t i = 0; i < 2; i++)
 	{
@@ -131,7 +126,7 @@ bool AABB::Intersects(AABB* box)
 	return true;
 }
 
-bool AABB::Intersects(BC* circle)
+bool BoundingBox::Intersects(BoundingCircle* circle)
 {
 	// Compute squared distance between sphere center and AABB
 	float sqDist = SqDistPoint(circle->GetCenter());
@@ -142,7 +137,7 @@ bool AABB::Intersects(BC* circle)
 	return sqDist <= radius * radius;
 }
 
-bool AABB::IntersectsMoving(AABB* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
+bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	// Exit early if ‘a’ and ‘b’ initially overlapping
 	if (Intersects(box))
@@ -181,7 +176,7 @@ bool AABB::IntersectsMoving(AABB* box, const Point& va, const Point& vb, float& 
 	return true;
 }
 
-Line AABB::GetSide(Side side)
+Line BoundingBox::GetSide(Side side)
 {
 	switch (side)
 	{
@@ -198,7 +193,7 @@ Line AABB::GetSide(Side side)
 	}
 }
 
-Point AABB::GetPoint(Side side)
+Point BoundingBox::GetPoint(Side side)
 {
 	switch (side)
 	{
@@ -215,7 +210,7 @@ Point AABB::GetPoint(Side side)
 	}
 }
 
-BC CalculateMinimumBoundingCircle(AABB* box)
+BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
 {
 	// Get the min and max points of the AABB
 	Point minPoint = box->GetMin();
@@ -232,63 +227,51 @@ BC CalculateMinimumBoundingCircle(AABB* box)
 	float radius = std::sqrtf(dx * dx + dy * dy) / 2.0f;
 
 	// Return the bounding circle
-	return BC(radius, center);
+	return BoundingCircle(radius, center);
 }
 
-int BC::s_count = 0;
+int BoundingCircle::s_count = 0;
 
-BC::BC()
-	: m_radius(16)
+BoundingCircle::BoundingCircle()
+	: m_radius(8)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
 	Reset(m_radius);
-	Update(GetPosition());
-
-	SetFillColour(sf::Color::Transparent);
-	SetOutlineColour(sf::Color::Red);
-	SetOutlineThickness(2);
+	Update(Point(10, 10));
 }
 
-BC::BC(float radius)
+BoundingCircle::BoundingCircle(float radius)
 	: m_radius(radius)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
 	Reset(m_radius);
 	Update(GetPosition());
-
-	SetFillColour(sf::Color::Transparent);
-	SetOutlineColour(sf::Color::Red);
-	SetOutlineThickness(2);
 }
 
-BC::BC(float radius, const sf::Vector2f& pos)
+BoundingCircle::BoundingCircle(float radius, const sf::Vector2f& pos)
 	: m_radius(radius)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
 	Reset(m_radius);
 	Update(pos);
-
-	SetFillColour(sf::Color::Transparent);
-	SetOutlineColour(sf::Color::Red);
-	SetOutlineThickness(2);
 }
 
-void BC::Reset(float radius)
+void BoundingCircle::Reset(float radius)
 {
 	GetCircle()->setRadius(radius);
 	SetOrigin(Point(radius, radius));
 }
 
-void BC::Update(const Point& pos)
+void BoundingCircle::Update(const Point& pos)
 {
 	SetPosition(pos);
 	SetCenter(GetPosition());
 }
 
-bool BC::Intersects(const Point& pnt) const
+bool BoundingCircle::Intersects(const Point& pnt) const
 {
 	// get distance between the point and circle's center
 	// using the Pythagorean Theorem
@@ -301,7 +284,7 @@ bool BC::Intersects(const Point& pnt) const
 	return distance <= m_radius;
 }
 
-bool BC::Intersects(AABB* box)
+bool BoundingCircle::Intersects(BoundingBox* box)
 {
 	// Compute squared distance between sphere center and AABB
 	float sqDist = box->SqDistPoint(GetCenter());
@@ -311,7 +294,7 @@ bool BC::Intersects(AABB* box)
 	return sqDist <= m_radius * m_radius;
 }
 
-bool BC::Intersects(BC* circle)
+bool BoundingCircle::Intersects(BoundingCircle* circle)
 {
 	// Calculate squared distance between centers
 	Point d = GetCenter() - circle->GetCenter();
@@ -322,7 +305,7 @@ bool BC::Intersects(BC* circle)
 	return dist2 <= radiusSum * radiusSum;
 }
 
-bool BC::IntersectsMoving(BC* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
+bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	Point s = GetCenter() - circle->GetCenter(); // Vector between sphere centers
 	float r = circle->m_radius + m_radius; // Sum of sphere radii
@@ -352,4 +335,138 @@ bool BC::IntersectsMoving(BC* circle, const Point& va, const Point& vb, float& t
 	tfirst = (-b - std::sqrt(d)) / a;
 
 	return true;
+}
+
+int BoundingCapsule::s_count = 0;
+
+BoundingCapsule::BoundingCapsule()
+	: m_radius(8), m_angle(0)
+{
+	m_capsuleNumber = s_count++;
+	MakeCapsuleShape();
+	Reset(m_radius, m_angle);
+
+	auto thickness = GetRect()->getOutlineThickness();
+	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
+}
+
+BoundingCapsule::BoundingCapsule(float radius, float angle)
+	: m_radius(radius), m_angle(angle)
+{
+	m_capsuleNumber = s_count++;
+	MakeCapsuleShape();
+	Reset(m_radius, m_angle);
+
+	auto thickness = GetRect()->getOutlineThickness();
+	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
+}
+
+BoundingCapsule::BoundingCapsule(float radius, float angle, const sf::Vector2f& pos)
+	: m_radius(radius), m_angle(angle)
+{
+	m_capsuleNumber = s_count++;
+	MakeCapsuleShape();
+	Reset(m_radius, m_angle);
+
+	Update(pos);
+}
+
+void BoundingCapsule::Reset(float radius, float angle)
+{
+	auto rect = GetRect();
+	rect->setSize(Point(radius * 2.f, radius * 2.f));
+	rect->setOrigin(radius, radius);
+	rect->setRotation(angle);
+
+	m_circle1.setRadius(radius);
+	m_circle1.setOrigin(radius, radius);
+
+	m_circle2.setRadius(radius);
+	m_circle2.setOrigin(radius, radius);
+}
+
+void BoundingCapsule::Render(sf::RenderWindow& window)
+{
+	window.draw(m_circle1);
+	BoundingVolume::Render(window);
+	window.draw(m_circle2);
+}
+
+// Function to calculate the four corners of a rotated rectangle
+void CalculateRotatedRectangleCorners(Point corners[4], const Point& centre, const Point& size, float angle) {
+	// Convert the angle from degrees to radians
+	float radians = angle * std::numbers::pi_v<float> / 180.0f;
+
+	// Precompute sine and cosine of the angle
+	float cosTheta = cos(radians);
+	float sinTheta = sin(radians);
+
+	// Half dimensions
+	float halfWidth = size.x / 2.0f;
+	float halfHeight = size.y / 2.0f;
+
+	// Relative corners before rotation
+	Point relativeCorners[4] =
+	{
+		{ -halfWidth, -halfHeight }, // Bottom-left
+		{  halfWidth, -halfHeight }, // Bottom-right
+		{  halfWidth,  halfHeight }, // Top-right
+		{ -halfWidth,  halfHeight }  // Top-left
+	};
+
+	// Compute rotated corners
+	for (int i = 0; i < 4; ++i)
+	{
+		corners[i].x = centre.x + relativeCorners[i].x * cosTheta - relativeCorners[i].y * sinTheta;
+		corners[i].y = centre.y + relativeCorners[i].x * sinTheta + relativeCorners[i].y * cosTheta;
+	}
+}
+
+void BoundingCapsule::Update(const Point& pos)
+{
+	SetPosition(pos);
+
+	m_center = GetPosition();
+
+	Point corners[4];
+	auto size = GetRect()->getSize();
+	size.x *= GameConstants::Scale.x;
+	size.y *= GameConstants::Scale.y;
+
+	CalculateRotatedRectangleCorners(corners, GetCenter(), size, m_angle);
+
+	// Calculate the midpoint of the top side
+	m_circle1.setPosition(Line(corners[3], corners[2]).GetMidPoint());
+	// Calculate the midpoint of the top side
+	m_circle2.setPosition(Line(corners[1], corners[0]).GetMidPoint());
+}
+
+bool BoundingCapsule::Intersects(const Point& pnt) const
+{
+	return false;
+}
+
+bool BoundingCapsule::Intersects(BoundingBox* box)
+{
+	return false;
+}
+
+bool BoundingCapsule::Intersects(BoundingCircle* circle)
+{
+	return false;
+}
+
+void BoundingCapsule::MakeCapsuleShape()
+{
+	MakeRectangleShape();
+	m_circle1.setScale(GameConstants::Scale);
+
+	m_circle1.setFillColor(sf::Color::Transparent);
+	m_circle1.setOutlineColor(sf::Color::Red);
+	m_circle1.setOutlineThickness(2);
+
+	m_circle2.setScale(GameConstants::Scale);
+	m_circle2.setFillColor(sf::Color::Transparent);
+	m_circle2.setOutlineColor(sf::Color::Red);
+	m_circle2.setOutlineThickness(2);
 }

@@ -44,8 +44,8 @@ public:
 
 	AnimatedSprite* GetAnimSpr() { return static_cast<AnimatedSprite*>(GetSprite()); }
 	Sprite* GetSprite() { return m_sprite.get(); }
-	AABB* GetAABB() { return static_cast<AABB*>(m_colVolume.get()); }
-	BC* GetBC() { return static_cast<BC*>(m_colVolume.get()); }
+	BoundingBox* GetBoundingBox() { return static_cast<BoundingBox*>(m_colVolume.get()); }
+	BoundingCircle* GetBoundingCircle() { return static_cast<BoundingCircle*>(m_colVolume.get()); }
 	BoundingVolume* GetColVolume() { return m_colVolume.get(); }
 
 	const std::string& GetID() const { return m_texID; }

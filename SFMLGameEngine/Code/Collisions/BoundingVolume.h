@@ -2,16 +2,15 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "../Utilities/Point.h"
+#include "../Utilities/Utilities.h"
 
 enum Side
 {
 	Left, Right, Top, Bottom
 };
 
-struct Line;
-class AABB;
-class BC;
+class BoundingBox;
+class BoundingCircle;
 
 class BoundingVolume
 {
@@ -20,11 +19,11 @@ public:
 	~BoundingVolume() = default;
 
 	virtual void Update(const Point& pos) = 0;
-	void Render(sf::RenderWindow& window);
+	virtual void Render(sf::RenderWindow& window);
 
 	virtual bool Intersects(const Point& pnt) const = 0;
-	virtual bool Intersects(AABB* box) = 0;
-	virtual bool Intersects(BC* circle) = 0;
+	virtual bool Intersects(BoundingBox* box) = 0;
+	virtual bool Intersects(BoundingCircle* circle) = 0;
 
 	virtual void SetPosition(const Point& pos) { m_shape->setPosition(pos); }
 	virtual Point GetPosition() { return m_shape->getPosition(); }
@@ -57,27 +56,24 @@ private:
 	std::unique_ptr<sf::Shape> m_shape;
 };
 
-class AABB : public BoundingVolume
+class BoundingBox : public BoundingVolume
 {
 public:
-	AABB();
-	AABB(const sf::Vector2f& size);
-	AABB(const sf::Vector2f& size, const sf::Vector2f& pos);
-	~AABB() = default;
+	BoundingBox();
+	BoundingBox(const sf::Vector2f& size);
+	BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos);
+	~BoundingBox() = default;
 
 	void Reset(const Point& size);
-
 	void Update(const Point& pos);
 
 	float SqDistPoint(Point p);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(AABB* box)  override;
-	bool Intersects(BC* circle)  override;
+	bool Intersects(BoundingBox* box)  override;
+	bool Intersects(BoundingCircle* circle)  override;
 
-	bool IntersectsMoving(AABB* box, const Point& va, const Point& vb, float& tfirst, float& tlast);
-
-	AABB* Get() { return this; }
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast);
 
 	const Point& GetMin() const { return m_min; }
 	const Point& GetMax() const { return m_max; }
@@ -85,14 +81,15 @@ public:
 	const Point& GetOverlap() const { return m_overlap; }
 
 	Line GetSide(Side side);
-
 	Point GetPoint(Side side);
 
+	BoundingBox* Get() { return this; }
 	sf::CircleShape* GetCircle() = delete;
 
 protected:
 
 	void MakeCircleShape() = delete;
+	void MakeCapsuleShape() = delete;
 
 private:
 
@@ -105,33 +102,32 @@ private:
 	Point m_overlap;
 };
 
-BC CalculateMinimumBoundingCircle(AABB* box);
+BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box);
 
-class BC : public BoundingVolume
+class BoundingCircle : public BoundingVolume
 {
 public:
-	BC();
-	BC(float radius);
-	BC(float radius, const sf::Vector2f& pos);
-	~BC() = default;
+	BoundingCircle();
+	BoundingCircle(float radius);
+	BoundingCircle(float radius, const sf::Vector2f& pos);
+	~BoundingCircle() = default;
 
 	void Reset(float radius);
-
 	void Update(const Point& pos);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(AABB* box)  override;
-	bool Intersects(BC* circle)  override;
+	bool Intersects(BoundingBox* box)  override;
+	bool Intersects(BoundingCircle* circle)  override;
 
-	bool IntersectsMoving(BC* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
-
-	BC* Get() { return this; }
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
 
 	float GetRadius() const { return m_radius; }
 
+	BoundingCircle* Get() { return this; }
 	sf::RectangleShape* GetRect() = delete;
 
 protected:
+
 	void MakeRectangleShape() = delete;
 
 private:
@@ -139,4 +135,40 @@ private:
 	int m_circleNumber;
 	static int s_count;
 	float m_radius;
+};
+
+class BoundingCapsule : public BoundingVolume
+{
+public:
+	BoundingCapsule();
+	BoundingCapsule(float radius, float angle);
+	BoundingCapsule(float radius, float angle, const sf::Vector2f& pos);
+	~BoundingCapsule() = default;
+
+	void Reset(float radius, float angle);
+	void Render(sf::RenderWindow& window) override;
+
+	void Update(const Point& pos);
+
+	bool Intersects(const Point& pnt) const override;
+	bool Intersects(BoundingBox* box)  override;
+	bool Intersects(BoundingCircle* circle)  override;
+
+	BoundingCapsule* Get() { return this; }
+	sf::CircleShape* GetCircle() = delete;
+
+protected:
+
+	void MakeCircleShape() = delete;
+	void MakeCapsuleShape();
+
+private:
+
+	int m_capsuleNumber;
+	static int s_count;
+	float m_radius;
+	float m_angle;
+	Line m_segment;
+	sf::CircleShape m_circle1;
+	sf::CircleShape m_circle2;
 };

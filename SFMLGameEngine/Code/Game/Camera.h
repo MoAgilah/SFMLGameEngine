@@ -13,13 +13,13 @@ public:
 
 	sf::View GetView() const { return m_camera; }
 
-	bool IsInView(AABB* box);
-	bool CheckVerticalBounds(AABB* box);
+	bool IsInView(BoundingBox* box);
+	bool CheckVerticalBounds(BoundingBox* box);
 	void Reset(sf::RenderWindow& window);
 	void RenderViewBox(sf::RenderWindow& window);
 
 private:
 
-	AABB m_viewBox;
+	BoundingBox m_viewBox;
 	sf::View m_camera;
 };

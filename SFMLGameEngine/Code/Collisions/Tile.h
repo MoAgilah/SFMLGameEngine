@@ -33,7 +33,7 @@ public:
 	Point GetPosition() { return m_aabb.GetPosition(); }
 	Point GetOrigin() { return m_aabb.GetOrigin(); }
 
-	AABB* GetAABB() { return &m_aabb; }
+	BoundingBox* GetBoundingBox() { return &m_aabb; }
 	sf::RectangleShape* GetRect() { return m_aabb.GetRect(); }
 	Line GetSlope(int bgn, int end) { return Line(m_slope, bgn, end); }
 	Line GetEdge() const { return m_edge; }
@@ -53,7 +53,7 @@ private:
 	int m_rowNum = -1;
 	int m_type = EMPTY;
 
-	AABB m_aabb;
+	BoundingBox m_aabb;
 	sf::Text m_text;
 	std::string m_id;
 	Line m_edge;
