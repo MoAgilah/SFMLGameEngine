@@ -29,6 +29,8 @@ public:
 
 	operator sf::Vector2f() const;
 
+	Point Clamp(const Point& p1, const Point& p2) const;
+
 	float x;
 	float y;
 };

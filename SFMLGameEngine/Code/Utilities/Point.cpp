@@ -122,6 +122,11 @@ Point::operator sf::Vector2f() const
 	return sf::Vector2f(x, y);
 }
 
+Point Point::Clamp(const Point& p1, const Point& p2) const
+{
+	return { std::max(p1.x, std::min(p2.x, x)), std::max(p1.y, std::min(p2.y, y)) };
+}
+
 float pnt::lengthSquared(const Point& p)
 {
 	return p.x * p.x + p.y * p.y;

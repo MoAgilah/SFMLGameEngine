@@ -67,6 +67,22 @@ BoundingBox::BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos)
 	Update(pos);
 }
 
+BoundingBox::BoundingBox(BoundingCapsule* capsule)
+{
+	float radius = capsule->GetRadius();
+	Line s = capsule->GetSegment();
+
+	// Calculate min and max extents of the bounding box
+	float min_x = std::min(s.start.x, s.end.x) - radius;
+	float max_x = std::max(s.start.x, s.end.x) + radius;
+	float min_y = std::min(s.start.y, s.end.y) - radius;
+	float max_y = std::max(s.start.y, s.end.y) + radius;
+
+	// Calculate size (width, height)
+	Reset({ max_x - min_x, max_y - min_y });
+	Update(s.GetMidPoint());
+}
+
 void BoundingBox::Reset(const Point& size)
 {
 	GetRect()->setSize(size);
@@ -137,6 +153,33 @@ bool BoundingBox::Intersects(BoundingCircle* circle)
 	return sqDist <= radius * radius;
 }
 
+bool BoundingBox::Intersects(BoundingCapsule* capsule)
+{
+	// Compute the box's min and max corners
+	Point boxMin = m_min;
+	Point boxMax = m_max;
+
+	auto line = capsule->GetSegment();
+
+	// Check the line segment (capsule core) against the box
+	Point closestToStart = line.start.Clamp(boxMin, boxMax);
+	Point closestToEnd = line.end.Clamp(boxMin, boxMax);
+
+	float distStart = line.SqDistPointSegment(closestToStart);
+	float distEnd = line.SqDistPointSegment(closestToEnd);
+
+	float radSq = capsule->GetRadius() * capsule->GetRadius();
+
+	// Check if the distances are less than or equal to the capsule's radius squared
+	if (distStart <= radSq || distEnd <= radSq)
+		return true;
+
+	float closestPointStartDistSq = pnt::lengthSquared((closestToStart - line.start));
+	float closestPointEndDistSq = pnt::lengthSquared((closestToEnd - line.end));
+
+	return closestPointStartDistSq <= radSq || closestPointEndDistSq <= radSq;
+}
+
 bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	// Exit early if ‘a’ and ‘b’ initially overlapping
@@ -178,6 +221,43 @@ bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Poin
 
 bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
+	// Relative velocity (treat box as stationary)
+	Point v = vb - va;
+
+	BoundingBox expandedBox = { GetPosition() - Point(circle->GetRadius(), circle->GetRadius()),
+								(m_extents * 2) + Point(circle->GetRadius() * 2, circle->GetRadius() * 2) };
+
+	// Compute the time of collision using swept AABB test
+	Point invVelocity = {
+		(v.x != 0) ? 1.0f / v.x : 0.0f,
+		(v.y != 0) ? 1.0f / v.y : 0.0f
+	};
+
+	Point boxMin = expandedBox.GetMin();
+	Point boxMax = expandedBox.GetMax();
+
+	Point tEnter = (boxMin - circle->GetPosition()) * invVelocity.x;
+	Point tExit = (boxMax - circle->GetPosition()) * invVelocity.y;
+
+	if (invVelocity.x < 0) std::swap(tEnter.x, tExit.x);
+	if (invVelocity.y < 0) std::swap(tEnter.y, tExit.y);
+
+	// Find the latest entry time and the earliest exit time
+	float entryTime = std::max(tEnter.x, tEnter.y);
+	float exitTime = std::min(tExit.x, tExit.y);
+
+	// If the entry time is greater than the exit time, or the exit time is less than zero, no collision
+	if (entryTime > exitTime || exitTime < 0)
+		return false;
+
+	// If entry time is between 0 and 1, there's a collision
+	if (entryTime >= 0 && entryTime <= 1)
+	{
+		tfirst = entryTime;
+		tlast = exitTime;
+		return true;
+	}
+
 	return false;
 }
 
@@ -291,12 +371,7 @@ bool BoundingCircle::Intersects(const Point& pnt) const
 
 bool BoundingCircle::Intersects(BoundingBox* box)
 {
-	// Compute squared distance between sphere center and AABB
-	float sqDist = box->SqDistPoint(GetCenter());
-
-	// Sphere and AABB intersect if the (squared) distance
-	// between them is less than the (squared) sphere radius
-	return sqDist <= m_radius * m_radius;
+	return box->Intersects(this);
 }
 
 bool BoundingCircle::Intersects(BoundingCircle* circle)
@@ -310,9 +385,18 @@ bool BoundingCircle::Intersects(BoundingCircle* circle)
 	return dist2 <= radiusSum * radiusSum;
 }
 
+bool BoundingCircle::Intersects(BoundingCapsule* capsule)
+{
+	float r = m_radius + capsule->GetRadius();
+
+	float distSq = capsule->GetSegment().SqDistPointSegment(m_center);
+
+	return distSq <= r * r;
+}
+
 bool BoundingCircle::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	return false;
+	return box->IntersectsMoving(this, va, vb, tfirst, tlast);
 }
 
 bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -325,6 +409,7 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 	{
 		// Spheres initially overlapping so exit directly
 		tfirst = 0.0f;
+		tlast = 0.0f;
 		return true;
 	}
 
@@ -342,7 +427,14 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 	if (d < 0.0f)
 		return false; // No real-valued root, spheres do not intersect
 
-	tfirst = (-b - std::sqrt(d)) / a;
+	// Calculate the times of entry and exit
+	float sqrtD = std::sqrt(d);
+	tfirst = (-b - sqrtD) / a; // Time of entry
+	tlast = (-b + sqrtD) / a;  // Time of exit
+
+	// Ensure the times are within valid bounds (0 to 1 for a single frame)
+	if (tfirst < 0.0f || tfirst > 1.0f)
+		return false; // No intersection in the given time interval
 
 	return true;
 }
@@ -403,7 +495,8 @@ void BoundingCapsule::Render(sf::RenderWindow& window)
 }
 
 // Function to calculate the four corners of a rotated rectangle
-void CalculateRotatedRectangleCorners(Point corners[4], const Point& centre, const Point& size, float angle) {
+void CalculateRotatedRectangleCorners(Point corners[4], const Point& centre, const Point& size, float angle)
+{
 	// Convert the angle from degrees to radians
 	float radians = angle * std::numbers::pi_v<float> / 180.0f;
 
@@ -462,11 +555,27 @@ bool BoundingCapsule::Intersects(const Point& pnt) const
 
 bool BoundingCapsule::Intersects(BoundingBox* box)
 {
-	auto clsPnt = m_segment.ClosestPointOnLineSegment(box->GetCenter());
+	// Compute the box's min and max corners
+	Point boxMin = box->GetMin();
+	Point boxMax = box->GetMax();
 
-	BoundingCircle circle(m_radius, clsPnt);
+	// Check the line segment (capsule core) against the box
+	Point closestToStart = m_segment.start.Clamp(boxMin, boxMax);
+	Point closestToEnd = m_segment.end.Clamp(boxMin, boxMax);
 
-	return circle.Intersects(box);
+	float distStart = m_segment.SqDistPointSegment(closestToStart);
+	float distEnd = m_segment.SqDistPointSegment(closestToEnd);
+
+	float radSq = m_radius * m_radius;
+
+	// Check if the distances are less than or equal to the capsule's radius squared
+	if (distStart <= radSq || distEnd <= radSq)
+		return true;
+
+	float closestPointStartDistSq = pnt::lengthSquared((closestToStart - m_segment.start));
+	float closestPointEndDistSq = pnt::lengthSquared((closestToEnd - m_segment.end));
+
+	return closestPointStartDistSq <= radSq || closestPointEndDistSq <= radSq;
 }
 
 bool BoundingCapsule::Intersects(BoundingCircle* circle)
@@ -478,9 +587,34 @@ bool BoundingCapsule::Intersects(BoundingCircle* circle)
 	return dist2 <= r * r;
 }
 
+bool BoundingCapsule::Intersects(BoundingCapsule* capsule)
+{
+	float combinedRadiusSquared = (m_radius + capsule->m_radius) * (m_radius + capsule->m_radius);
+
+	// Compute the shortest distance squared between the two line segments
+	float distanceSquared = std::min({
+		capsule->m_segment.SqDistPointSegment(m_segment.start),
+		capsule->m_segment.SqDistPointSegment(m_segment.end),
+		m_segment.SqDistPointSegment(capsule->m_segment.start),
+		m_segment.SqDistPointSegment(capsule->m_segment.end)
+	});
+
+	// Check if the distance is within the combined radii
+	return distanceSquared <= combinedRadiusSquared;
+}
+
 bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	return false;
+	BoundingCircle circle(m_radius, m_segment.start);
+	if (circle.IntersectsMoving(box, va, vb, tfirst, tlast))
+		return true;
+
+	circle.Update(m_segment.end);
+	if (circle.IntersectsMoving(box, va, vb, tfirst, tlast))
+		return true;
+
+	BoundingBox capBox(this);
+	return capBox.IntersectsMoving(box, va, vb, tfirst, tlast);
 }
 
 bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va, const Point& vb, float& tfirst, float& tlast)

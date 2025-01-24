@@ -11,6 +11,7 @@ enum Side
 
 class BoundingBox;
 class BoundingCircle;
+class BoundingCapsule;
 
 class BoundingVolume
 {
@@ -24,6 +25,7 @@ public:
 	virtual bool Intersects(const Point& pnt) const = 0;
 	virtual bool Intersects(BoundingBox* box) = 0;
 	virtual bool Intersects(BoundingCircle* circle) = 0;
+	virtual bool Intersects(BoundingCapsule* capsule) = 0;
 
 	virtual bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 	virtual bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
@@ -65,6 +67,7 @@ public:
 	BoundingBox();
 	BoundingBox(const sf::Vector2f& size);
 	BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos);
+	BoundingBox(BoundingCapsule* capsule);
 	~BoundingBox() = default;
 
 	void Reset(const Point& size);
@@ -73,8 +76,9 @@ public:
 	float SqDistPoint(Point p);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(BoundingBox* box)  override;
-	bool Intersects(BoundingCircle* circle)  override;
+	bool Intersects(BoundingBox* box) override;
+	bool Intersects(BoundingCircle* circle) override;
+	bool Intersects(BoundingCapsule* capsule) override;
 
 	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
@@ -120,8 +124,9 @@ public:
 	void Update(const Point& pos);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(BoundingBox* box)  override;
-	bool Intersects(BoundingCircle* circle)  override;
+	bool Intersects(BoundingBox* box) override;
+	bool Intersects(BoundingCircle* circle) override;
+	bool Intersects(BoundingCapsule* capsule) override;
 
 	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
@@ -156,11 +161,15 @@ public:
 	void Update(const Point& pos);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(BoundingBox* box)  override;
-	bool Intersects(BoundingCircle* circle)  override;
+	bool Intersects(BoundingBox* box) override;
+	bool Intersects(BoundingCircle* circle) override;
+	bool Intersects(BoundingCapsule* capsule) override;
 
 	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
+
+	float GetRadius() const { return m_radius; }
+	Line& GetSegment() { return m_segment; }
 
 	BoundingCapsule* Get() { return this; }
 	sf::CircleShape* GetCircle() = delete;

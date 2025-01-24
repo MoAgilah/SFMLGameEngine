@@ -107,7 +107,7 @@ Point Line::ClosestPointOnLineSegment(const Point& pnt) const
 	Point AB = end - start;
 	Point AP = pnt - start;
 
-	double abLengthSquared = pnt::lengthSquared(AB);
+	float abLengthSquared = pnt::lengthSquared(AB);
 	if (abLengthSquared == 0.0)
 	{
 		// A and B are the same point
@@ -115,10 +115,10 @@ Point Line::ClosestPointOnLineSegment(const Point& pnt) const
 	}
 
 	// Projection factor (t)
-	double t = pnt::dot(AP, AB) / abLengthSquared;
+	float t = pnt::dot(AP, AB) / abLengthSquared;
 
 	// Clamp t to [0, 1] to stay within the segment
-	t = std::max(0.0, std::min(1.0, t));
+	t = std::max(0.0f, std::min(1.0f, t));
 
 	// Compute the closest point
 	return { start.x + t * AB.x, start.y + t * AB.y };
