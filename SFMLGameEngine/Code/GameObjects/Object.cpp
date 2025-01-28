@@ -22,6 +22,14 @@ Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
+Object::Object(const std::string& texID, float circleRadius, float angle)
+{
+	m_sprite = std::make_unique<Sprite>(texID);
+	m_colVolume = std::make_unique<BoundingCapsule>(circleRadius, angle);
+	m_objectID = s_objectNum++;
+	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
+}
+
 Object::Object(const std::string& texID, const AnimationData& animData, float circleRadius)
 {
 	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
@@ -35,6 +43,14 @@ Object::Object(const std::string& texID, const AnimationData& animData, const sf
 {
 	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingBox>(boxSize);
+	m_objectID = s_objectNum++;
+	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
+}
+
+Object::Object(const std::string& texID, const AnimationData& animData, float circleRadius, float angle)
+{
+	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
+	m_colVolume = std::make_unique<BoundingCapsule>(circleRadius, angle);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -87,6 +103,12 @@ DynamicObject::DynamicObject(const std::string& texID, const sf::Vector2f& boxSi
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
 
+DynamicObject::DynamicObject(const std::string& texID, float circleRadius, float angle)
+	: Object(texID, circleRadius, angle)
+{
+	m_physicsCtrl = std::make_unique<PhysicsController>();
+}
+
 DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius)
 	: Object(texID, animData, circleRadius)
 {
@@ -95,6 +117,12 @@ DynamicObject::DynamicObject(const std::string& texID, const AnimationData& anim
 
 DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize)
 	: Object(texID, animData, boxSize)
+{
+	m_physicsCtrl = std::make_unique<PhysicsController>();
+}
+
+DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius, float angle)
+	: Object(texID, animData, circleRadius, angle)
 {
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }

@@ -9,7 +9,7 @@ Camera::Camera()
 	m_camera.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 	m_camera.setCenter(GameConstants::ScreenDim * 0.5f);
 
-	m_viewBox.Reset(sf::Vector2f(253,237));
+	m_viewBox.Reset(GameConstants::ScreenDim);
 	m_viewBox.Update(m_camera.getCenter());
 	m_viewBox.SetFillColour(sf::Color(255, 0, 0, 128));
 }

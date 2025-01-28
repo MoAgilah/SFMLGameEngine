@@ -29,8 +29,10 @@ class Object
 public:
 	Object(const std::string& texID, float circleRadius);
 	Object(const std::string& texID, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, float circleRadius, float angle);
 	Object(const std::string& texID, const AnimationData& animData, float circleRadius);
 	Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, const AnimationData& animData, float circleRadius, float angle);
 	virtual ~Object() = default;
 
 	virtual void Update(float deltaTime) = 0;
@@ -46,6 +48,7 @@ public:
 	Sprite* GetSprite() { return m_sprite.get(); }
 	BoundingBox* GetBoundingBox() { return static_cast<BoundingBox*>(m_colVolume.get()); }
 	BoundingCircle* GetBoundingCircle() { return static_cast<BoundingCircle*>(m_colVolume.get()); }
+	BoundingCapsule* GetBoundingCapsule() { return static_cast<BoundingCapsule*>(m_colVolume.get()); }
 	BoundingVolume* GetColVolume() { return m_colVolume.get(); }
 
 	const std::string& GetID() const { return m_texID; }
@@ -86,8 +89,10 @@ class DynamicObject : public Object
 public:
 	DynamicObject(const std::string& texID, float circleRadius);
 	DynamicObject(const std::string& texID, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, float circleRadius, float angle);
 	DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius);
 	DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius, float angle);
 	~DynamicObject() override = default;
 
 	void Reset() override;
