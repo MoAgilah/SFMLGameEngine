@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include "../Utilities/Utilities.h"
 
-enum Side
+enum VolumeType
 {
-	Left, Right, Top, Bottom
+	None, Box, Circle, Capsule
 };
 
 class BoundingBox;
@@ -16,7 +16,7 @@ class BoundingCapsule;
 class BoundingVolume
 {
 public:
-	BoundingVolume() = default;
+	BoundingVolume(VolumeType type);
 	~BoundingVolume() = default;
 
 	virtual void Update(const Point& pos) = 0;
@@ -29,6 +29,8 @@ public:
 
 	virtual bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 	virtual bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
+
+	VolumeType GetType() { return m_type; }
 
 	virtual void SetPosition(const Point& pos) { m_shape->setPosition(pos); }
 	virtual Point GetPosition() { return m_shape->getPosition(); }
@@ -58,7 +60,13 @@ protected:
 
 private:
 
+	VolumeType m_type = VolumeType::None;
 	std::unique_ptr<sf::Shape> m_shape;
+};
+
+enum Side
+{
+	Left, Right, Top, Bottom
 };
 
 class BoundingBox : public BoundingVolume

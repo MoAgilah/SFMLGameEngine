@@ -3,6 +3,11 @@
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
 
+BoundingVolume::BoundingVolume(VolumeType type)
+	: m_type(type)
+{
+}
+
 void BoundingVolume::Render(sf::RenderWindow& window)
 {
 	window.draw(*m_shape);
@@ -41,7 +46,7 @@ void BoundingVolume::MakeRectangleShape()
 int BoundingBox::s_count = 0;
 
 BoundingBox::BoundingBox()
-	: m_size(16, 16)
+	: BoundingVolume(VolumeType::Box), m_size(16, 16)
 {
 	m_boxNumber = s_count++;
 	MakeRectangleShape();
@@ -50,7 +55,7 @@ BoundingBox::BoundingBox()
 }
 
 BoundingBox::BoundingBox(const sf::Vector2f& size)
-	: m_size(size)
+	: BoundingVolume(VolumeType::Box), m_size(size)
 {
 	m_boxNumber = s_count++;
 	MakeRectangleShape();
@@ -59,7 +64,7 @@ BoundingBox::BoundingBox(const sf::Vector2f& size)
 }
 
 BoundingBox::BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos)
-	: m_size(size)
+	: BoundingVolume(VolumeType::Box), m_size(size)
 {
 	m_boxNumber = s_count++;
 	MakeRectangleShape();
@@ -68,6 +73,7 @@ BoundingBox::BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos)
 }
 
 BoundingBox::BoundingBox(BoundingCapsule* capsule)
+	: BoundingVolume(VolumeType::Box)
 {
 	float radius = capsule->GetRadius();
 	Line s = capsule->GetSegment();
@@ -318,7 +324,7 @@ BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
 int BoundingCircle::s_count = 0;
 
 BoundingCircle::BoundingCircle()
-	: m_radius(8)
+	: BoundingVolume(VolumeType::Circle), m_radius(8)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
@@ -327,7 +333,7 @@ BoundingCircle::BoundingCircle()
 }
 
 BoundingCircle::BoundingCircle(float radius)
-	: m_radius(radius)
+	: BoundingVolume(VolumeType::Circle), m_radius(radius)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
@@ -336,7 +342,7 @@ BoundingCircle::BoundingCircle(float radius)
 }
 
 BoundingCircle::BoundingCircle(float radius, const sf::Vector2f& pos)
-	: m_radius(radius)
+	: BoundingVolume(VolumeType::Circle), m_radius(radius)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
@@ -442,7 +448,7 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 int BoundingCapsule::s_count = 0;
 
 BoundingCapsule::BoundingCapsule()
-	: m_radius(8), m_angle(0)
+	: BoundingVolume(VolumeType::Capsule), m_radius(8), m_angle(0)
 {
 	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
@@ -453,7 +459,7 @@ BoundingCapsule::BoundingCapsule()
 }
 
 BoundingCapsule::BoundingCapsule(float radius, float length, float angle)
-	: m_radius(radius), m_angle(angle)
+	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(angle)
 {
 	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
@@ -464,7 +470,7 @@ BoundingCapsule::BoundingCapsule(float radius, float length, float angle)
 }
 
 BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const sf::Vector2f& pos)
-	: m_radius(radius), m_angle(angle)
+	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(angle)
 {
 	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
