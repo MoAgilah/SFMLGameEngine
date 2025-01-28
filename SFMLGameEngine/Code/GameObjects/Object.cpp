@@ -65,7 +65,12 @@ void Object::Render(sf::RenderWindow& window)
 
 bool Object::Intersects(Object* obj)
 {
-	return false;
+	return m_colVolume->Intersects(obj->GetColVolume());
+}
+
+bool Object::Intersects(DynamicObject* obj)
+{
+	return m_colVolume->Intersects(obj->GetColVolume());
 }
 
 void Object::Reset()
@@ -125,6 +130,12 @@ DynamicObject::DynamicObject(const std::string& texID, const AnimationData& anim
 	: Object(texID, animData, radius, length, angle)
 {
 	m_physicsCtrl = std::make_unique<PhysicsController>();
+}
+
+bool DynamicObject::Intersects(DynamicObject* obj)
+{
+	float tFirst, tLast = 0;
+	return GetColVolume()->IntersectsMoving(obj->GetColVolume(), GetVelocity(), obj->GetVelocity(), tFirst, tLast);
 }
 
 void DynamicObject::Reset()

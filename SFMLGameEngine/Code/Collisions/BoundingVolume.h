@@ -23,12 +23,8 @@ public:
 	virtual void Render(sf::RenderWindow& window);
 
 	virtual bool Intersects(const Point& pnt) const = 0;
-	virtual bool Intersects(BoundingBox* box) = 0;
-	virtual bool Intersects(BoundingCircle* circle) = 0;
-	virtual bool Intersects(BoundingCapsule* capsule) = 0;
-
-	virtual bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
-	virtual bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
+	virtual bool Intersects(BoundingVolume* volume) = 0;
+	virtual bool IntersectsMoving(BoundingVolume* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 
 	VolumeType GetType() { return m_type; }
 
@@ -59,6 +55,13 @@ protected:
 	Point m_center;
 
 private:
+	virtual bool Intersects(BoundingBox* box) = 0;
+	virtual bool Intersects(BoundingCircle* circle) = 0;
+	virtual bool Intersects(BoundingCapsule* capsule) = 0;
+
+	virtual bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
+	virtual bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
+	virtual bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 
 	VolumeType m_type = VolumeType::None;
 	std::unique_ptr<sf::Shape> m_shape;
@@ -84,12 +87,8 @@ public:
 	float SqDistPoint(Point p);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(BoundingBox* box) override;
-	bool Intersects(BoundingCircle* circle) override;
-	bool Intersects(BoundingCapsule* capsule) override;
-
-	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
-	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool Intersects(BoundingVolume* volume) override;
+	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	const Point& GetMin() const { return m_min; }
 	const Point& GetMax() const { return m_max; }
@@ -108,6 +107,13 @@ protected:
 	void MakeCapsuleShape() = delete;
 
 private:
+	bool Intersects(BoundingBox* box) override;
+	bool Intersects(BoundingCircle* circle) override;
+	bool Intersects(BoundingCapsule* capsule) override;
+
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	int m_boxNumber;
 	static int s_count;
@@ -132,12 +138,8 @@ public:
 	void Update(const Point& pos);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(BoundingBox* box) override;
-	bool Intersects(BoundingCircle* circle) override;
-	bool Intersects(BoundingCapsule* capsule) override;
-
-	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
-	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool Intersects(BoundingVolume* volume);
+	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	float GetRadius() const { return m_radius; }
 
@@ -149,6 +151,13 @@ protected:
 	void MakeRectangleShape() = delete;
 
 private:
+	bool Intersects(BoundingBox* box) override;
+	bool Intersects(BoundingCircle* circle) override;
+	bool Intersects(BoundingCapsule* capsule) override;
+
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	int m_circleNumber;
 	static int s_count;
@@ -170,12 +179,9 @@ public:
 	void Update(const Point& pos);
 
 	bool Intersects(const Point& pnt) const override;
-	bool Intersects(BoundingBox* box) override;
-	bool Intersects(BoundingCircle* circle) override;
-	bool Intersects(BoundingCapsule* capsule) override;
+	bool Intersects(BoundingVolume* volume);
+	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
-	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
-	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
 
 	float GetRadius() const { return m_radius; }
 	Line& GetSegment() { return m_segment; }
@@ -189,6 +195,13 @@ protected:
 	void MakeCapsuleShape();
 
 private:
+	bool Intersects(BoundingBox* box) override;
+	bool Intersects(BoundingCircle* circle) override;
+	bool Intersects(BoundingCapsule* capsule) override;
+
+	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
 	int m_capsuleNumber;
 	static int s_count;

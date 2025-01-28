@@ -23,6 +23,8 @@ struct AnimationData
 	float animationSpeed;
 };
 
+class DynamicObject;
+
 class Tile;
 class Object
 {
@@ -39,6 +41,7 @@ public:
 	virtual void Render(sf::RenderWindow& window);
 
 	virtual bool Intersects(Object* obj);
+	virtual bool Intersects(DynamicObject* obj);
 
 	virtual void Reset();
 
@@ -94,6 +97,8 @@ public:
 	DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
 	DynamicObject(const std::string& texID, const AnimationData& animData, float radius, float length, float angle);
 	~DynamicObject() override = default;
+
+	bool Intersects(DynamicObject* obj) override;
 
 	void Reset() override;
 

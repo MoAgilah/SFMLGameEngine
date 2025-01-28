@@ -130,13 +130,77 @@ bool BoundingBox::Intersects(const Point& pnt) const
 	return false;
 }
 
+bool BoundingBox::Intersects(BoundingVolume* volume)
+{
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return Intersects((BoundingBox*)volume);
+	case VolumeType::Circle:
+		return Intersects((BoundingCircle*)volume);
+	case VolumeType::Capsule:
+		return Intersects((BoundingCapsule*)volume);
+	}
+
+	return false;
+}
+
+bool BoundingBox::IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return IntersectsMoving((BoundingBox*)volume, va, vb, tfirst, tlast);
+	case VolumeType::Circle:
+		return IntersectsMoving((BoundingCircle*)volume, va, vb, tfirst, tlast);
+	case VolumeType::Capsule:
+		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
+	}
+
+	return false;
+}
+
+Line BoundingBox::GetSide(Side side)
+{
+	switch (side)
+	{
+	case Left:
+		return Line(m_min, Point(m_min.x, m_max.y));
+	case Right:
+		return Line(Point(m_max.x, m_min.y), m_max);
+	case Top:
+		return Line(m_min, Point(m_max.x, m_min.y));
+	case Bottom:
+		return Line(Point(m_min.x, m_max.y), m_max);
+	default:
+		throw std::out_of_range("Side enum value doesn't exist");
+	}
+}
+
+Point BoundingBox::GetPoint(Side side)
+{
+	switch (side)
+	{
+	case Left:
+		return m_center - Point(m_extents.x, 0);
+	case Right:
+		return m_center + Point(m_extents.x, 0);
+	case Top:
+		return m_center - Point(0, m_extents.y);
+	case Bottom:
+		return m_center + Point(0, m_extents.y);
+	default:
+		throw std::out_of_range("Side enum value doesn't exist");
+	}
+}
+
 bool BoundingBox::Intersects(BoundingBox* box)
 {
 	for (size_t i = 0; i < 2; i++)
 	{
 		if (std::abs(m_center[i] - box->m_center[i])
-			> m_extents[i] + box->m_extents[i])
-				return false;
+	> m_extents[i] + box->m_extents[i])
+			return false;
 	}
 
 	// calculate the overlap
@@ -267,38 +331,9 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 	return false;
 }
 
-Line BoundingBox::GetSide(Side side)
+bool BoundingBox::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	switch (side)
-	{
-	case Left:
-		return Line(m_min, Point(m_min.x, m_max.y));
-	case Right:
-		return Line(Point(m_max.x, m_min.y), m_max);
-	case Top:
-		return Line(m_min, Point(m_max.x, m_min.y));
-	case Bottom:
-		return Line(Point(m_min.x, m_max.y), m_max);
-	default:
-		throw std::out_of_range("Side enum value doesn't exist");
-	}
-}
-
-Point BoundingBox::GetPoint(Side side)
-{
-	switch (side)
-	{
-	case Left:
-		return m_center - Point(m_extents.x, 0);
-	case Right:
-		return m_center + Point(m_extents.x, 0);
-	case Top:
-		return m_center - Point(0, m_extents.y);
-	case Bottom:
-		return m_center + Point(0, m_extents.y);
-	default:
-		throw std::out_of_range("Side enum value doesn't exist");
-	}
+	return capsule->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
 }
 
 BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
@@ -375,9 +410,39 @@ bool BoundingCircle::Intersects(const Point& pnt) const
 	return distance <= m_radius;
 }
 
+bool BoundingCircle::Intersects(BoundingVolume* volume)
+{
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return Intersects((BoundingBox*)volume);
+	case VolumeType::Circle:
+		return Intersects((BoundingCircle*)volume);
+	case VolumeType::Capsule:
+		return Intersects((BoundingCapsule*)volume);
+	}
+
+	return false;
+}
+
+bool BoundingCircle::IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return IntersectsMoving((BoundingBox*)volume, va, vb, tfirst, tlast);
+	case VolumeType::Circle:
+		return IntersectsMoving((BoundingCircle*)volume, va, vb, tfirst, tlast);
+	case VolumeType::Capsule:
+		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
+	}
+
+	return false;
+}
+
 bool BoundingCircle::Intersects(BoundingBox* box)
 {
-	return box->Intersects(this);
+	return box->Intersects((BoundingVolume*)this);
 }
 
 bool BoundingCircle::Intersects(BoundingCircle* circle)
@@ -402,7 +467,7 @@ bool BoundingCircle::Intersects(BoundingCapsule* capsule)
 
 bool BoundingCircle::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	return box->IntersectsMoving(this, va, vb, tfirst, tlast);
+	return box->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
 }
 
 bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -443,6 +508,11 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 		return false; // No intersection in the given time interval
 
 	return true;
+}
+
+bool BoundingCircle::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	return capsule->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
 }
 
 int BoundingCapsule::s_count = 0;
@@ -564,6 +634,34 @@ void BoundingCapsule::Update(const Point& pos)
 	m_circle2.setPosition(Line(corners[1], corners[0]).GetMidPoint());
 }
 
+bool BoundingCapsule::Intersects(BoundingVolume* volume)
+{
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return Intersects((BoundingBox*)volume);
+	case VolumeType::Circle:
+		return Intersects((BoundingCircle*)volume);
+	case VolumeType::Capsule:
+		return Intersects((BoundingCapsule*)volume);
+	}
+
+	return false;
+}
+
+bool BoundingCapsule::IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return IntersectsMoving((BoundingBox*)volume, va, vb, tfirst, tlast);
+	case VolumeType::Circle:
+		return IntersectsMoving((BoundingCircle*)volume, va, vb, tfirst, tlast);
+	case VolumeType::Capsule:
+		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
+	}
+}
+
 bool BoundingCapsule::Intersects(const Point& pnt) const
 {
 	auto clsPnt = m_segment.ClosestPointOnLineSegment(pnt);
@@ -626,15 +724,15 @@ bool BoundingCapsule::Intersects(BoundingCapsule* capsule)
 bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	BoundingCircle circle(m_radius, m_segment.start);
-	if (circle.IntersectsMoving(box, va, vb, tfirst, tlast))
+	if (circle.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast))
 		return true;
 
 	circle.Update(m_segment.end);
-	if (circle.IntersectsMoving(box, va, vb, tfirst, tlast))
+	if (circle.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast))
 		return true;
 
 	BoundingBox capBox(this);
-	return capBox.IntersectsMoving(box, va, vb, tfirst, tlast);
+	return capBox.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast);
 }
 
 bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -643,7 +741,12 @@ bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va,
 
 	BoundingCircle circle2(m_radius, clsPnt);
 
-	return circle2.IntersectsMoving(circle1, va, vb, tfirst, tlast);
+	return circle2.IntersectsMoving((BoundingVolume*)circle1, va, vb, tfirst, tlast);
+}
+
+bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	return false;
 }
 
 void BoundingCapsule::MakeCapsuleShape()

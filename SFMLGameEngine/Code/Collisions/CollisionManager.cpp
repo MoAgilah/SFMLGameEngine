@@ -146,7 +146,7 @@ void CollisionManager::DynamicObjectToTileCollisions(DynamicObject* obj)
 		if (!tile->GetActive())
 			continue;
 
-		if (tile->GetBoundingBox()->Intersects(obj->GetBoundingBox()))
+		if (tile->GetBoundingBox()->Intersects(obj->GetColVolume()))
 			collidedWith.push_back(tile);
 	}
 
@@ -156,7 +156,7 @@ void CollisionManager::DynamicObjectToTileCollisions(DynamicObject* obj)
 			SortCollidedTiles(collidedWith);
 
 		for (auto& tile : collidedWith)
-			if (tile->GetBoundingBox()->Intersects(obj->GetBoundingBox()))
+			if (tile->GetBoundingBox()->Intersects(obj->GetColVolume()))
 				DynamicObjectToTileResolution(obj, tile.get());
 	}
 
@@ -416,7 +416,7 @@ void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj
 		return;
 
 	float tFirst, tLast = 0;
-	if (obj1->GetBoundingBox()->IntersectsMoving(obj2->GetBoundingBox(), obj1->GetVelocity(), obj2->GetVelocity(), tFirst, tLast))
+	if (obj1->GetBoundingBox()->IntersectsMoving(obj2->GetColVolume(), obj1->GetVelocity(), obj2->GetVelocity(), tFirst, tLast))
 	{
 		DynamicObjectToDynamicObjectResolution(obj1, tFirst);
 		DynamicObjectToDynamicObjectResolution(obj2, tFirst);
