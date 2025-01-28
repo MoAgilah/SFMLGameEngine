@@ -72,7 +72,8 @@ namespace
 	}
 }
 
-CollisionManager::CollisionManager()
+CollisionManager::CollisionManager(int rows, int columns, const std::string& tileFilePaths)
+	: m_grid(rows, columns, tileFilePaths)
 {
 	for (auto& tile : m_grid.GetGrid())
 	{

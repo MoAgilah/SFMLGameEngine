@@ -17,7 +17,7 @@ class DynamicObject;
 class CollisionManager
 {
 public:
-	CollisionManager();
+	CollisionManager(int rows = 0, int columns = 0, const std::string& tileFilePaths = GameConstants::TileFilePaths);
 	~CollisionManager() = default;
 
 	void ProcessCollisions(Object* object);

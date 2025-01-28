@@ -4,13 +4,14 @@
 #include <vector>
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "../Code/Game/Constants.h"
 
 class Tile;
 
 class Grid
 {
 public:
-	Grid();
+	Grid(int rows, int columns, const std::string& tileFilePaths = GameConstants::TileFilePaths);
 	~Grid() = default;
 
 	void Render(sf::RenderWindow & window);
@@ -20,8 +21,10 @@ public:
 
 private:
 
-	void SetTileTypes();
+	void SetTileTypes(const std::string& tileFilePaths);
 	void SetTilePosition();
 
+	int m_rows = 0;
+	int m_columns = 0;
 	std::vector<std::shared_ptr<Tile>> m_grid;
 };

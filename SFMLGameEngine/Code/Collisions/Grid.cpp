@@ -7,19 +7,23 @@
 #include "../Game/GameManager.h"
 #include "../Collisions/Tile.h"
 
-Grid::Grid()
+Grid::Grid(int rows, int columns, const std::string& tileFilePaths)
+	: m_rows(rows), m_columns(columns)
 {
 	auto font = GameManager::Get()->GetFontMgr().GetFont("Standard");
 
 	//create grid for entire level
-	for (int y = 0; y < 15; y++)
+	for (int y = 0; y < m_rows; y++)
 	{
-		for (int x = 0; x < 313; x++)
+		for (int x = 0; x < m_columns; x++)
 			m_grid.push_back(std::make_shared<Tile>(x, y, font));
 	}
 
-	SetTileTypes();
-	SetTilePosition();
+	if (!m_grid.empty())
+	{
+		SetTileTypes(tileFilePaths);
+		SetTilePosition();
+	}
 }
 
 void Grid::SetTilePosition()
@@ -31,14 +35,14 @@ void Grid::SetTilePosition()
 	sf::Vector2f pos(m_grid.front()->GetBoundingBox()->GetExtents());
 	m_grid[x]->SetPosition(pos);
 
-	for (x = x + 1; x < 313; x++)
+	for (x = x + 1; x < m_columns; x++)
 	{
 		pos = sf::Vector2f(pos.x + (m_grid.front()->GetBoundingBox()->GetExtents().x * 2), pos.y);
 		m_grid[x]->SetPosition(pos);
 	}
 
 	//remaining rows
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < m_rows - 1; i++)
 	{
 		pos = sf::Vector2f(m_grid[begin]->GetPosition().x, m_grid[begin]->GetPosition().y + (m_grid.front()->GetBoundingBox()->GetExtents().y * 2));
 		m_grid[x]->SetPosition(pos);
@@ -46,7 +50,7 @@ void Grid::SetTilePosition()
 
 		int val = 2 + i;
 
-		for (x = x + 1; x < 313 * val; x++)
+		for (x = x + 1; x < m_columns * val; x++)
 		{
 			pos = sf::Vector2f(pos.x + (m_grid.front()->GetBoundingBox()->GetExtents().x * 2), pos.y);
 			m_grid[x]->SetPosition(pos);
@@ -81,13 +85,13 @@ Tile* Grid::GetTile(int x, int y)
 	return nullptr;
 }
 
-void Grid::SetTileTypes()
+void Grid::SetTileTypes(const std::string& tileFilePaths)
 {
 	std::ifstream inFile;
 	std::vector<int> types;
 
 	//extract tile types from text file
-	inFile.open("../Resources/TileTypes.txt");
+	inFile.open(tileFilePaths);
 
 	int type;
 	while (inFile >> type)

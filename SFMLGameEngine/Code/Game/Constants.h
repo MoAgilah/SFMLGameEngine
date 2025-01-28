@@ -13,6 +13,7 @@ public:
 	static Point ScreenDim;
 	static Point Scale;
 	static std::string WindowTitle;
+	static std::string TileFilePaths;
 	static std::string FontFilePaths;
 	static std::string ShaderFilePaths;
 	static std::string SoundFilePaths;
