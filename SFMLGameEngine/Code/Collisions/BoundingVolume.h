@@ -151,11 +151,12 @@ class BoundingCapsule : public BoundingVolume
 {
 public:
 	BoundingCapsule();
-	BoundingCapsule(float radius, float angle);
-	BoundingCapsule(float radius, float angle, const sf::Vector2f& pos);
+	BoundingCapsule(float radius, float length, float angle);
+	BoundingCapsule(float radius, float length, float angle, const sf::Vector2f& pos);
 	~BoundingCapsule() = default;
 
 	void Reset(float radius, float angle);
+	void Reset(float radius, float length, float angle);
 	void Render(sf::RenderWindow& window) override;
 
 	void Update(const Point& pos);

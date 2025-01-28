@@ -27,12 +27,12 @@ class Tile;
 class Object
 {
 public:
-	Object(const std::string& texID, float circleRadius);
+	Object(const std::string& texID, float radius);
 	Object(const std::string& texID, const sf::Vector2f& boxSize);
-	Object(const std::string& texID, float circleRadius, float angle);
+	Object(const std::string& texID, float radius, float length, float angle);
 	Object(const std::string& texID, const AnimationData& animData, float circleRadius);
 	Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
-	Object(const std::string& texID, const AnimationData& animData, float circleRadius, float angle);
+	Object(const std::string& texID, const AnimationData& animData, float radius, float length, float angle);
 	virtual ~Object() = default;
 
 	virtual void Update(float deltaTime) = 0;
@@ -87,12 +87,12 @@ private:
 class DynamicObject : public Object
 {
 public:
-	DynamicObject(const std::string& texID, float circleRadius);
+	DynamicObject(const std::string& texID, float radius);
 	DynamicObject(const std::string& texID, const sf::Vector2f& boxSize);
-	DynamicObject(const std::string& texID, float circleRadius, float angle);
+	DynamicObject(const std::string& texID, float radius, float length, float angle);
 	DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius);
 	DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
-	DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius, float angle);
+	DynamicObject(const std::string& texID, const AnimationData& animData, float radius, float length, float angle);
 	~DynamicObject() override = default;
 
 	void Reset() override;

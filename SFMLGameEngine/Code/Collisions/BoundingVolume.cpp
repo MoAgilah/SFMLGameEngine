@@ -446,38 +446,52 @@ BoundingCapsule::BoundingCapsule()
 {
 	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
-	Reset(m_radius, m_angle);
+	Reset(m_radius, 16, m_angle);
 
 	auto thickness = GetRect()->getOutlineThickness();
 	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
 }
 
-BoundingCapsule::BoundingCapsule(float radius, float angle)
+BoundingCapsule::BoundingCapsule(float radius, float length, float angle)
 	: m_radius(radius), m_angle(angle)
 {
 	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
-	Reset(m_radius, m_angle);
+	Reset(m_radius, length, m_angle);
 
 	auto thickness = GetRect()->getOutlineThickness();
 	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
 }
 
-BoundingCapsule::BoundingCapsule(float radius, float angle, const sf::Vector2f& pos)
+BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const sf::Vector2f& pos)
 	: m_radius(radius), m_angle(angle)
 {
 	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
-	Reset(m_radius, m_angle);
+	Reset(m_radius, length, m_angle);
 
 	Update(pos);
+}
+
+void BoundingCapsule::Reset(float radius, float length, float angle)
+{
+	auto rect = GetRect();
+	rect->setSize(Point(radius * 2.f, length));
+	rect->setOrigin(radius, length / 2.f);
+	rect->setRotation(angle);
+
+	m_circle1.setRadius(radius);
+	m_circle1.setOrigin(radius, radius);
+
+	m_circle2.setRadius(radius);
+	m_circle2.setOrigin(radius, radius);
 }
 
 void BoundingCapsule::Reset(float radius, float angle)
 {
 	auto rect = GetRect();
-	rect->setSize(Point(radius * 2.f, radius * 2.f));
-	rect->setOrigin(radius, radius);
+	rect->setSize(Point(radius * 2.f, 150));
+	rect->setOrigin(radius, 75);
 	rect->setRotation(angle);
 
 	m_circle1.setRadius(radius);
