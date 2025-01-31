@@ -179,13 +179,13 @@ void CollisionManager::DynamicObjectToTileResolution(DynamicObject* obj, Tile* t
 	{
 		if (dir == DDIR || dir == LDIR || dir == RDIR)
 		{
-			/*Capsule capsule(tileTopEdge, 6);
-			Circle circle(obj->GetBoundingBox(), 4);
-			if (capsule.IntersectsCircle(circle))
+			BoundingCapsule capsule(6, tileTopEdge);
+			BoundingCircle circle(4, obj->GetBoundingBox()->GetPoint(Side::Bottom));
+			if (capsule.Intersects((BoundingVolume*)&circle))
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 					ResolveObjectToBoxTop(obj, tile->GetBoundingBox());
-			}*/
+			}
 		}
 		return;
 	}
@@ -460,11 +460,11 @@ bool CollisionManager::ResolveObjectToSlopeTop(DynamicObject* obj, Tile* tile)
 bool CollisionManager::ResolveObjectToSlopeIncline(DynamicObject* obj, Tile* tile, int start, int end)
 {
 	Line line = tile->GetSlope(start, end);
-	/*Circle circle(obj->GetBoundingBox(), 4);
-	Capsule capsule(line, 6);
-	if (capsule.IntersectsCircle(circle))
+	BoundingCircle circle(4, obj->GetBoundingBox()->GetPoint(Side::Bottom));
+	BoundingCapsule capsule(6, line);
+	if (capsule.Intersects((BoundingVolume*)&circle))
 	{
-		auto yOffset = GetYOffSet(start ? GetXDist(circle.center, line.start) : GetXDist(line.start, circle.center),
+		auto yOffset = GetYOffSet(start ? GetXDist(circle.GetCenter(), line.start) : GetXDist(line.start, circle.GetCenter()),
 			line.DistY(),
 			line.start.y,
 			obj->GetBoundingBox()->GetPosition().y,
@@ -474,7 +474,7 @@ bool CollisionManager::ResolveObjectToSlopeIncline(DynamicObject* obj, Tile* til
 		obj->SetOnSlope(true);
 
 		return true;
-	}*/
+	}
 
 
 	return false;
@@ -483,11 +483,11 @@ bool CollisionManager::ResolveObjectToSlopeIncline(DynamicObject* obj, Tile* til
 bool CollisionManager::ResolveObjectToSlopeDecline(DynamicObject* obj, Tile* tile, int start, int end)
 {
 	Line line = tile->GetSlope(start, end);
-	/*Circle circle(obj->GetBoundingBox(), 4);
-	Capsule capsule(line, 6);
-	if (!capsule.IntersectsCircle(circle))
+	BoundingCircle circle(4, obj->GetBoundingBox()->GetPoint(Side::Bottom));
+	BoundingCapsule capsule(6, line);
+	if (capsule.Intersects((BoundingVolume*)&circle))
 	{
-		auto yOffset = GetYOffSet(start ? GetXDist(circle.center, line.start) : GetXDist(line.start, circle.center),
+		auto yOffset = GetYOffSet(start ? GetXDist(circle.GetCenter(), line.start) : GetXDist(line.start, circle.GetCenter()),
 			line.DistY(),
 			line.start.y,
 			obj->GetBoundingBox()->GetPosition().y,
@@ -497,7 +497,7 @@ bool CollisionManager::ResolveObjectToSlopeDecline(DynamicObject* obj, Tile* til
 		obj->SetOnSlope(true);
 
 		return true;
-	}*/
+	}
 
 	return false;
 }
@@ -517,10 +517,10 @@ void CollisionManager::DynamicObjectToEdgeBounds(DynamicObject* obj, Tile* tile)
 
 	if (IsMovingTowards(edge.start, side, Point(0, 0), obj->GetVelocity()))
 	{
-		/*Circle circle(side, 4);
-		Capsule capsule(edge, 4);
-		if (capsule.IntersectsCircle(circle))
-			obj->SetDirection(!obj->GetDirection());*/
+		BoundingCircle circle(4, side);
+		BoundingCapsule capsule(4, edge);
+		if (capsule.Intersects((BoundingVolume*)&circle))
+			obj->SetDirection(!obj->GetDirection());
 	}
 }
 

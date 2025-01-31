@@ -1,10 +1,8 @@
 #pragma once
 
 #include <string>
-#include <array>
 #include <SFML/Graphics.hpp>
 #include "Point.h"
-#include "../Game/TextureManager.h"
 
 bool IsPlayerObject(const std::string& texID);
 bool IsBoxObject(const std::string& texID);
@@ -35,25 +33,3 @@ struct Line
 
 float GetXDist(const Point& p1, const Point& p2);
 float GetYDist(const Point& p1, const Point& p2);
-
-//struct Circle
-//{
-//	Circle(const Point& position, float radius);
-//	Circle(AABB* box, float radius);
-//
-//	bool IntersectsPoint(const Point& pnt) const;
-//	bool IntersectsLineSegment(const Line& line) const;
-//
-//	float radius;
-//	Point center;
-//};
-//
-//struct Capsule
-//{
-//	Capsule(const Line& line, float radius);
-//
-//	bool IntersectsCircle(const Circle& circle) const;
-//
-//	Line line;
-//	float radius;
-//};

@@ -182,6 +182,7 @@ public:
 	BoundingCapsule();
 	BoundingCapsule(float radius, float length, float angle);
 	BoundingCapsule(float radius, float length, float angle, const sf::Vector2f& pos);
+	BoundingCapsule(float radius, const Line& segment);
 	~BoundingCapsule() = default;
 
 	void Reset(float radius, float angle);

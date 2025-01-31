@@ -1,4 +1,5 @@
 #include "Utilities.h"
+#include <array>
 #include <numbers>
 #include "../Collisions/BoundingVolume.h"
 
@@ -155,64 +156,3 @@ float GetYDist(const Point& p1, const Point& p2)
 {
 	return p2.y - p1.y;
 }
-
-/*
-Circle::Circle(const Point& position, float radius)
-	: center(position), radius(radius)
-{}
-
-Circle::Circle(AABB * box, float radius)
-	: Circle(box->GetPoint(Side::Bottom) - Point(radius, radius), radius)
-{
-}
-
-bool Circle::IntersectsPoint(const Point& pnt) const
-{
-	// get distance between the point and circle's center
-	float d = pnt::distance(pnt, center);
-	return d <= radius;
-}
-
-bool Circle::IntersectsLineSegment(const Line & line) const
-{
-	if (IntersectsPoint(line.start))
-		return true;
-
-	if (IntersectsPoint(line.end))
-		return true;
-
-	// get length of the line
-	auto lineLen = pnt::distance(line.start, line.end);
-
-	// get dot product of the line and circle
-	float dot = (((center.x - line.start.x) * (line.end.x - line.start.x)) +
-		((center.y - line.start.y) * (line.end.y - line.start.y)))
-		/ std::powf(lineLen, 2);
-
-	// find the closest point on the line
-	Point closestPnt = line.start + (dot * (line.end - line.start));
-
-	// is this point actually on the line segment?
-	// if so keep going, but if not, return false
-	if (!line.IntersectsPoint(closestPnt))
-		return false;
-
-	// get distance to closest point
-	float dist = pnt::distance(center, closestPnt);
-
-	return dist <= radius;
-}
-
-Capsule::Capsule(const Line& line, float radius)
-	: line(line), radius(radius)
-{}
-
-bool Capsule::IntersectsCircle(const Circle & circle) const
-{
-	float r = circle.radius + radius;
-
-	float dist2 = SqDistPointSegment(line.start, line.end, circle.center);
-
-	return dist2 <= r * r;
-}
-*/

@@ -643,6 +643,15 @@ BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const 
 	Update(pos);
 }
 
+BoundingCapsule::BoundingCapsule(float radius, const Line& segment)
+	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(segment.CalculateAngle())
+{
+	MakeCapsuleShape();
+	Reset(m_radius, pnt::distance(segment.start, segment.end), m_angle);
+
+	Update(segment.GetMidPoint());
+}
+
 void BoundingCapsule::Reset(float radius, float length, float angle)
 {
 	auto rect = GetRect();
