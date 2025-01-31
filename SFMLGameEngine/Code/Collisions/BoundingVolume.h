@@ -40,6 +40,10 @@ public:
 	void Move(float x, float y);
 	void Move(const Point& pos);
 
+	virtual Point GetSeparationVector(BoundingBox* other) = 0;
+	virtual Point GetSeparationVector(BoundingCircle* other) = 0;
+	virtual Point GetSeparationVector(BoundingCapsule* other) = 0;
+
 	void SetFillColour(const sf::Color& col) { m_shape->setFillColor(col); }
 	void SetOutlineColour(const sf::Color& col) { m_shape->setOutlineColor(col); }
 	void SetOutlineThickness(float scale) { m_shape->setOutlineThickness(scale); }
@@ -89,6 +93,10 @@ public:
 	bool Intersects(const Point& pnt) const override;
 	bool Intersects(BoundingVolume* volume) override;
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+
+	Point GetSeparationVector(BoundingBox* other) override;
+	Point GetSeparationVector(BoundingCircle* other) override;
+	Point GetSeparationVector(BoundingCapsule* other) override;
 
 	const Point& GetMin() const { return m_min; }
 	const Point& GetMax() const { return m_max; }
@@ -141,6 +149,10 @@ public:
 	bool Intersects(BoundingVolume* volume);
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
+	Point GetSeparationVector(BoundingBox* other) override;
+	Point GetSeparationVector(BoundingCircle* other) override;
+	Point GetSeparationVector(BoundingCapsule* other) override;
+
 	float GetRadius() const { return m_radius; }
 
 	BoundingCircle* Get() { return this; }
@@ -182,6 +194,9 @@ public:
 	bool Intersects(BoundingVolume* volume);
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
+	Point GetSeparationVector(BoundingBox* other) override;
+	Point GetSeparationVector(BoundingCircle* other) override;
+	Point GetSeparationVector(BoundingCapsule* other) override;
 
 	float GetRadius() const { return m_radius; }
 	Line& GetSegment() { return m_segment; }
