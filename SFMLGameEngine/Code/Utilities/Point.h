@@ -42,4 +42,5 @@ namespace pnt
 	float distance(const Point& p1, const Point& p2);
 	float length(const Point& p);
 	Point Normalize(const Point& p);
+	bool IsMovingTowards(Point p1, Point p2, Point v1, Point v2);
 }

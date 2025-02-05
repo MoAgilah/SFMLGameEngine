@@ -415,6 +415,32 @@ BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
 	return BoundingCircle(radius, center);
 }
 
+Direction GetCollisionDirection(const Point& mtv, const Point& velA, const Point& velB)
+{
+	Direction dir;
+	Point relativeVelocity = velA - velB;
+
+	// Determine collision side based on MTV direction
+	if (std::abs(mtv.x) > 0 && std::abs(mtv.y) == 0)
+	{
+		dir = (relativeVelocity.x > 0) ? LDIR : RDIR;
+	}
+	else if (std::abs(mtv.y) > 0 && std::abs(mtv.x) == 0)
+	{
+		dir = (relativeVelocity.y > 0) ? DDIR : UDIR;
+	}
+	else
+	{
+		// Diagonal case, pick the stronger axis (MTV dominates)
+		if (std::abs(mtv.x) > std::abs(mtv.y))
+			dir = (relativeVelocity.x > 0) ? LDIR : RDIR;
+		else
+			dir = (relativeVelocity.y > 0) ? DDIR : UDIR;
+	}
+
+	return dir;
+}
+
 int BoundingCircle::s_count = 0;
 
 BoundingCircle::BoundingCircle()
@@ -497,6 +523,23 @@ bool BoundingCircle::IntersectsMoving(BoundingVolume* volume, const Point& va, c
 	}
 
 	return false;
+}
+
+Point BoundingCircle::GetPoint(Side side)
+{
+	switch (side)
+	{
+	case Left:
+		return m_center - Point(m_radius, 0);
+	case Right:
+		return m_center + Point(m_radius, 0);
+	case Top:
+		return m_center - Point(0, m_radius);
+	case Bottom:
+		return m_center + Point(0, m_radius);
+	default:
+		throw std::out_of_range("Side enum value doesn't exist");
+	}
 }
 
 Point BoundingCircle::GetSeparationVector(BoundingBox* other)
@@ -763,6 +806,11 @@ bool BoundingCapsule::IntersectsMoving(BoundingVolume* volume, const Point& va, 
 	case VolumeType::Capsule:
 		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
 	}
+}
+
+Point BoundingCapsule::GetPoint(Side side)
+{
+	return Point();
 }
 
 Point BoundingCapsule::GetSeparationVector(BoundingBox* other)

@@ -1,6 +1,7 @@
 #include "../Collisions/Tile.h"
 #include <format>
 #include "../Game/Constants.h"
+#include "../GameObjects/Object.h"
 
 Tile::Tile()
 {
@@ -22,6 +23,141 @@ Tile::Tile(int x, int y, sf::Font* font)
 	m_text.setOrigin(6, 6);
 	m_text.setStyle(sf::Text::Bold);
 	m_text.setString(std::format("{}\n{}", m_colNum, m_rowNum));
+}
+
+bool Tile::Intersects(DynamicObject* obj)
+{
+	return m_aabb.Intersects(obj->GetColVolume());
+}
+
+void Tile::ResolveCollision(DynamicObject* obj)
+{
+	Direction dir = obj->GetFacingDirection();
+	Line tileTopEdge = m_aabb.GetSide(Side::Top);
+	Point objBottomPoint = obj->GetColVolume()->GetPoint(Side::Bottom);
+
+	switch (GetType())
+	{
+	case Types::OWAY:
+	{
+		if (dir == DDIR || dir == LDIR || dir == RDIR)
+		{
+			BoundingCapsule capsule(6, tileTopEdge);
+			BoundingCircle circle(4, obj->GetBoundingBox()->GetPoint(Side::Bottom));
+			if (capsule.Intersects((BoundingVolume*)&circle))
+			{
+				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
+					ResolveObjectToBoxTop(obj);
+			}
+		}
+		return;
+	}
+	case Types::GRND:
+		if (dir == DDIR || dir == LDIR || dir == RDIR)
+		{
+			if (tileTopEdge.IsPointAboveLine(objBottomPoint))
+				ResolveObjectToBoxTop(obj);
+		}
+		return;
+	case Types::LCRN:
+		[[fallthrough]];
+	case Types::RCRN:
+	{
+		Point seperationVector = obj->GetColVolume()->GetSeparationVector(&m_aabb);
+		Direction colDir = GetCollisionDirection(seperationVector, obj->GetVelocity(), Point());
+
+		if (dir == DDIR)
+		{
+			// the collision came from a vertical direction
+			if (colDir == DDIR)
+			{
+				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
+				{
+					ResolveObjectToBoxTop(obj);
+					return;
+				}
+			}
+		}
+
+		// the collision came from a horizontal direction
+		if (colDir == LDIR || colDir == RDIR)
+		{
+			ResolveObjectToBoxHorizontally(obj);
+		}
+		else
+		{
+			if (dir == LDIR || dir == RDIR)
+			{
+				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
+				{
+					ResolveObjectToBoxTop(obj);
+				}
+
+				ResolveObjectToEdgeBounds(obj);
+			}
+		}
+		return;
+	}
+	case Types::WALL:
+		ResolveObjectToBoxHorizontally(obj);
+		return;
+	case Types::DIAGU:
+	{
+		switch (dir)
+		{
+		case DDIR:
+			if (ResolveObjectToSlopeTop(obj))
+			{
+				if (!obj->GetShouldSlideLeft())
+					obj->SetShouldSlideLeft(true);
+			}
+			break;
+		case RDIR:
+			if (ResolveObjectToSlopeIncline(obj, 0, 1))
+			{
+				if (!obj->GetShouldSlideLeft())
+					obj->SetShouldSlideLeft(true);
+			}
+			break;
+		case LDIR:
+			if (ResolveObjectToSlopeDecline(obj, 1, 0))
+			{
+				if (!obj->GetShouldSlideLeft())
+					obj->SetShouldSlideLeft(true);
+			}
+			break;
+		}
+		return;
+	}
+	case Types::DIAGD:
+	{
+		switch (dir)
+		{
+		case DDIR:
+			if (ResolveObjectToSlopeTop(obj))
+			{
+				if (!obj->GetShouldSlideRight())
+					obj->SetShouldSlideRight(true);
+			}
+			break;
+		case LDIR:
+			if (ResolveObjectToSlopeIncline(obj, 1, 0))
+			{
+				if (!obj->GetShouldSlideRight())
+					obj->SetShouldSlideRight(true);
+			}
+			break;
+		case RDIR:
+			if (ResolveObjectToSlopeDecline(obj, 0, 1))
+			{
+				if (!obj->GetShouldSlideRight())
+					obj->SetShouldSlideRight(true);
+			}
+			break;
+		}
+		return;
+	}
+	}
 }
 
 void Tile::SetPosition(sf::Vector2f pos)
@@ -80,4 +216,138 @@ void Tile::Render(sf::RenderWindow& window)
 
 	if (m_hasFont)
 		window.draw(m_text);
+}
+
+Point Tile::GetSeperationVector(DynamicObject* obj)
+{
+	Point seperationVector;
+
+	switch (obj->GetColVolume()->GetType())
+	{
+	case VolumeType::Box:
+		seperationVector = m_aabb.GetSeparationVector(obj->GetBoundingBox());
+		break;
+	case VolumeType::Circle:
+		seperationVector = m_aabb.GetSeparationVector(obj->GetBoundingCircle());
+		break;
+	case VolumeType::Capsule:
+		seperationVector = m_aabb.GetSeparationVector(obj->GetBoundingCapsule());
+		break;
+	}
+
+	return seperationVector;
+}
+
+void Tile::ResolveObjectToBoxTop(DynamicObject* obj)
+{
+	Point seperationVector = GetSeperationVector(obj);
+
+	obj->Move(0, -seperationVector.y);
+	obj->SetOnGround(true);
+	obj->SetOnSlope(false);
+}
+
+void Tile::ResolveObjectToBoxBottom(DynamicObject* obj)
+{
+	Point seperationVector = GetSeperationVector(obj);
+
+	obj->Move(0, seperationVector.y);
+}
+
+void Tile::ResolveObjectToBoxHorizontally(DynamicObject* obj)
+{
+	Point seperationVector = GetSeperationVector(obj);
+
+	obj->Move((obj->GetDirection() ? -1 : 1) * seperationVector.x, 0);
+}
+
+bool Tile::ResolveObjectToSlopeTop(DynamicObject* obj)
+{
+	Line line = GetSlope(0, 1);
+	BoundingCircle circle(4, obj->GetColVolume()->GetPoint(Side::Bottom));
+
+	if (line.IsPointAboveLine(circle.GetCenter()))
+	{
+		BoundingCapsule capsule(6, line);
+		if (capsule.Intersects((BoundingVolume*)&circle))
+		{
+			obj->SetOnSlope(true);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+float GetYOffSet(float pDistX, float lDistY, float slopeY, float currY, float tileHeight)
+{
+	auto percent = pDistX / lDistY;
+	auto colHeight = lDistY * percent + slopeY;
+	return ((currY - colHeight) / tileHeight);
+}
+
+bool Tile::ResolveObjectToSlopeIncline(DynamicObject* obj, int start, int end)
+{
+	Line line = GetSlope(start, end);
+	BoundingCircle circle(4, obj->GetColVolume()->GetPoint(Side::Bottom));
+	BoundingCapsule capsule(6, line);
+	if (capsule.Intersects((BoundingVolume*)&circle))
+	{
+		auto yOffset = GetYOffSet(start ? GetXDist(circle.GetCenter(), line.start) : GetXDist(line.start, circle.GetCenter()),
+			line.DistY(),
+			line.start.y,
+			obj->GetBoundingBox()->GetPosition().y,
+			GetTileHeight());
+
+		obj->Move(sf::Vector2f(0, yOffset));
+		obj->SetOnSlope(true);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool Tile::ResolveObjectToSlopeDecline(DynamicObject* obj, int start, int end)
+{
+	Line line = GetSlope(start, end);
+	BoundingCircle circle(4, obj->GetColVolume()->GetPoint(Side::Bottom));
+	BoundingCapsule capsule(6, line);
+	if (capsule.Intersects((BoundingVolume*)&circle))
+	{
+		auto yOffset = GetYOffSet(start ? GetXDist(circle.GetCenter(), line.start) : GetXDist(line.start, circle.GetCenter()),
+			line.DistY(),
+			line.start.y,
+			obj->GetBoundingBox()->GetPosition().y,
+			GetTileHeight());
+
+		obj->Move(sf::Vector2f(0, -yOffset));
+		obj->SetOnSlope(true);
+
+		return true;
+	}
+
+	return false;
+}
+
+void Tile::ResolveObjectToEdgeBounds(DynamicObject* obj)
+{
+	if (IsPlayerObject(obj->GetID()))
+		return;
+
+	Point side;
+	if (m_type == LCRN)
+		side = obj->GetBoundingBox()->GetPoint(Side::Right);
+	else
+		side = obj->GetBoundingBox()->GetPoint(Side::Left);
+
+	Line edge = GetEdge();
+
+	if (pnt::IsMovingTowards(edge.start, side, Point(0, 0), obj->GetVelocity()))
+	{
+		BoundingCircle circle(4, side);
+		BoundingCapsule capsule(4, edge);
+		if (capsule.Intersects((BoundingVolume*)&circle))
+			obj->SetDirection(!obj->GetDirection());
+	}
 }

@@ -152,3 +152,11 @@ Point pnt::Normalize(const Point& p)
 	auto len = length(p);
 	return Point(p.x / len, p.y / len);
 }
+
+bool pnt::IsMovingTowards(Point p1, Point p2, Point v1, Point v2)
+{
+	Point v = v2 - v1;
+	Point d = p2 - p1;
+
+	return (d.x * v.x + d.y * v.y) < 0;
+}

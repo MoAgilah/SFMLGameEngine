@@ -11,12 +11,17 @@ enum Types
 	EMPTY, GRND, WALL, DIAGU, DIAGD, LCRN, RCRN, OWAY
 };
 
+class DynamicObject;
+
 class Tile
 {
 public:
 	Tile();
 	Tile(int gX, int gY, sf::Font* font);
 	~Tile() = default;
+
+	bool Intersects(DynamicObject* obj);
+	void ResolveCollision(DynamicObject* obj);
 
 	std::string_view GetID() const { return m_id; }
 
@@ -46,6 +51,17 @@ public:
 	void Render(sf::RenderWindow& window);
 
 private:
+
+	Point GetSeperationVector(DynamicObject* obj);
+
+	void ResolveObjectToBoxTop(DynamicObject* obj);
+	void ResolveObjectToBoxBottom(DynamicObject* obj);
+	void ResolveObjectToBoxHorizontally(DynamicObject* obj);
+	bool ResolveObjectToSlopeTop(DynamicObject* obj);
+	bool ResolveObjectToSlopeIncline(DynamicObject* obj, int start, int end);
+	bool ResolveObjectToSlopeDecline(DynamicObject* obj, int start, int end);
+
+	void ResolveObjectToEdgeBounds(DynamicObject* obj);
 
 	bool m_visible = false;
 	bool m_hasFont = false;

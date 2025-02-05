@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Utilities/Utilities.h"
 
-enum VolumeType
+enum class VolumeType
 {
 	None, Box, Circle, Capsule
 };
@@ -12,6 +12,16 @@ enum VolumeType
 class BoundingBox;
 class BoundingCircle;
 class BoundingCapsule;
+
+enum Side
+{
+	Left, Right, Top, Bottom
+};
+
+enum Direction
+{
+	LDIR, RDIR, UDIR, DDIR
+};
 
 class BoundingVolume
 {
@@ -39,6 +49,8 @@ public:
 
 	void Move(float x, float y);
 	void Move(const Point& pos);
+
+	virtual Point GetPoint(Side side) = 0;
 
 	virtual Point GetSeparationVector(BoundingBox* other) = 0;
 	virtual Point GetSeparationVector(BoundingCircle* other) = 0;
@@ -71,11 +83,6 @@ private:
 	std::unique_ptr<sf::Shape> m_shape;
 };
 
-enum Side
-{
-	Left, Right, Top, Bottom
-};
-
 class BoundingBox : public BoundingVolume
 {
 public:
@@ -104,7 +111,7 @@ public:
 	const Point& GetOverlap() const { return m_overlap; }
 
 	Line GetSide(Side side);
-	Point GetPoint(Side side);
+	Point GetPoint(Side side) override;
 
 	BoundingBox* Get() { return this; }
 	sf::CircleShape* GetCircle() = delete;
@@ -148,6 +155,8 @@ public:
 	bool Intersects(const Point& pnt) const override;
 	bool Intersects(BoundingVolume* volume);
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+
+	Point GetPoint(Side side);
 
 	Point GetSeparationVector(BoundingBox* other) override;
 	Point GetSeparationVector(BoundingCircle* other) override;
@@ -195,6 +204,8 @@ public:
 	bool Intersects(BoundingVolume* volume);
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
+	Point GetPoint(Side side);
+
 	Point GetSeparationVector(BoundingBox* other) override;
 	Point GetSeparationVector(BoundingCircle* other) override;
 	Point GetSeparationVector(BoundingCapsule* other) override;
@@ -227,3 +238,5 @@ private:
 	sf::CircleShape m_circle1;
 	sf::CircleShape m_circle2;
 };
+
+Direction GetCollisionDirection(const Point& seperationVector, const Point& velA, const Point& velB);

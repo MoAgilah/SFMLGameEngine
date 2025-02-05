@@ -5,11 +5,7 @@
 #include "../Collisions/Grid.h"
 #include "../Collisions/Tile.h"
 
-enum Direction
-{
-	LDIR, RDIR, UDIR, DDIR
-};
-
+class Box;
 class Enemy;
 class Object;
 class DynamicObject;
@@ -34,30 +30,27 @@ public:
 
 private:
 
+	bool CanCollideWithTile(const std::string& texID);
+	void SortCollidedTiles(std::vector<std::shared_ptr<Tile>> collidedWith);
+
+	bool IsDynamicCollectable(const std::string& texID);
+	bool IsDynamicObject(const std::string& texId);
+
 	void DynamicObjectToTileCollisions(DynamicObject* obj);
-	void DynamicObjectToTileResolution(DynamicObject* obj, Tile* tile);
+
+	void ObjectToObjectCollisions(Object* obj1, Object* obj2);
 
 	void PlayerToObjectCollisions(DynamicObject* ply, Object* obj);
-	void ObjectToObjectCollisions(Object* obj1, Object* obj2);
 
 	void PlayerToEnemyResolutions(DynamicObject* ply, Enemy* enmy);
 
-	void DynamicObjectToBoxResolutions(Direction dirOfTravel, const Point& prevOverlap, DynamicObject* obj, BoundingBox* box, bool resolveUpDir = true);
+	void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
 
 	void DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2);
-	void DynamicObjectToDynamicObjectResolution(DynamicObject* obj, float tFirst);
 
-	void ResolveObjectToBoxTop(DynamicObject* obj, BoundingBox* box);
-	void ResolveObjectToBoxBottom(DynamicObject* obj, BoundingBox* box);
-	void ResolveObjectToBoxHorizontally(DynamicObject* obj, BoundingBox* box);
-
-	bool ResolveObjectToSlopeTop(DynamicObject* obj, Tile* box);
-	bool ResolveObjectToSlopeIncline(DynamicObject* obj, Tile* box, int start, int end);
-	bool ResolveObjectToSlopeDecline(DynamicObject* obj, Tile* box, int start, int end);
-
-	void DynamicObjectToEdgeBounds(DynamicObject* obj, Tile* tile);
-
-	Direction GetFacingDirection(DynamicObject* obj);
+	static std::vector<std::string> s_canCollideWithTile;
+	static std::vector<std::string> s_dynamicCollectables;
+	static std::vector<std::string> s_dynamicObject;
 
 	Grid m_grid;
 	std::vector<Object*> m_collidables;

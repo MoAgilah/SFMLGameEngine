@@ -224,6 +224,32 @@ void DynamicObject::Move(const sf::Vector2f& pos)
 	GetColVolume()->Move(pos);
 }
 
+Direction DynamicObject::GetFacingDirection()
+{
+	const sf::Vector2f& currentVel = m_velocity;
+
+	Direction currentDir = Direction::DDIR;
+
+	if (currentVel.x != 0.f || currentVel.y != 0.f)
+	{
+		float vxa = std::abs(currentVel.x);
+		float vya = std::abs(currentVel.y);
+
+		if (vxa > vya)
+		{
+			currentDir = (currentVel.x < 0) ?
+				Direction::LDIR : Direction::RDIR;
+		}
+		else
+		{
+			currentDir = (currentVel.y < 0) ?
+				Direction::UDIR : Direction::DDIR;
+		}
+	}
+
+	return currentDir;
+}
+
 void DynamicObject::CheckForHorizontalBounds(float deltaTime)
 {
 }
