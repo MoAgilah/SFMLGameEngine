@@ -158,6 +158,7 @@ void CollisionManager::PlayerToObjectCollisions(DynamicObject* ply, Object* obj)
 	{
 		if (obj->Intersects(ply))
 		{
+			DynamicObjectToBoxResolutions(ply, (Box*)obj);
 		}
 	}
 	else if (IsCollectableObject(obj->GetID()))
@@ -179,14 +180,21 @@ void CollisionManager::PlayerToObjectCollisions(DynamicObject* ply, Object* obj)
 		if (obj->Intersects(ply))
 			PlayerToEnemyResolutions(ply, (Enemy*)obj);
 	}
+	else
+	{
+		if (IsDynamicObject(ply->GetID()) && IsDynamicObject(obj->GetID()))
+			DynamicObjectToDynamicObjectCollisions(ply, (DynamicObject*)obj);
+	}
 }
 
 void CollisionManager::PlayerToEnemyResolutions(DynamicObject* ply, Enemy* enmy)
 {
+	// add special instruction for enemy resolution
 }
 
 void CollisionManager::DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir)
 {
+	// utilise tile for resolution
 }
 
 //void CollisionManager::DynamicObjectToBoxResolutions(Direction dirOfTravel, const Point& prevOverlap, DynamicObject* obj, BoundingBox* box, bool resolveUpDir)

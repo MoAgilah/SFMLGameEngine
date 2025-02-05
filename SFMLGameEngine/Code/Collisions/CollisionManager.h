@@ -42,11 +42,11 @@ private:
 
 	void PlayerToObjectCollisions(DynamicObject* ply, Object* obj);
 
-	void PlayerToEnemyResolutions(DynamicObject* ply, Enemy* enmy);
+	virtual void PlayerToEnemyResolutions(DynamicObject* ply, Enemy* enmy);
 
-	void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
+	virtual void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
 
-	void DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2);
+	virtual void DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2);
 
 	static std::vector<std::string> s_canCollideWithTile;
 	static std::vector<std::string> s_dynamicCollectables;
