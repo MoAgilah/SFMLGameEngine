@@ -23,13 +23,14 @@ public:
 	void CheckIsInView();
 
 	virtual void AddEnemies();
+	virtual void AddGUI();
 	virtual void AddObjects();
 	virtual void AddForeGroundSprites();
 
 private:
 
-	virtual void AddGUI();
 	virtual void UpdateGUI();
+	virtual void RenderGUI(sf::RenderWindow& window);
 
 protected:
 

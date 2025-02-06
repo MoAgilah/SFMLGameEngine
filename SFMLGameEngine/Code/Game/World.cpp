@@ -14,6 +14,8 @@ World::World()
 
 void World::Update(float deltaTime)
 {
+	UpdateGUI();
+
 	for (const auto& enemy : m_enemies)
 	{
 		if (!enemy->GetActive())
@@ -29,8 +31,6 @@ void World::Update(float deltaTime)
 
 		object->Update(deltaTime);
 	}
-
-	UpdateGUI();
 }
 
 void World::Render(sf::RenderWindow& window)
@@ -52,6 +52,8 @@ void World::Render(sf::RenderWindow& window)
 
 		object->Render(window);
 	}
+
+	RenderGUI(window);
 }
 
 void World::ResetLevel()
@@ -78,6 +80,10 @@ void World::AddEnemies()
 {
 }
 
+void World::AddGUI()
+{
+}
+
 void World::AddObjects()
 {
 }
@@ -86,11 +92,11 @@ void World::AddForeGroundSprites()
 {
 }
 
-void World::AddGUI()
-{
-}
-
 void World::UpdateGUI()
 {
 	auto view = GameManager::Get()->GetCamera().GetView();
+}
+
+void World::RenderGUI(sf::RenderWindow& window)
+{
 }
