@@ -49,7 +49,7 @@ int FrameWork::Run()
 		float frameTime = newTime - currentTime;
 		currentTime = newTime;
 
-		window.clear(sf::Color::White);
+		window.clear(GameConstants::WindowColour);
 
 		while (frameTime > 0.0)
 		{

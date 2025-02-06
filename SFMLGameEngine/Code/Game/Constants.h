@@ -1,6 +1,7 @@
 #pragma once
-#include "../Utilities/Point.h"
 #include <string>
+#include <SFML/Graphics.hpp>
+#include "../Utilities/Point.h"
 
 class GameConstants
 {
@@ -10,6 +11,7 @@ public:
 	static float FPS;
 	static float Gravity;
 	static float ObjectSpeed;
+	static sf::Color WindowColour;
 	static Point ScreenDim;
 	static Point Scale;
 	static std::string WindowTitle;

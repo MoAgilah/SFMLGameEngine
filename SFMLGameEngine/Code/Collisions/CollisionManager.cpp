@@ -197,6 +197,11 @@ void CollisionManager::DynamicObjectToBoxResolutions(DynamicObject* ply, Box* bo
 	// utilise tile for resolution
 }
 
+void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2)
+{
+	// add special instruction for dynamic object to dynamic object resolution
+}
+
 //void CollisionManager::DynamicObjectToBoxResolutions(Direction dirOfTravel, const Point& prevOverlap, DynamicObject* obj, BoundingBox* box, bool resolveUpDir)
 //{
 //	// the collision came from a horizontal direction

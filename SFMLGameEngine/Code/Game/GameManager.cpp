@@ -43,3 +43,8 @@ void GameManager::ChangeWorld(World* world)
 {
 	m_world.reset(world);
 }
+
+void GameManager::ChangeCollisionManager(CollisionManager* mgr)
+{
+	m_collisionManager.reset(mgr);
+}

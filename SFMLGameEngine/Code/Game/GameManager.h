@@ -33,6 +33,8 @@ public:
 	void ChangeWorld(World* world);
 	World* GetWorld() { return m_world.get(); }
 
+	void ChangeCollisionManager(CollisionManager* mgr);
+
 	Timer& GetTimer() { return m_timer; }
 	Camera& GetCamera() { return m_camera; }
 	InputManager& GetInputManager() { return m_inputManager; }
