@@ -76,7 +76,7 @@ inline void ResourceLoader<sf::Shader>::LoadResources(fs::path path)
 
 	for (const auto& entry : fs::directory_iterator(path))
 	{
-		auto type = ShaderTypeFromFileExtension(entry.path().extension().string());
+		auto type = ShaderTypeFromFileExtension(entry.path().extension().string().substr(1));
 		if (type)
 		{
 			auto filename = entry.path().filename().replace_extension().string();

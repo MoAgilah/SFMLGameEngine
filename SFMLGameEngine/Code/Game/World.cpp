@@ -14,7 +14,7 @@ World::World()
 
 void World::Update(float deltaTime)
 {
-	UpdateGUI();
+	UpdateGUI(deltaTime);
 
 	for (const auto& enemy : m_enemies)
 	{
@@ -92,7 +92,7 @@ void World::AddForeGroundSprites()
 {
 }
 
-void World::UpdateGUI()
+void World::UpdateGUI(float deltaTime)
 {
 	auto view = GameManager::Get()->GetCamera().GetView();
 }

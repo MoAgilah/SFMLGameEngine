@@ -67,6 +67,9 @@
     <Filter Include="Source Files\Code\Utilities">
       <UniqueIdentifier>{470d85ac-c526-4a7d-afea-4c8567264a4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{e67edff7-99ac-41ea-8886-20c6cf0d297e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -138,12 +141,6 @@
     <ClCompile Include="Code\GameStates\LoadingState.cpp">
       <Filter>Source Files\Code\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="Code\UI\FlashingText.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\UI\Menu.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Utilities\Point.cpp">
       <Filter>Source Files\Code\Utilities</Filter>
     </ClCompile>
@@ -155,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="Code\Collisions\BoundingVolume.cpp">
       <Filter>Source Files\Code\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\UIElements\FlashingText.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\UIElements\Menu.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,12 +233,6 @@
     <ClInclude Include="Code\GameStates\LoadingState.h">
       <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="Code\UI\FlashingText.h">
-      <Filter>Header Files\Code\UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\UI\Menu.h">
-      <Filter>Header Files\Code\UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utilities\Point.h">
       <Filter>Header Files\Code\Utilities</Filter>
     </ClInclude>
@@ -250,6 +247,12 @@
     </ClInclude>
     <ClInclude Include="Code\Collisions\BoundingVolume.h">
       <Filter>Header Files\Code\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\FlashingText.h">
+      <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\Menu.h">
+      <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,6 +291,9 @@
     </None>
     <None Include="bin\Debug\openal32.dll">
       <Filter>Resource Files\Dlls</Filter>
+    </None>
+    <None Include="Resources\Shaders\FadeInOutShader.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

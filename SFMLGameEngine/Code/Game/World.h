@@ -29,7 +29,7 @@ public:
 
 private:
 
-	virtual void UpdateGUI();
+	virtual void UpdateGUI(float deltaTime);
 	virtual void RenderGUI(sf::RenderWindow& window);
 
 protected:
