@@ -4,6 +4,15 @@
 #include <format>
 #include <iostream>
 
+void CalculateTextOrigin(sf::Text& text)
+{
+	sf::FloatRect textRect = text.getLocalBounds();
+	auto len = text.getString().getSize();
+
+	text.setOrigin(((textRect.left + text.getCharacterSize()) * len) / 2.0f,
+		(textRect.top + textRect.height) / 2.0f);
+}
+
 FlashingText::FlashingText(const std::string fontName, float fadeTime)
 	: m_paused(false), m_maxTime(fadeTime), m_timer(m_maxTime)
 {
@@ -21,9 +30,7 @@ void FlashingText::Init(const std::string text, unsigned int charSize, const sf:
 	m_text.setOutlineThickness(charSize / 10.f);
 	m_text.setOutlineColor(sf::Color::Black);
 
-	sf::FloatRect textRect = m_text.getLocalBounds();
-	m_text.setOrigin((textRect.left + textRect.width) / 2.0f,
-		(textRect.top + textRect.height) / 2.0f);
+	CalculateTextOrigin(m_text);
 
 	m_text.setPosition(pos);
 }
@@ -33,13 +40,10 @@ void FlashingText::Reset(const std::string text)
 	m_text.setString(text);
 
 	sf::FloatRect textRect = m_text.getLocalBounds();
-	if (text == "1")
-	{
-		textRect.left - 5;
-		textRect.width = 50;
-	}
+	unsigned int charSize = m_text.getCharacterSize();
+	auto len = m_text.getString().getSize();
 
-	m_text.setOrigin((textRect.left + textRect.width) / 2.0f,
+	m_text.setOrigin(((textRect.left + charSize) * len) / 2.0f,
 		(textRect.top + textRect.height) / 2.0f);
 
 	m_timer.ResetTime();
