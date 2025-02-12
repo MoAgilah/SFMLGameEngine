@@ -210,6 +210,7 @@ public:
 	Point GetSeparationVector(BoundingCircle* other) override;
 	Point GetSeparationVector(BoundingCapsule* other) override;
 
+	float GetLength() const { return m_length; }
 	float GetRadius() const { return m_radius; }
 	Line& GetSegment() { return m_segment; }
 
@@ -222,6 +223,7 @@ protected:
 	void MakeCapsuleShape();
 
 private:
+
 	bool Intersects(BoundingBox* box) override;
 	bool Intersects(BoundingCircle* circle) override;
 	bool Intersects(BoundingCapsule* capsule) override;
@@ -234,6 +236,7 @@ private:
 	static int s_count;
 	float m_radius;
 	float m_angle;
+	float m_length;
 	Line m_segment;
 	sf::CircleShape m_circle1;
 	sf::CircleShape m_circle2;

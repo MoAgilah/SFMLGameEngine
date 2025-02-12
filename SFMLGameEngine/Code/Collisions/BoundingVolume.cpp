@@ -697,9 +697,11 @@ BoundingCapsule::BoundingCapsule(float radius, const Line& segment)
 
 void BoundingCapsule::Reset(float radius, float length, float angle)
 {
+	m_length = length;
+
 	auto rect = GetRect();
-	rect->setSize(Point(radius * 2.f, length));
-	rect->setOrigin(radius, length / 2.f);
+	rect->setSize(Point(radius * 2.f, m_length));
+	rect->setOrigin(radius, m_length / 2.f);
 	rect->setRotation(angle);
 
 	m_circle1.setRadius(radius);
