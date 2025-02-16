@@ -54,7 +54,7 @@ public:
 	BoundingCapsule* GetBoundingCapsule() { return static_cast<BoundingCapsule*>(m_colVolume.get()); }
 	BoundingVolume* GetColVolume() { return m_colVolume.get(); }
 
-	virtual void ResolveCollisions(float time) = 0;
+	virtual void ResolveCollisions(float time, const Point& seperationVector, float restitution = 0.8f) = 0;
 
 	const std::string& GetID() const { return m_texID; }
 	void SetID(const std::string& texID) { m_texID = texID; }

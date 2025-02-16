@@ -63,7 +63,7 @@ void Tile::ResolveCollision(DynamicObject* obj)
 		[[fallthrough]];
 	case Types::RCRN:
 	{
-		Point seperationVector = obj->GetColVolume()->GetSeparationVector(&m_aabb);
+		Point seperationVector = obj->GetColVolume()->GetSeparationVector((BoundingVolume*)&m_aabb);
 		Direction colDir = GetCollisionDirection(seperationVector, obj->GetVelocity(), Point());
 
 		if (dir == DDIR)
@@ -220,22 +220,7 @@ void Tile::Render(sf::RenderWindow& window)
 
 Point Tile::GetSeperationVector(DynamicObject* obj)
 {
-	Point seperationVector;
-
-	switch (obj->GetColVolume()->GetType())
-	{
-	case VolumeType::Box:
-		seperationVector = m_aabb.GetSeparationVector(obj->GetBoundingBox());
-		break;
-	case VolumeType::Circle:
-		seperationVector = m_aabb.GetSeparationVector(obj->GetBoundingCircle());
-		break;
-	case VolumeType::Capsule:
-		seperationVector = m_aabb.GetSeparationVector(obj->GetBoundingCapsule());
-		break;
-	}
-
-	return seperationVector;
+	return m_aabb.GetSeparationVector((BoundingVolume*)obj->GetColVolume());
 }
 
 void Tile::ResolveObjectToBoxTop(DynamicObject* obj)

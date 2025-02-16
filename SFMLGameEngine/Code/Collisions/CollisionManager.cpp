@@ -245,7 +245,8 @@ void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj
 	float tFirst, tLast = 0;
 	if (obj1->GetColVolume()->IntersectsMoving(obj2->GetColVolume(), obj1->GetVelocity(), obj2->GetVelocity(), tFirst, tLast))
 	{
-		obj1->ResolveCollisions(tFirst);
-		obj2->ResolveCollisions(tFirst);
+		Point seperationVector = obj1->GetColVolume()->GetSeparationVector(obj2->GetColVolume());
+		obj1->ResolveCollisions(tFirst, seperationVector);
+		obj2->ResolveCollisions(tFirst, seperationVector);
 	}
 }

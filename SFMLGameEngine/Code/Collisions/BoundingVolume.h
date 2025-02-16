@@ -36,6 +36,8 @@ public:
 	virtual bool Intersects(BoundingVolume* volume) = 0;
 	virtual bool IntersectsMoving(BoundingVolume* box, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 
+	virtual Point GetSeparationVector(BoundingVolume* volume) = 0;
+
 	VolumeType GetType() { return m_type; }
 
 	virtual void SetPosition(const Point& pos) { m_shape->setPosition(pos); }
@@ -51,10 +53,6 @@ public:
 	void Move(const Point& pos);
 
 	virtual Point GetPoint(Side side) = 0;
-
-	virtual Point GetSeparationVector(BoundingBox* other) = 0;
-	virtual Point GetSeparationVector(BoundingCircle* other) = 0;
-	virtual Point GetSeparationVector(BoundingCapsule* other) = 0;
 
 	void SetFillColour(const sf::Color& col) { m_shape->setFillColor(col); }
 	void SetOutlineColour(const sf::Color& col) { m_shape->setOutlineColor(col); }
@@ -79,6 +77,10 @@ private:
 	virtual bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 	virtual bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) = 0;
 
+	virtual Point GetSeparationVector(BoundingBox* other) = 0;
+	virtual Point GetSeparationVector(BoundingCircle* other) = 0;
+	virtual Point GetSeparationVector(BoundingCapsule* other) = 0;
+
 	VolumeType m_type = VolumeType::None;
 	std::unique_ptr<sf::Shape> m_shape;
 };
@@ -101,9 +103,7 @@ public:
 	bool Intersects(BoundingVolume* volume) override;
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
-	Point GetSeparationVector(BoundingBox* other) override;
-	Point GetSeparationVector(BoundingCircle* other) override;
-	Point GetSeparationVector(BoundingCapsule* other) override;
+	Point GetSeparationVector(BoundingVolume* volume) override;
 
 	const Point& GetMin() const { return m_min; }
 	const Point& GetMax() const { return m_max; }
@@ -129,6 +129,10 @@ private:
 	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+
+	Point GetSeparationVector(BoundingBox* other) override;
+	Point GetSeparationVector(BoundingCircle* other) override;
+	Point GetSeparationVector(BoundingCapsule* other) override;
 
 	int m_boxNumber;
 	static int s_count;
@@ -156,11 +160,9 @@ public:
 	bool Intersects(BoundingVolume* volume);
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
-	Point GetPoint(Side side);
+	Point GetSeparationVector(BoundingVolume* volume) override;
 
-	Point GetSeparationVector(BoundingBox* other) override;
-	Point GetSeparationVector(BoundingCircle* other) override;
-	Point GetSeparationVector(BoundingCapsule* other) override;
+	Point GetPoint(Side side);
 
 	float GetRadius() const { return m_radius; }
 
@@ -179,6 +181,10 @@ private:
 	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+
+	Point GetSeparationVector(BoundingBox* other) override;
+	Point GetSeparationVector(BoundingCircle* other) override;
+	Point GetSeparationVector(BoundingCapsule* other) override;
 
 	int m_circleNumber;
 	static int s_count;
@@ -204,11 +210,9 @@ public:
 	bool Intersects(BoundingVolume* volume);
 	bool IntersectsMoving(BoundingVolume* volume, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 
-	Point GetPoint(Side side);
+	Point GetSeparationVector(BoundingVolume* volume) override;
 
-	Point GetSeparationVector(BoundingBox* other) override;
-	Point GetSeparationVector(BoundingCircle* other) override;
-	Point GetSeparationVector(BoundingCapsule* other) override;
+	Point GetPoint(Side side);
 
 	float GetLength() const { return m_length; }
 	float GetRadius() const { return m_radius; }
@@ -231,6 +235,10 @@ private:
 	bool IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
 	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override;
+
+	Point GetSeparationVector(BoundingBox* other) override;
+	Point GetSeparationVector(BoundingCircle* other) override;
+	Point GetSeparationVector(BoundingCapsule* other) override;
 
 	int m_capsuleNumber;
 	static int s_count;

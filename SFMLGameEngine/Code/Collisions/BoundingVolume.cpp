@@ -160,68 +160,9 @@ bool BoundingBox::IntersectsMoving(BoundingVolume* volume, const Point& va, cons
 	return false;
 }
 
-Point BoundingBox::GetSeparationVector(BoundingBox* other)
+Point BoundingBox::GetSeparationVector(BoundingVolume* volume)
 {
-	// Calculate delta (absolute difference in positions)
-	Point delta = other->GetPosition() - GetPosition();
-	delta = { std::abs(delta.x), std::abs(delta.y) };  // Make delta absolute
-
-	// Calculate overlap using provided formula
-	Point overlap = (other->m_extents + m_extents) - delta;
-
-	// Find the minimum translation direction
-	if (overlap.x < overlap.y)
-	{
-		// Push along X axis
-		float direction = (other->GetPosition().x < GetPosition().x) ? -1.0f : 1.0f;
-		return { overlap.x * direction, 0 };
-	}
-	else
-	{
-		// Push along Y axis
-		float direction = (other->GetPosition().y < GetPosition().y) ? -1.0f : 1.0f;
-		return { 0, overlap.y * direction };
-	}
-}
-
-Point BoundingBox::GetSeparationVector(BoundingCircle* other)
-{
-	Point circlePos = other->GetPosition();
-
-	// Find the closest point on the AABB to the circle's center
-	Point closestPoint = {
-		std::max(m_min.x, std::min(circlePos.x, m_max.x)),
-		std::max(m_min.y, std::min(circlePos.y, m_max.y))
-	};
-
-	// Compute the vector from the closest point to the circle's center
-	Point displacement = circlePos - closestPoint;
-	float distance = pnt::length(displacement);
-
-	// Calculate the penetration depth
-	float penetrationDepth = other->GetRadius() - distance;
-
-	pnt::Normalize(displacement)* penetrationDepth;
-
-	// Get the separation vector by normalizing the displacement and scaling by penetration depth
-	return pnt::Normalize(displacement) * penetrationDepth;
-}
-
-Point BoundingBox::GetSeparationVector(BoundingCapsule* other)
-{
-	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
-
-	// Use AABB vs Circle logic with closest point as the "circle center"
-	Point clampedPoint = {
-		std::max(m_min.x, std::min(closestPoint.x, m_max.x)),
-		std::max(m_min.y, std::min(closestPoint.y, m_max.y))
-	};
-
-	Point displacement = closestPoint - clampedPoint;
-	float distance = pnt::length(displacement);
-
-	float penetrationDepth = other->GetRadius() - distance;
-	return pnt::Normalize(displacement) * penetrationDepth;
+	return Point();
 }
 
 Line BoundingBox::GetSide(Side side)
@@ -395,6 +336,71 @@ bool BoundingBox::IntersectsMoving(BoundingCapsule* capsule, const Point& va, co
 	return capsule->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
 }
 
+Point BoundingBox::GetSeparationVector(BoundingBox* other)
+{
+	// Calculate delta (absolute difference in positions)
+	Point delta = other->GetPosition() - GetPosition();
+	delta = { std::abs(delta.x), std::abs(delta.y) };  // Make delta absolute
+
+	// Calculate overlap using provided formula
+	Point overlap = (other->m_extents + m_extents) - delta;
+
+	// Find the minimum translation direction
+	if (overlap.x < overlap.y)
+	{
+		// Push along X axis
+		float direction = (other->GetPosition().x < GetPosition().x) ? -1.0f : 1.0f;
+		return { overlap.x * direction, 0 };
+	}
+	else
+	{
+		// Push along Y axis
+		float direction = (other->GetPosition().y < GetPosition().y) ? -1.0f : 1.0f;
+		return { 0, overlap.y * direction };
+	}
+}
+
+Point BoundingBox::GetSeparationVector(BoundingCircle* other)
+{
+	Point circlePos = other->GetPosition();
+
+	// Find the closest point on the AABB to the circle's center
+	Point closestPoint = {
+		std::max(m_min.x, std::min(circlePos.x, m_max.x)),
+		std::max(m_min.y, std::min(circlePos.y, m_max.y))
+	};
+
+	// Compute the vector from the closest point to the circle's center
+	Point displacement = circlePos - closestPoint;
+	float distance = pnt::length(displacement);
+
+	// Calculate the penetration depth
+	float penetrationDepth = other->GetRadius() - distance;
+
+	pnt::Normalize(displacement)* penetrationDepth;
+
+	// Get the separation vector by normalizing the displacement and scaling by penetration depth
+	return pnt::Normalize(displacement) * penetrationDepth;
+}
+
+Point BoundingBox::GetSeparationVector(BoundingCapsule* other)
+{
+	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
+
+	// Use AABB vs Circle logic with closest point as the "circle center"
+	Point clampedPoint = {
+		std::max(m_min.x, std::min(closestPoint.x, m_max.x)),
+		std::max(m_min.y, std::min(closestPoint.y, m_max.y))
+	};
+
+	Point displacement = closestPoint - clampedPoint;
+	float distance = pnt::length(displacement);
+
+	float penetrationDepth = other->GetRadius() - distance;
+	return pnt::Normalize(displacement) * penetrationDepth;
+}
+
+
 BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
 {
 	// Get the min and max points of the AABB
@@ -525,6 +531,11 @@ bool BoundingCircle::IntersectsMoving(BoundingVolume* volume, const Point& va, c
 	return false;
 }
 
+Point BoundingCircle::GetSeparationVector(BoundingVolume* volume)
+{
+	return Point();
+}
+
 Point BoundingCircle::GetPoint(Side side)
 {
 	switch (side)
@@ -540,41 +551,6 @@ Point BoundingCircle::GetPoint(Side side)
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
 	}
-}
-
-Point BoundingCircle::GetSeparationVector(BoundingBox* other)
-{
-	return other->GetSeparationVector(this);
-}
-
-Point BoundingCircle::GetSeparationVector(BoundingCircle* other)
-{
-	Point displacement = other->GetPosition() - GetPosition();
-	float distance = pnt::length(displacement);
-	float radiusSum = other->GetRadius() + GetRadius();
-
-	// Compute the penetration depth
-	float penetrationDepth = radiusSum - distance;
-
-	// Compute the separation vector (normalize displacement and scale by penetration)
-	return pnt::Normalize(displacement) * penetrationDepth;
-}
-
-Point BoundingCircle::GetSeparationVector(BoundingCapsule* other)
-{
-	// Find the closest point on the capsule's segment to the circle
-	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
-
-	// Use Circle vs Circle logic with the closest point as the "capsule circle centre"
-	Point displacement = GetPosition() - closestPoint;
-	float distance = pnt::length(displacement);
-	float radiusSum = GetRadius() + other->GetRadius();
-
-	// Compute the penetration depth
-	float penetrationDepth = radiusSum - distance;
-
-	// Compute the separation vector (normalize displacement and scale by penetration)
-	return pnt::Normalize(displacement) * penetrationDepth;
 }
 
 bool BoundingCircle::Intersects(BoundingBox* box)
@@ -650,6 +626,41 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 bool BoundingCircle::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	return capsule->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
+}
+
+Point BoundingCircle::GetSeparationVector(BoundingBox* other)
+{
+	return other->GetSeparationVector((BoundingVolume*)this);
+}
+
+Point BoundingCircle::GetSeparationVector(BoundingCircle* other)
+{
+	Point displacement = other->GetPosition() - GetPosition();
+	float distance = pnt::length(displacement);
+	float radiusSum = other->GetRadius() + GetRadius();
+
+	// Compute the penetration depth
+	float penetrationDepth = radiusSum - distance;
+
+	// Compute the separation vector (normalize displacement and scale by penetration)
+	return pnt::Normalize(displacement) * penetrationDepth;
+}
+
+Point BoundingCircle::GetSeparationVector(BoundingCapsule* other)
+{
+	// Find the closest point on the capsule's segment to the circle
+	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
+
+	// Use Circle vs Circle logic with the closest point as the "capsule circle centre"
+	Point displacement = GetPosition() - closestPoint;
+	float distance = pnt::length(displacement);
+	float radiusSum = GetRadius() + other->GetRadius();
+
+	// Compute the penetration depth
+	float penetrationDepth = radiusSum - distance;
+
+	// Compute the separation vector (normalize displacement and scale by penetration)
+	return pnt::Normalize(displacement) * penetrationDepth;
 }
 
 int BoundingCapsule::s_count = 0;
@@ -810,43 +821,14 @@ bool BoundingCapsule::IntersectsMoving(BoundingVolume* volume, const Point& va, 
 	}
 }
 
-Point BoundingCapsule::GetPoint(Side side)
+Point BoundingCapsule::GetSeparationVector(BoundingVolume* volume)
 {
 	return Point();
 }
 
-Point BoundingCapsule::GetSeparationVector(BoundingBox* other)
+Point BoundingCapsule::GetPoint(Side side)
 {
-	return other->GetSeparationVector(this);
-}
-
-Point BoundingCapsule::GetSeparationVector(BoundingCircle* other)
-{
-	return other->GetSeparationVector(this);
-}
-
-Point BoundingCapsule::GetSeparationVector(BoundingCapsule* other)
-{
-	// Start with the naive approach: project each capsule's spine onto the other.
-	Point closest1 = m_segment.ClosestPointOnLineSegment(other->m_segment.start);
-	Point closest2 = other->m_segment.ClosestPointOnLineSegment(m_segment.start);
-
-	// Get the closest point on cap1 for the closest point found on cap2
-	closest1 = m_segment.ClosestPointOnLineSegment(closest2);
-
-	// Get the closest point on cap2 for the closest point found on cap1
-	closest2 = other->m_segment.ClosestPointOnLineSegment(closest1);
-
-	// Use Circle vs Circle logic with the closest points as "capsule centres"
-	Point displacement = closest2 - closest1;
-	float distance = pnt::length(displacement);
-	float radiusSum = GetRadius() + other->GetRadius();
-
-	// Compute the penetration depth
-	float penetrationDepth = radiusSum - distance;
-
-	// Compute the separation vector (normalize displacement and scale by penetration)
-	return pnt::Normalize(displacement) * penetrationDepth;
+	return Point();
 }
 
 bool BoundingCapsule::Intersects(const Point& pnt) const
@@ -955,6 +937,40 @@ bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va
 	BoundingBox box2 = BoundingBox(capsule);
 
 	return box1.IntersectsMoving((BoundingVolume*)&box2, va, vb, tfirst, tlast);
+}
+
+Point BoundingCapsule::GetSeparationVector(BoundingBox* other)
+{
+	return other->GetSeparationVector((BoundingVolume*)this);
+}
+
+Point BoundingCapsule::GetSeparationVector(BoundingCircle* other)
+{
+	return other->GetSeparationVector((BoundingVolume*)this);
+}
+
+Point BoundingCapsule::GetSeparationVector(BoundingCapsule* other)
+{
+	// Start with the naive approach: project each capsule's spine onto the other.
+	Point closest1 = m_segment.ClosestPointOnLineSegment(other->m_segment.start);
+	Point closest2 = other->m_segment.ClosestPointOnLineSegment(m_segment.start);
+
+	// Get the closest point on cap1 for the closest point found on cap2
+	closest1 = m_segment.ClosestPointOnLineSegment(closest2);
+
+	// Get the closest point on cap2 for the closest point found on cap1
+	closest2 = other->m_segment.ClosestPointOnLineSegment(closest1);
+
+	// Use Circle vs Circle logic with the closest points as "capsule centres"
+	Point displacement = closest2 - closest1;
+	float distance = pnt::length(displacement);
+	float radiusSum = GetRadius() + other->GetRadius();
+
+	// Compute the penetration depth
+	float penetrationDepth = radiusSum - distance;
+
+	// Compute the separation vector (normalize displacement and scale by penetration)
+	return pnt::Normalize(displacement) * penetrationDepth;
 }
 
 void BoundingCapsule::MakeCapsuleShape()
