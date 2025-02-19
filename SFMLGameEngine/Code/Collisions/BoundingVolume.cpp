@@ -162,6 +162,16 @@ bool BoundingBox::IntersectsMoving(BoundingVolume* volume, const Point& va, cons
 
 Point BoundingBox::GetSeparationVector(BoundingVolume* volume)
 {
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return GetSeparationVector((BoundingBox*)volume);
+	case VolumeType::Circle:
+		return GetSeparationVector((BoundingCircle*)volume);
+	case VolumeType::Capsule:
+		return GetSeparationVector((BoundingCapsule*)volume);
+	}
+
 	return Point();
 }
 
@@ -533,6 +543,16 @@ bool BoundingCircle::IntersectsMoving(BoundingVolume* volume, const Point& va, c
 
 Point BoundingCircle::GetSeparationVector(BoundingVolume* volume)
 {
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return GetSeparationVector((BoundingBox*)volume);
+	case VolumeType::Circle:
+		return GetSeparationVector((BoundingCircle*)volume);
+	case VolumeType::Capsule:
+		return GetSeparationVector((BoundingCapsule*)volume);
+	}
+
 	return Point();
 }
 
@@ -791,6 +811,9 @@ void BoundingCapsule::Update(const Point& pos)
 	m_circle1.setPosition(Line(corners[3], corners[2]).GetMidPoint());
 	// Calculate the midpoint of the top side
 	m_circle2.setPosition(Line(corners[1], corners[0]).GetMidPoint());
+
+	m_segment.start = m_circle1.getPosition();
+	m_segment.end = m_circle2.getPosition();
 }
 
 bool BoundingCapsule::Intersects(BoundingVolume* volume)
@@ -823,6 +846,16 @@ bool BoundingCapsule::IntersectsMoving(BoundingVolume* volume, const Point& va, 
 
 Point BoundingCapsule::GetSeparationVector(BoundingVolume* volume)
 {
+	switch (volume->GetType())
+	{
+	case VolumeType::Box:
+		return GetSeparationVector((BoundingBox*)volume);
+	case VolumeType::Circle:
+		return GetSeparationVector((BoundingCircle*)volume);
+	case VolumeType::Capsule:
+		return GetSeparationVector((BoundingCapsule*)volume);
+	}
+
 	return Point();
 }
 

@@ -6,8 +6,9 @@
 int Object::s_objectNum = 0;
 
 Object::Object(const std::string& texID, float radius)
+	: m_texID(texID)
 {
-	m_sprite = std::make_unique<Sprite>(texID);
+	m_sprite = std::make_unique<Sprite>(m_texID);
 	m_colVolume = std::make_unique<BoundingCircle>(radius);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
@@ -16,23 +17,25 @@ Object::Object(const std::string& texID, float radius)
 Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
 	: m_texID(texID)
 {
-	m_sprite = std::make_unique<Sprite>(texID);
+	m_sprite = std::make_unique<Sprite>(m_texID);
 	m_colVolume = std::make_unique<BoundingBox>(boxSize);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
 Object::Object(const std::string& texID, float radius, float length, float angle)
+	: m_texID(texID)
 {
-	m_sprite = std::make_unique<Sprite>(texID);
+	m_sprite = std::make_unique<Sprite>(m_texID);
 	m_colVolume = std::make_unique<BoundingCapsule>(radius, length, angle);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
 Object::Object(const std::string& texID, const AnimationData& animData, float radius)
+	: m_texID(texID)
 {
-	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
+	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingCircle>(radius);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
@@ -41,15 +44,16 @@ Object::Object(const std::string& texID, const AnimationData& animData, float ra
 Object::Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize)
 	: m_texID(texID)
 {
-	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
+	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingBox>(boxSize);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
 Object::Object(const std::string& texID, const AnimationData& animData, float radius, float length, float angle)
+	: m_texID(texID)
 {
-	m_sprite = std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
+	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingCapsule>(radius, length, angle);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);

@@ -54,7 +54,7 @@ public:
 	BoundingCapsule* GetBoundingCapsule() { return static_cast<BoundingCapsule*>(m_colVolume.get()); }
 	BoundingVolume* GetColVolume() { return m_colVolume.get(); }
 
-	virtual void ResolveCollisions(float time, const Point& seperationVector, float restitution = 0.8f) = 0;
+	virtual void ResolveCollisions(float time, const Point& seperationVector) = 0;
 
 	const std::string& GetID() const { return m_texID; }
 	void SetID(const std::string& texID) { m_texID = texID; }
@@ -77,6 +77,8 @@ public:
 	const sf::Vector2f& GetInitialPosition() const { return m_spawnData.initialPos; }
 	void SetInitialPosition(const sf::Vector2f& pos) { m_spawnData.initialPos = pos; }
 
+	virtual float GetRestitution() { return m_restitution; }
+
 private:
 
 	std::string m_texID;
@@ -84,6 +86,7 @@ private:
 	bool m_direction = true;
 	int m_objectID = 0;
 	static int s_objectNum;
+	float m_restitution = 1;
 	SpawnData m_spawnData;
 	std::unique_ptr<BoundingVolume> m_colVolume;
 	std::unique_ptr<Sprite> m_sprite;
