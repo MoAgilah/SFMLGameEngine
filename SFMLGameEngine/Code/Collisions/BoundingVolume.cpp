@@ -606,42 +606,45 @@ bool BoundingCircle::IntersectsMoving(BoundingBox* box, const Point& va, const P
 bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	Point s = GetCenter() - circle->GetCenter(); // Vector between sphere centers
-	float r = circle->m_radius + m_radius; // Sum of sphere radii
-	float c = pnt::dot(s, s) - r * r;
+	float r = circle->m_radius + m_radius;      // Sum of sphere radii
 
+	// Compute relative velocity
+	Point v = vb - va;
+	float a = pnt::dot(v, v);
+
+	// Use a more stable epsilon for numerical comparisons
+	constexpr float EPSILON = 1e-6f;
+	if (a < EPSILON) return false; // No relative motion
+
+	float b = pnt::dot(v, s);
+	if (b >= 0.0f) return false; // Moving away, no intersection
+
+	// Compute squared distance between centers minus squared radius
+	float c = pnt::dot(s, s) - r * r;
 	if (c < 0.0f)
 	{
-		// Spheres initially overlapping so exit directly
+		// Spheres initially overlapping, return immediate collision
 		tfirst = 0.0f;
 		tlast = 0.0f;
 		return true;
 	}
 
-	Point v = vb - va; // Relative motion of s1 with respect to stationary s0
-
-	float a = pnt::dot(v, v);
-	if (a < std::numeric_limits<float>::epsilon())
-		return false; // Spheres not moving relative each other
-
-	float b = pnt::dot(v, s);
-	if (b >= 0.0f)
-		return false; // Spheres not moving towards each other
-
+	// Quadratic formula calculation
 	float d = b * b - a * c;
-	if (d < 0.0f)
-		return false; // No real-valued root, spheres do not intersect
+	if (d < 0.0f) return false; // No real root, no intersection
 
-	// Calculate the times of entry and exit
+	// Compute time of entry and exit
 	float sqrtD = std::sqrt(d);
-	tfirst = (-b - sqrtD) / a; // Time of entry
-	tlast = (-b + sqrtD) / a;  // Time of exit
+	tfirst = (-b - sqrtD) / a;
+	tlast = (-b + sqrtD) / a;
 
-	// Ensure the times are within valid bounds (0 to 1 for a single frame)
-	if (tfirst < 0.0f || tfirst > 1.0f)
-		return false; // No intersection in the given time interval
+	// Ensure valid collision window
+	if (tlast < 0.0f || tfirst > 1.0f) return false;
+	if (tfirst > tlast) return false;
 
-	return true;
+	return true; // Collision detected
 }
+
 
 bool BoundingCircle::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
@@ -940,6 +943,12 @@ bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const 
 bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	auto clsPnt = m_segment.ClosestPointOnLineSegment(circle1->GetCenter());
+
+	// Ensure the closest point is within the capsule's rounded ends
+	if (pnt::length(clsPnt - m_segment.start) <= m_radius)
+		clsPnt = m_segment.start;
+	else if (pnt::length(clsPnt - m_segment.end) <= m_radius)
+		clsPnt = m_segment.end;
 
 	BoundingCircle circle2(m_radius, clsPnt);
 
