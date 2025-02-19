@@ -840,6 +840,8 @@ bool BoundingCapsule::IntersectsMoving(BoundingVolume* volume, const Point& va, 
 	case VolumeType::Capsule:
 		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
 	}
+
+	return false;
 }
 
 Point BoundingCapsule::GetSeparationVector(BoundingVolume* volume)
