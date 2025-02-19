@@ -199,7 +199,7 @@ void CollisionManager::DynamicObjectToBoxResolutions(DynamicObject* ply, Box* bo
 	// utilise tile for resolution
 }
 
-void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2)
+void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2, float time)
 {
 	// add special instruction for dynamic object to dynamic object resolution
 }
@@ -246,9 +246,5 @@ void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj
 
 	float tFirst, tLast = 0;
 	if (obj1->GetColVolume()->IntersectsMoving(obj2->GetColVolume(), obj1->GetVelocity(), obj2->GetVelocity(), tFirst, tLast))
-	{
-		Point seperationVector = obj1->GetColVolume()->GetSeparationVector(obj2->GetColVolume());
-		obj1->ResolveCollisions(tFirst, seperationVector);
-		obj2->ResolveCollisions(tFirst, seperationVector);
-	}
+		DynamicObjectToDynamicObjectResolution(obj1, obj2, tFirst);
 }

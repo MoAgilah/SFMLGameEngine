@@ -52,7 +52,7 @@ private:
 
 	virtual void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
 
-	virtual void DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2);
+	virtual void DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2, float time);
 
 	Grid m_grid;
 	std::vector<Object*> m_collidables;
