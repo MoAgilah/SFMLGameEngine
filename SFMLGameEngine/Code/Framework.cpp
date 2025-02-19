@@ -12,63 +12,63 @@ void FrameWork::Initialise()
 
 int FrameWork::Run()
 {
-	float t = 0.0f;
-	float dt = 1.f / GameConstants::FPS;
+    float t = 0.0f;
+    float dt = 1.f / GameConstants::FPS;  // Fixed time step
 
-	auto& window = m_gameMgr.GetRenderWindow();
+    auto& window = m_gameMgr.GetRenderWindow();
 
-	window.create(sf::VideoMode((int)GameConstants::ScreenDim.x, (int)GameConstants::ScreenDim.y), GameConstants::WindowTitle);
-	window.setFramerateLimit((int)GameConstants::FPS);
+    window.create(sf::VideoMode((int)GameConstants::ScreenDim.x, (int)GameConstants::ScreenDim.y), GameConstants::WindowTitle);
+    window.setFramerateLimit((int)GameConstants::FPS);
 
-	sf::Clock clock;
-	sf::Event event;
-	float currentTime = clock.getElapsedTime().asSeconds();
+    sf::Clock clock;
+    sf::Event event;
+    float currentTime = clock.getElapsedTime().asSeconds();
+    float accumulator = 0.0f;  // Stores leftover time from frames
 
-	while (window.isOpen())
-	{
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+    while (window.isOpen())
+    {
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
 
-			if (event.type == sf::Event::KeyPressed)
-			{
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-					window.close();
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                    window.close();
 
-				m_gameMgr.GetInputManager().ProcessKeyPressedEvent(event);
-			}
+                m_gameMgr.GetInputManager().ProcessKeyPressedEvent(event);
+            }
 
-			if (event.type == sf::Event::KeyReleased)
-			{
-				m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(event);
-			}
-		}
+            if (event.type == sf::Event::KeyReleased)
+            {
+                m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(event);
+            }
+        }
 
-		float newTime = clock.getElapsedTime().asSeconds();
-		float frameTime = newTime - currentTime;
-		currentTime = newTime;
+        float newTime = clock.getElapsedTime().asSeconds();
+        float frameTime = newTime - currentTime;
+        currentTime = newTime;
 
-		window.clear(GameConstants::WindowColour);
+        // Prevent large time steps causing instability
+        if (frameTime > 0.25f)
+            frameTime = 0.25f;
 
-		while (frameTime > 0.0)
-		{
-			float deltaTime = std::min(frameTime, dt);
+        accumulator += frameTime;
 
-			//do update
-			m_gameMgr.Update(deltaTime);
-			//end update
+        // Fixed update loop
+        while (accumulator >= dt)
+        {
+            m_gameMgr.Update(dt);
+            accumulator -= dt;
+            t += dt;
+        }
 
-			frameTime -= deltaTime;
-			t += deltaTime;
-		}
+        // Render once per frame
+        window.clear(GameConstants::WindowColour);
+        m_gameMgr.Render();
+        window.display();
+    }
 
-		//do render
-		m_gameMgr.Render();
-		//end render
-
-		window.display();
-	}
-
-	return 0;
+    return 0;
 }

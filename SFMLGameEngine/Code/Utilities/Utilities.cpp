@@ -72,25 +72,26 @@ float Line::SqDistPointSegment(const Point& p)
 
 Point Line::ClosestPointOnLineSegment(const Point& pnt) const
 {
-	Point AB = end - start;
-	Point AP = pnt - start;
+	Point segmentVector = end - start;
+	Point pointVector = pnt - start;
 
-	float abLengthSquared = pnt::lengthSquared(AB);
-	if (abLengthSquared == 0.0)
+	float segmentLengthSquared = pnt::lengthSquared(segmentVector);
+	if (segmentLengthSquared == 0.0f)
 	{
-		// A and B are the same point
+		// The line segment is just a single point
 		return start;
 	}
 
-	// Projection factor (t)
-	float t = pnt::dot(AP, AB) / abLengthSquared;
+	// Compute projection factor t
+	float t = pnt::dot(pointVector, segmentVector) / segmentLengthSquared;
 
-	// Clamp t to [0, 1] to stay within the segment
-	t = std::max(0.0f, std::min(1.0f, t));
+	// Clamp t to [0, 1] to ensure the closest point is within the segment
+	t = std::clamp(t, 0.0f, 1.0f);
 
-	// Compute the closest point
-	return { start.x + t * AB.x, start.y + t * AB.y };
+	// Compute the closest point on the segment
+	return { start.x + t * segmentVector.x, start.y + t * segmentVector.y };
 }
+
 
 bool Line::IsPointAboveLine(const Point & pnt) const
 {

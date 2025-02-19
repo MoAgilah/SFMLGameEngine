@@ -605,46 +605,41 @@ bool BoundingCircle::IntersectsMoving(BoundingBox* box, const Point& va, const P
 
 bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	Point s = GetCenter() - circle->GetCenter(); // Vector between sphere centers
-	float r = circle->m_radius + m_radius;      // Sum of sphere radii
+	Point s = GetCenter() - circle->GetCenter();
+	float r = circle->m_radius + m_radius;
 
-	// Compute relative velocity
-	Point v = vb - va;
+	Point v = vb - va; // Relative motion
 	float a = pnt::dot(v, v);
 
-	// Use a more stable epsilon for numerical comparisons
 	constexpr float EPSILON = 1e-6f;
 	if (a < EPSILON) return false; // No relative motion
 
 	float b = pnt::dot(v, s);
-	if (b >= 0.0f) return false; // Moving away, no intersection
+	if (b >= 0.0f) return false; // Moving away
 
-	// Compute squared distance between centers minus squared radius
 	float c = pnt::dot(s, s) - r * r;
-	if (c < 0.0f)
+	if (c < -EPSILON) // Initial overlap case
 	{
-		// Spheres initially overlapping, return immediate collision
-		tfirst = 0.0f;
-		tlast = 0.0f;
+		tfirst = tlast = 0.0f;
 		return true;
 	}
 
-	// Quadratic formula calculation
 	float d = b * b - a * c;
-	if (d < 0.0f) return false; // No real root, no intersection
+	if (d < 0.0f) return false; // No real solution
 
-	// Compute time of entry and exit
 	float sqrtD = std::sqrt(d);
 	tfirst = (-b - sqrtD) / a;
 	tlast = (-b + sqrtD) / a;
 
-	// Ensure valid collision window
 	if (tlast < 0.0f || tfirst > 1.0f) return false;
 	if (tfirst > tlast) return false;
 
-	return true; // Collision detected
-}
+	// If tfirst is negative, clamp to zero
+	if (tfirst < 0.0f && tlast >= 0.0f)
+		tfirst = 0.0f;
 
+	return true;
+}
 
 bool BoundingCircle::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
@@ -942,18 +937,35 @@ bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const 
 
 bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	auto clsPnt = m_segment.ClosestPointOnLineSegment(circle1->GetCenter());
+	// Get the closest point on the line segment to the circle's center
+	Point clsPnt = m_segment.ClosestPointOnLineSegment(circle1->GetCenter());
 
-	// Ensure the closest point is within the capsule's rounded ends
-	if (pnt::length(clsPnt - m_segment.start) <= m_radius)
+	// Compute squared distances to avoid unnecessary sqrt operations
+	float distSqToStart = pnt::lengthSquared(clsPnt - m_segment.start);
+	float distSqToEnd = pnt::lengthSquared(clsPnt - m_segment.end);
+	float radiusSq = m_radius * m_radius;
+
+	constexpr float epsilon = 1e-5f; // Small margin for floating-point precision
+
+	// Ensure the closest point is within the capsule region
+	if (distSqToStart <= radiusSq + epsilon)
 		clsPnt = m_segment.start;
-	else if (pnt::length(clsPnt - m_segment.end) <= m_radius)
+	else if (distSqToEnd <= radiusSq + epsilon)
 		clsPnt = m_segment.end;
 
-	BoundingCircle circle2(m_radius, clsPnt);
+	// Create a bounding circle at the closest point on the capsule
+	BoundingCircle capsuleCircle(m_radius, clsPnt);
 
-	return circle2.IntersectsMoving((BoundingVolume*)circle1, va, vb, tfirst, tlast);
+	if (capsuleCircle.Intersects((BoundingVolume*)(circle1)))
+	{
+		tfirst = 0.0f;
+		tlast = 1.0f;
+		return true;
+	}
+
+	return capsuleCircle.IntersectsMoving((BoundingVolume*)circle1, va, vb, tfirst, tlast);
 }
+
 
 bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
