@@ -4,10 +4,18 @@
 #include <SFML/Graphics.hpp>
 #include "Point.h"
 
-bool IsPlayerObject(const std::string& texID);
-bool IsBoxObject(const std::string& texID);
-bool IsEnemyObject(const std::string& texID);
-bool IsCollectableObject(const std::string& texID);
+namespace obj
+{
+	static std::vector<std::string> playerObjects;
+	static std::vector<std::string> boxObjects;
+	static std::vector<std::string> enemyObjects;
+	static std::vector<std::string> collectableObjects;
+
+	bool IsPlayerObject(const std::string& texID);
+	bool IsBoxObject(const std::string& texID);
+	bool IsEnemyObject(const std::string& texID);
+	bool IsCollectableObject(const std::string& texID);
+}
 
 struct Line
 {

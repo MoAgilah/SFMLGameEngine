@@ -28,6 +28,10 @@ public:
 	std::vector<std::shared_ptr<Tile>> GetGrid();
 	std::vector<Object*> GetCollidables();
 
+	static std::vector<std::string> s_canCollideWithTile;
+	static std::vector<std::string> s_dynamicCollectables;
+	static std::vector<std::string> s_dynamicObject;
+
 private:
 
 	bool CanCollideWithTile(const std::string& texID);
@@ -49,10 +53,6 @@ private:
 	virtual void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
 
 	virtual void DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2);
-
-	static std::vector<std::string> s_canCollideWithTile;
-	static std::vector<std::string> s_dynamicCollectables;
-	static std::vector<std::string> s_dynamicObject;
 
 	Grid m_grid;
 	std::vector<Object*> m_collidables;

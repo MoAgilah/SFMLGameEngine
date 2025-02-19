@@ -3,59 +3,26 @@
 #include <numbers>
 #include "../Collisions/BoundingVolume.h"
 
-bool IsPlayerObject(const std::string& texID)
+namespace obj
 {
-	return texID == "";
-}
-
-bool IsBoxObject(const std::string& texID)
-{
-	return texID == "";
-}
-
-std::vector<std::string> enemyObject =
-{
-};
-
-bool IsEnemyObject(const std::string& texID)
-{
-	return std::find(enemyObject.begin(), enemyObject.end(), texID) != enemyObject.end();
-}
-
-std::vector<std::string> collectableObject =
-{
-};
-
-bool IsCollectableObject(const std::string& texID)
-{
-	return std::find(collectableObject.begin(), collectableObject.end(), texID) != collectableObject.end();
-}
-
-namespace
-{
-	float Dot(const Point& a, const Point& b)
+	bool IsPlayerObject(const std::string& texID)
 	{
-		return a.x * b.x + a.y * b.y;
+		return std::find(playerObjects.begin(), playerObjects.end(), texID) != playerObjects.end();
 	}
 
-	float SqDistPointSegment(const Point& a, const Point& b, const Point& c)
+	bool IsBoxObject(const std::string& texID)
 	{
-		Point ab = b - a;
-		Point ac = c - a;
-		Point bc = c - b;
+		return std::find(boxObjects.begin(), boxObjects.end(), texID) != boxObjects.end();
+	}
 
-		float e = Dot(ac, ab);
+	bool IsEnemyObject(const std::string& texID)
+	{
+		return std::find(enemyObjects.begin(), enemyObjects.end(), texID) != enemyObjects.end();
+	}
 
-		// Handle cases where c projects outside ab
-		if (e <= 0.0f)
-			return Dot(ac, ac);
-
-		float f = Dot(ab, ab);
-		if (e >= f)
-			return Dot(bc, bc);
-
-		// Handle cases where c projects onto ab
-		return Dot(ac, ac) - e * e / f;
+	bool IsCollectableObject(const std::string& texID)
+	{
+		return std::find(collectableObjects.begin(), collectableObjects.end(), texID) != collectableObjects.end();
 	}
 }
 
@@ -89,18 +56,18 @@ float Line::SqDistPointSegment(const Point& p)
 	Point ps = p - start;
 	Point pe = p - end;
 
-	float e = Dot(ps, es);
+	float e = pnt::dot(ps, es);
 
 	// Handle cases where c projects outside ab
 	if (e <= 0.0f)
-		return Dot(ps, ps);
+		return pnt::dot(ps, ps);
 
-	float f = Dot(es, es);
+	float f = pnt::dot(es, es);
 	if (e >= f)
-		return Dot(pe, pe);
+		return pnt::dot(pe, pe);
 
 	// Handle cases where c projects onto ab
-	return Dot(ps, ps) - e * e / f;
+	return pnt::dot(ps, ps) - e * e / f;
 }
 
 Point Line::ClosestPointOnLineSegment(const Point& pnt) const

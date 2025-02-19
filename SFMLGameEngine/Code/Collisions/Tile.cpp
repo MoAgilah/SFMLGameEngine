@@ -3,6 +3,8 @@
 #include "../Game/Constants.h"
 #include "../GameObjects/Object.h"
 
+using namespace obj;
+
 Tile::Tile()
 {
 	m_aabb.SetOutlineColour(sf::Color::Black);

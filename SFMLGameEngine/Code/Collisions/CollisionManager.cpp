@@ -9,6 +9,8 @@
 #include "../GameObjects/Collectables.h"
 #include "../Utilities/Utilities.h"
 
+using namespace obj;
+
 std::vector<std::string> CollisionManager::s_canCollideWithTile = {};
 std::vector<std::string> CollisionManager::s_dynamicCollectables = {};
 std::vector<std::string> CollisionManager::s_dynamicObject = {};
