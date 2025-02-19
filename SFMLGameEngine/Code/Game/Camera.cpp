@@ -34,9 +34,9 @@ void Camera::Reset(sf::RenderWindow& window)
 	Update();
 }
 
-bool Camera::IsInView(BoundingBox* box)
+bool Camera::IsInView(BoundingVolume* volume)
 {
-	return box->Intersects((BoundingVolume*)&m_viewBox);
+	return m_viewBox.Intersects(volume);
 }
 
 bool Camera::CheckVerticalBounds(BoundingBox* box)

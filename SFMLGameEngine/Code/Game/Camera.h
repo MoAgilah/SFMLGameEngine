@@ -13,7 +13,7 @@ public:
 
 	sf::View GetView() const { return m_camera; }
 
-	bool IsInView(BoundingBox* box);
+	bool IsInView(BoundingVolume* box);
 	bool CheckVerticalBounds(BoundingBox* box);
 	void Reset(sf::RenderWindow& window);
 	void RenderViewBox(sf::RenderWindow& window);
