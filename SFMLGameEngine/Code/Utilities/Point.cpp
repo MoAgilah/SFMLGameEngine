@@ -201,18 +201,13 @@ Point pnt::Normalize(const Point& p)
 
 bool pnt::IsMovingTowards(Point p1, Point p2, Point v1, Point v2)
 {
-	Point d = p2 - p1;
-	float currentDistSq = pnt::dot(d, d);
+	Point relativePosition = p2 - p1;
+	Point relativeVelocity = v2 - v1;
 
-	Point futureP1 = p1 + v1;
-	Point futureP2 = p2 + v2;
+	float res = pnt::dot(relativePosition, relativeVelocity);
 
-	Point futureD = futureP2 - futureP1;
-
-	float futureDistSq = pnt::dot(futureD, futureD);
-
-	// If future distance is smaller than current, they are moving towards each other
-	return futureDistSq < currentDistSq;
+	// If the dot product is negative, they are moving towards each other
+	return res < 0;
 }
 
 bool pnt::IsBetween(const Point& p, const Point& a, const Point& b)
