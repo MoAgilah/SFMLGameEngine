@@ -41,3 +41,6 @@ struct Line
 
 float GetXDist(const Point& p1, const Point& p2);
 float GetYDist(const Point& p1, const Point& p2);
+// Solves a*t^2 + b*t + c = 0.
+// Returns false if there are no real roots; otherwise, returns the roots in t0 and t1.
+bool SolveQuadratic(float a, float b, float c, float& t0, float& t1);

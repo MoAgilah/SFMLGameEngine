@@ -124,3 +124,15 @@ float GetYDist(const Point& p1, const Point& p2)
 {
 	return p2.y - p1.y;
 }
+
+bool SolveQuadratic(float a, float b, float c, float& t0, float& t1)
+{
+	float discriminant = b * b - 4.0f * a * c;
+	if (discriminant < 0.0f)
+		return false;
+
+	float sqrtDiscriminant = std::sqrt(discriminant);
+	t0 = (-b - sqrtDiscriminant) / (2.0f * a);
+	t1 = (-b + sqrtDiscriminant) / (2.0f * a);
+	return true;
+}

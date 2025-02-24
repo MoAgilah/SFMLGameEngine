@@ -1,6 +1,7 @@
 #include "Point.h"
 #include <stdexcept>
-#include <SFML/Graphics.hpp>
+#include "../Code/Collisions/BoundingVolume.h"
+
 
 Point::Point()
 	: x(0), y(0)
@@ -127,6 +128,51 @@ Point Point::Clamp(const Point& p1, const Point& p2) const
 	return { std::max(p1.x, std::min(p2.x, x)), std::max(p1.y, std::min(p2.y, y)) };
 }
 
+bool Point::MovingPointIntersects(BoundingCircle* circle, const Point& v, float& tfirst, float& tlast)
+{
+	// Compute the vector from the sphere center to the starting point.
+	Point m = (*this) - circle->GetCenter();
+
+	float radius = circle->GetRadius();
+
+	// Coefficients for quadratic: |m + v*t|^2 = radius^2.
+	float a = pnt::dot(v, v);
+	float b = 2.0f * pnt::dot(v, m);
+	float c = pnt::dot(m, m) - radius * radius;
+
+	if (!SolveQuadratic(a, b, c, tfirst, tlast))
+		return false;
+
+	return true;
+}
+
+bool Point::MovingPointIntersects(BoundingCapsule* cap, const Point& v, float& tfirst, float& tlast)
+{
+	Line seg = cap->GetSegment();
+	// Compute the normalized axis direction of the segment.
+	Point d = seg.end - seg.start;
+	d = pnt::Normalize(d);
+
+	// Compute the vector from one end of the segment to the starting point.
+	Point delta = (*this) - seg.start;
+
+	// Remove the component parallel to the segment’s axis.
+	Point delta_perp = delta - d * pnt::dot(delta, d);
+	Point v_perp = v - d * pnt::dot(v, d);
+
+	float radius = cap->GetRadius();
+
+	// Now, the collision condition becomes: |delta_perp + v_perp * t|^2 = radius^2.
+	float a = pnt::dot(v_perp, v_perp);
+	float b = 2.0f * pnt::dot(v_perp, delta_perp);
+	float c = pnt::dot(delta_perp, delta_perp) - radius * radius;
+
+	if (!SolveQuadratic(a, b, c, tfirst, tlast))
+		return false;
+
+	return true;
+}
+
 float pnt::lengthSquared(const Point& p)
 {
 	return p.x * p.x + p.y * p.y;
@@ -167,4 +213,10 @@ bool pnt::IsMovingTowards(Point p1, Point p2, Point v1, Point v2)
 
 	// If future distance is smaller than current, they are moving towards each other
 	return futureDistSq < currentDistSq;
+}
+
+bool pnt::IsBetween(const Point& p, const Point& a, const Point& b)
+{
+	// p is between a and b if the dot product of (p - a) and (p - b) is non-positive.
+	return dot(p - a, p - b) <= 0.0f;
 }

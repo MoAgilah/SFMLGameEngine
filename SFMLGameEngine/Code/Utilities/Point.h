@@ -2,6 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
+class BoundingCircle;
+class BoundingCapsule;
+
 class Point
 {
 public:
@@ -31,6 +34,9 @@ public:
 
 	Point Clamp(const Point& p1, const Point& p2) const;
 
+	bool MovingPointIntersects(BoundingCircle* circle, const Point& v, float& tfirst, float& tlast);
+	bool MovingPointIntersects(BoundingCapsule* circle, const Point& v, float& tfirst, float& tlast);
+
 	float x;
 	float y;
 };
@@ -43,4 +49,5 @@ namespace pnt
 	float length(const Point& p);
 	Point Normalize(const Point& p);
 	bool IsMovingTowards(Point p1, Point p2, Point v1, Point v2);
+	bool IsBetween(const Point& p, const Point& a, const Point& b);
 }
