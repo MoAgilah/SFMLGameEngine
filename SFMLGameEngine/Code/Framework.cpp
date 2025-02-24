@@ -12,56 +12,55 @@ void FrameWork::Initialise()
 
 int FrameWork::Run()
 {
-    float t = 0.0f;
-    float dt = 1.f / GameConstants::FPS;  // Fixed time step
+    // Fixed time step (e.g., for 60 updates per second)
+    const float dt = 1.f / GameConstants::FPS;
 
     auto& window = m_gameMgr.GetRenderWindow();
+    window.create(sf::VideoMode(static_cast<int>(GameConstants::ScreenDim.x),
+        static_cast<int>(GameConstants::ScreenDim.y)),
+        GameConstants::WindowTitle);
 
-    window.create(sf::VideoMode((int)GameConstants::ScreenDim.x, (int)GameConstants::ScreenDim.y), GameConstants::WindowTitle);
-    window.setFramerateLimit((int)GameConstants::FPS);
+    window.setFramerateLimit(static_cast<int>(GameConstants::FPS));
 
     sf::Clock clock;
-    sf::Event event;
-    float currentTime = clock.getElapsedTime().asSeconds();
-    float accumulator = 0.0f;  // Stores leftover time from frames
+    float accumulator = 0.0f;
 
     while (window.isOpen())
     {
+        // Process events
+        sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-                window.close();
-
-            if (event.type == sf::Event::KeyPressed)
             {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                window.close();
+            }
+            else if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Escape)
                     window.close();
 
                 m_gameMgr.GetInputManager().ProcessKeyPressedEvent(event);
             }
-
-            if (event.type == sf::Event::KeyReleased)
+            else if (event.type == sf::Event::KeyReleased)
             {
                 m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(event);
             }
         }
 
-        float newTime = clock.getElapsedTime().asSeconds();
-        float frameTime = newTime - currentTime;
-        currentTime = newTime;
+        // Calculate elapsed time for this frame
+        float frameTime = clock.restart().asSeconds();
 
-        // Prevent large time steps causing instability
+        // Clamp frameTime to avoid instability during long frames
         if (frameTime > 0.25f)
             frameTime = 0.25f;
-
         accumulator += frameTime;
 
-        // Fixed update loop
+        // Fixed update loop: process as many fixed time steps as necessary
         while (accumulator >= dt)
         {
             m_gameMgr.Update(dt);
             accumulator -= dt;
-            t += dt;
         }
 
         // Render once per frame

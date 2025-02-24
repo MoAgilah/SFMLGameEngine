@@ -159,6 +159,15 @@
     <ClCompile Include="Code\UIElements\Menu.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="Code\UIElements\MultiPageMenu.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameStates\MenuState.cpp">
+      <Filter>Source Files\Code\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameStates\PlayerState.cpp">
+      <Filter>Source Files\Code\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\CollisionManager.h">
@@ -253,6 +262,15 @@
     </ClInclude>
     <ClInclude Include="Code\UIElements\Menu.h">
       <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\MultiPageMenu.h">
+      <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameStates\MenuState.h">
+      <Filter>Header Files\Code\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameStates\PlayerState.h">
+      <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

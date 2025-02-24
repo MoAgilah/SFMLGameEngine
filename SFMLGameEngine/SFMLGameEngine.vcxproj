@@ -34,6 +34,8 @@
     <ClCompile Include="Code\GameStates\GameStateMgr.cpp" />
     <ClCompile Include="Code\GameStates\LoadingState.cpp" />
     <ClCompile Include="Code\GameStates\MainMenuState.cpp" />
+    <ClCompile Include="Code\GameStates\MenuState.cpp" />
+    <ClCompile Include="Code\GameStates\PlayerState.cpp" />
     <ClCompile Include="Code\Game\Camera.cpp" />
     <ClCompile Include="Code\Game\Constants.cpp" />
     <ClCompile Include="Code\Game\FontManager.cpp" />
@@ -47,6 +49,7 @@
     <ClCompile Include="Code\Game\World.cpp" />
     <ClCompile Include="Code\UIElements\FlashingText.cpp" />
     <ClCompile Include="Code\UIElements\Menu.cpp" />
+    <ClCompile Include="Code\UIElements\MultiPageMenu.cpp" />
     <ClCompile Include="Code\Utilities\Point.cpp" />
     <ClCompile Include="Code\Utilities\Utilities.cpp" />
   </ItemGroup>
@@ -66,6 +69,8 @@
     <ClInclude Include="Code\GameStates\GameStateMgr.h" />
     <ClInclude Include="Code\GameStates\LoadingState.h" />
     <ClInclude Include="Code\GameStates\MainMenuState.h" />
+    <ClInclude Include="Code\GameStates\MenuState.h" />
+    <ClInclude Include="Code\GameStates\PlayerState.h" />
     <ClInclude Include="Code\Game\Camera.h" />
     <ClInclude Include="Code\Game\Constants.h" />
     <ClInclude Include="Code\Game\FontManager.h" />
@@ -79,6 +84,7 @@
     <ClInclude Include="Code\Game\World.h" />
     <ClInclude Include="Code\UIElements\FlashingText.h" />
     <ClInclude Include="Code\UIElements\Menu.h" />
+    <ClInclude Include="Code\UIElements\MultiPageMenu.h" />
     <ClInclude Include="Code\Utilities\Point.h" />
     <ClInclude Include="Code\Utilities\ResourceLoader.h" />
     <ClInclude Include="Code\Utilities\Utilities.h" />
