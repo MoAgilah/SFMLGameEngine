@@ -75,6 +75,7 @@ BoundingBox::BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos)
 BoundingBox::BoundingBox(BoundingCapsule* capsule)
 	: BoundingVolume(VolumeType::Box)
 {
+	MakeRectangleShape();
 	float radius = capsule->GetRadius();
 	Line s = capsule->GetSegment();
 
