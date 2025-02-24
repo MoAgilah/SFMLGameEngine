@@ -938,37 +938,24 @@ bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const 
 	return capBox.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast);
 }
 
-bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle1, const Point& va, const Point& vb, float& tfirst, float& tlast)
+bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	// Cache the circle's center
-	const Point center = circle1->GetCenter();
-
-	// Get the closest point on the segment to the circle's center.
-	Point closest = m_segment.ClosestPointOnLineSegment(center);
-
-	// Pre-calculate squared radius and use a small epsilon for floating-point comparisons.
-	const float radiusSq = m_radius * m_radius;
-	constexpr float epsilon = 1e-5f;
-
-	// If the closest point is within the spherical cap around the segment's start/end,
-	// set it to that endpoint.
-	if (pnt::lengthSquared(closest - m_segment.start) <= radiusSq + epsilon)
-		closest = m_segment.start;
-	else if (pnt::lengthSquared(closest - m_segment.end) <= radiusSq + epsilon)
-		closest = m_segment.end;
-
-	// Construct a bounding circle using the capsule's radius and the determined closest point.
-	BoundingCircle capsuleCircle(m_radius, closest);
-
-	// If the circles intersect, set the time interval to cover the whole period.
-	if (capsuleCircle.Intersects(static_cast<BoundingVolume*>(circle1))) {
-		tfirst = 0.0f;
-		tlast = 1.0f;
+	// check the capsule spherical ends
+	BoundingCircle capCircle(circle->GetRadius(), m_segment.start);
+	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
 		return true;
-	}
 
-	// Otherwise, perform the moving intersection test.
-	return capsuleCircle.IntersectsMoving(static_cast<BoundingVolume*>(circle1), va, vb, tfirst, tlast);
+	capCircle.Update(m_segment.end);
+
+	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
+		return true;
+
+	capCircle.Update(m_segment.GetMidPoint());
+
+	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
+		return true;
+
+	return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);
 }
 
 bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)

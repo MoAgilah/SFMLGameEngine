@@ -115,6 +115,38 @@ bool Line::IntersectsPoint(const Point& pnt) const
 	return d1 + d2 >= lineLen - buffer && d1 + d2 <= lineLen + buffer;
 }
 
+bool Line::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
+{
+	// Get relative velocity vector
+	Point velocity = vb - va;
+
+	// Get the squared radius of the circle
+	float radiusSquared = circle->GetRadius() * circle->GetRadius();
+
+	// Use relative velocity to treat the line as stationary
+	Point lineVector = end - start;
+	Point relativeVelocity = velocity - lineVector;
+
+	// Vector from the start of the line to the center of the circle
+	Point circleToLineStart = circle->GetCenter() - start;
+
+	// Calculate coefficients for the quadratic equation
+	float a = pnt::dot(relativeVelocity, relativeVelocity);
+	float b = 2 * pnt::dot(relativeVelocity, circleToLineStart);
+	float c = pnt::dot(circleToLineStart, circleToLineStart) - radiusSquared;
+
+	// Solve the quadratic equation
+	if (!SolveQuadratic(a, b, c, tfirst, tlast)) {
+		return false;  // No intersection
+	}
+
+	// Ensure tfirst and tlast are within valid range [0, 1]
+	tfirst = std::max(tfirst, 0.0f);
+	tlast = std::min(tlast, 1.0f);
+
+	return tfirst <= tlast;
+}
+
 float GetXDist(const Point& p1, const Point& p2)
 {
 	return p2.x - p1.x;

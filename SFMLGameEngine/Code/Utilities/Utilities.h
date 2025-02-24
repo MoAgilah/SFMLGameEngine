@@ -17,6 +17,8 @@ namespace obj
 	bool IsCollectableObject(const std::string& texID);
 }
 
+class BoundingCircle;
+
 struct Line
 {
 	Line() = default;
@@ -32,6 +34,8 @@ struct Line
 	bool IsPointAboveLine(const Point& pnt) const;
 	bool IntersectsPoint(const Point& pnt) const;
 
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
+
 	float DistX() const { return end.x - start.x; }
 	float DistY() const { return end.y - start.y; }
 
@@ -41,6 +45,7 @@ struct Line
 
 float GetXDist(const Point& p1, const Point& p2);
 float GetYDist(const Point& p1, const Point& p2);
+
 // Solves a*t^2 + b*t + c = 0.
 // Returns false if there are no real roots; otherwise, returns the roots in t0 and t1.
 bool SolveQuadratic(float a, float b, float c, float& t0, float& t1);
