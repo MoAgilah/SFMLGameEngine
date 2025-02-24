@@ -3,6 +3,9 @@
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
 
+// Epsilon value to handle floating-point precision issues
+constexpr float EPSILON = std::numeric_limits<float>::epsilon() * 100;
+
 BoundingVolume::BoundingVolume(VolumeType type)
 	: m_type(type)
 {
@@ -612,7 +615,6 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 	Point v = vb - va; // Relative motion
 	float a = pnt::dot(v, v);
 
-	constexpr float EPSILON = 1e-6f;
 	if (a < EPSILON) return false; // No relative motion
 
 	float b = pnt::dot(v, s);

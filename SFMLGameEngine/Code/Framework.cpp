@@ -14,6 +14,8 @@ int FrameWork::Run()
 {
     // Fixed time step (e.g., for 60 updates per second)
     const float dt = 1.f / GameConstants::FPS;
+    const int subSteps = 4;  // Number of sub-steps for improved collision accuracy
+    const float subStepDt = dt / static_cast<float>(subSteps);
 
     auto& window = m_gameMgr.GetRenderWindow();
     window.create(sf::VideoMode(static_cast<int>(GameConstants::ScreenDim.x),
@@ -56,10 +58,12 @@ int FrameWork::Run()
             frameTime = 0.25f;
         accumulator += frameTime;
 
-        // Fixed update loop: process as many fixed time steps as necessary
+        // Sub-stepping update loop for better collision accuracy
         while (accumulator >= dt)
         {
-            m_gameMgr.Update(dt);
+            for (int i = 0; i < subSteps; ++i)
+                m_gameMgr.Update(subStepDt);  // Perform sub-step updates
+
             accumulator -= dt;
         }
 

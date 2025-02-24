@@ -118,33 +118,46 @@ bool Line::IntersectsPoint(const Point& pnt) const
 bool Line::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	// Get relative velocity vector
-	Point velocity = vb - va;
+	Point relativeVelocity = vb - va;
 
-	// Get the squared radius of the circle
+	// Calculate relative movement of the line endpoints
+	Point relStartVelocity = relativeVelocity + (start - end);
+	Point relEndVelocity = relativeVelocity + (end - start);
+
+	// Calculate the coefficients for the quadratic equation
 	float radiusSquared = circle->GetRadius() * circle->GetRadius();
 
-	// Use relative velocity to treat the line as stationary
-	Point lineVector = end - start;
-	Point relativeVelocity = velocity - lineVector;
+	// From start to circle center
+	Point lineToCircleStart = circle->GetCenter() - start;
 
-	// Vector from the start of the line to the center of the circle
-	Point circleToLineStart = circle->GetCenter() - start;
-
-	// Calculate coefficients for the quadratic equation
-	float a = pnt::dot(relativeVelocity, relativeVelocity);
-	float b = 2 * pnt::dot(relativeVelocity, circleToLineStart);
-	float c = pnt::dot(circleToLineStart, circleToLineStart) - radiusSquared;
+	float a = pnt::dot(relStartVelocity, relStartVelocity);
+	float b = 2 * pnt::dot(relStartVelocity, lineToCircleStart);
+	float c = pnt::dot(lineToCircleStart, lineToCircleStart) - radiusSquared;
 
 	// Solve the quadratic equation
-	if (!SolveQuadratic(a, b, c, tfirst, tlast)) {
+	if (!SolveQuadratic(a, b, c, tfirst, tlast))
 		return false;  // No intersection
-	}
 
 	// Ensure tfirst and tlast are within valid range [0, 1]
 	tfirst = std::max(tfirst, 0.0f);
 	tlast = std::min(tlast, 1.0f);
 
-	return tfirst <= tlast;
+	if (tfirst > tlast) return false;
+
+	// Check intersection for line endpoints
+	for (float t = tfirst; t <= tlast; t += 0.01f)
+	{
+		Point currentStart = start + relStartVelocity * t;
+		Point currentEnd = end + relEndVelocity * t;
+		Point currentCircle = circle->GetCenter() + relativeVelocity * t;
+
+		if (pnt::lengthSquared(currentCircle - currentStart) <= radiusSquared ||
+			pnt::lengthSquared(currentCircle - currentEnd) <= radiusSquared) {
+			return true;
+		}
+	}
+
+	return true;
 }
 
 float GetXDist(const Point& p1, const Point& p2)
