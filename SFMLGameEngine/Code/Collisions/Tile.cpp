@@ -46,7 +46,7 @@ void Tile::ResolveCollision(DynamicObject* obj)
 		{
 			BoundingCapsule capsule(6, tileTopEdge);
 			BoundingCircle circle(4, obj->GetBoundingBox()->GetPoint(Side::Bottom));
-			if (capsule.Intersects((BoundingVolume*)&circle))
+			if (capsule.Intersects(static_cast<BoundingVolume*>(&circle)))
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 					ResolveObjectToBoxTop(obj);
@@ -65,7 +65,7 @@ void Tile::ResolveCollision(DynamicObject* obj)
 		[[fallthrough]];
 	case Types::RCRN:
 	{
-		Point seperationVector = obj->GetColVolume()->GetSeparationVector((BoundingVolume*)&m_aabb);
+		Point seperationVector = obj->GetColVolume()->GetSeparationVector(static_cast<BoundingVolume*>(&m_aabb));
 		Direction colDir = GetCollisionDirection(seperationVector, obj->GetVelocity(), Point());
 
 		if (dir == DDIR)
@@ -222,7 +222,7 @@ void Tile::Render(sf::RenderWindow& window)
 
 Point Tile::GetSeperationVector(DynamicObject* obj)
 {
-	return m_aabb.GetSeparationVector((BoundingVolume*)obj->GetColVolume());
+	return m_aabb.GetSeparationVector(obj->GetColVolume());
 }
 
 void Tile::ResolveObjectToBoxTop(DynamicObject* obj)
@@ -256,7 +256,7 @@ bool Tile::ResolveObjectToSlopeTop(DynamicObject* obj)
 	if (line.IsPointAboveLine(circle.GetCenter()))
 	{
 		BoundingCapsule capsule(6, line);
-		if (capsule.Intersects((BoundingVolume*)&circle))
+		if (capsule.Intersects(static_cast<BoundingVolume*>(&circle)))
 		{
 			obj->SetOnSlope(true);
 			return true;
@@ -278,7 +278,7 @@ bool Tile::ResolveObjectToSlopeIncline(DynamicObject* obj, int start, int end)
 	Line line = GetSlope(start, end);
 	BoundingCircle circle(4, obj->GetColVolume()->GetPoint(Side::Bottom));
 	BoundingCapsule capsule(6, line);
-	if (capsule.Intersects((BoundingVolume*)&circle))
+	if (capsule.Intersects(static_cast<BoundingVolume*>(&circle)))
 	{
 		auto yOffset = GetYOffSet(start ? GetXDist(circle.GetCenter(), line.start) : GetXDist(line.start, circle.GetCenter()),
 			line.DistY(),
@@ -300,7 +300,7 @@ bool Tile::ResolveObjectToSlopeDecline(DynamicObject* obj, int start, int end)
 	Line line = GetSlope(start, end);
 	BoundingCircle circle(4, obj->GetColVolume()->GetPoint(Side::Bottom));
 	BoundingCapsule capsule(6, line);
-	if (capsule.Intersects((BoundingVolume*)&circle))
+	if (capsule.Intersects(static_cast<BoundingVolume*>(&circle)))
 	{
 		auto yOffset = GetYOffSet(start ? GetXDist(circle.GetCenter(), line.start) : GetXDist(line.start, circle.GetCenter()),
 			line.DistY(),
@@ -334,7 +334,7 @@ void Tile::ResolveObjectToEdgeBounds(DynamicObject* obj)
 	{
 		BoundingCircle circle(4, side);
 		BoundingCapsule capsule(4, edge);
-		if (capsule.Intersects((BoundingVolume*)&circle))
+		if (capsule.Intersects(static_cast<BoundingVolume*>(&circle)))
 			obj->SetDirection(!obj->GetDirection());
 	}
 }

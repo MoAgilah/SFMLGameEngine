@@ -139,11 +139,11 @@ bool BoundingBox::Intersects(BoundingVolume* volume)
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return Intersects((BoundingBox*)volume);
+		return Intersects(static_cast<BoundingBox*>(volume));
 	case VolumeType::Circle:
-		return Intersects((BoundingCircle*)volume);
+		return Intersects(static_cast<BoundingCircle*>(volume));
 	case VolumeType::Capsule:
-		return Intersects((BoundingCapsule*)volume);
+		return Intersects(static_cast<BoundingCapsule*>(volume));
 	}
 
 	return false;
@@ -154,11 +154,11 @@ bool BoundingBox::IntersectsMoving(BoundingVolume* volume, const Point& va, cons
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return IntersectsMoving((BoundingBox*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingBox*>(volume), va, vb, tfirst, tlast);
 	case VolumeType::Circle:
-		return IntersectsMoving((BoundingCircle*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingCircle*>(volume), va, vb, tfirst, tlast);
 	case VolumeType::Capsule:
-		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingCapsule*>(volume), va, vb, tfirst, tlast);
 	}
 
 	return false;
@@ -169,11 +169,11 @@ Point BoundingBox::GetSeparationVector(BoundingVolume* volume)
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return GetSeparationVector((BoundingBox*)volume);
+		return GetSeparationVector(static_cast<BoundingBox*>(volume));
 	case VolumeType::Circle:
-		return GetSeparationVector((BoundingCircle*)volume);
+		return GetSeparationVector(static_cast<BoundingCircle*>(volume));
 	case VolumeType::Capsule:
-		return GetSeparationVector((BoundingCapsule*)volume);
+		return GetSeparationVector(static_cast<BoundingCapsule*>(volume));
 	}
 
 	return Point();
@@ -347,7 +347,7 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 
 bool BoundingBox::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	return capsule->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
+	return capsule->IntersectsMoving(static_cast<BoundingVolume*>(this), va, vb, tfirst, tlast);
 }
 
 Point BoundingBox::GetSeparationVector(BoundingBox* other)
@@ -520,11 +520,11 @@ bool BoundingCircle::Intersects(BoundingVolume* volume)
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return Intersects((BoundingBox*)volume);
+		return Intersects(static_cast<BoundingBox*>(volume));
 	case VolumeType::Circle:
-		return Intersects((BoundingCircle*)volume);
+		return Intersects(static_cast<BoundingCircle*>(volume));
 	case VolumeType::Capsule:
-		return Intersects((BoundingCapsule*)volume);
+		return Intersects(static_cast<BoundingCapsule*>(volume));
 	}
 
 	return false;
@@ -535,11 +535,11 @@ bool BoundingCircle::IntersectsMoving(BoundingVolume* volume, const Point& va, c
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return IntersectsMoving((BoundingBox*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingBox*>(volume), va, vb, tfirst, tlast);
 	case VolumeType::Circle:
-		return IntersectsMoving((BoundingCircle*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingCircle*>(volume), va, vb, tfirst, tlast);
 	case VolumeType::Capsule:
-		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingCapsule*>(volume), va, vb, tfirst, tlast);
 	}
 
 	return false;
@@ -550,11 +550,11 @@ Point BoundingCircle::GetSeparationVector(BoundingVolume* volume)
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return GetSeparationVector((BoundingBox*)volume);
+		return GetSeparationVector(static_cast<BoundingBox*>(volume));
 	case VolumeType::Circle:
-		return GetSeparationVector((BoundingCircle*)volume);
+		return GetSeparationVector(static_cast<BoundingCircle*>(volume));
 	case VolumeType::Capsule:
-		return GetSeparationVector((BoundingCapsule*)volume);
+		return GetSeparationVector(static_cast<BoundingCapsule*>(volume));
 	}
 
 	return Point();
@@ -579,7 +579,7 @@ Point BoundingCircle::GetPoint(Side side)
 
 bool BoundingCircle::Intersects(BoundingBox* box)
 {
-	return box->Intersects((BoundingVolume*)this);
+	return box->Intersects(static_cast<BoundingVolume*>(this));
 }
 
 bool BoundingCircle::Intersects(BoundingCircle* circle)
@@ -604,7 +604,7 @@ bool BoundingCircle::Intersects(BoundingCapsule* capsule)
 
 bool BoundingCircle::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	return box->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
+	return box->IntersectsMoving(static_cast<BoundingVolume*>(this), va, vb, tfirst, tlast);
 }
 
 bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -646,12 +646,12 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 
 bool BoundingCircle::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	return capsule->IntersectsMoving((BoundingVolume*)this, va, vb, tfirst, tlast);
+	return capsule->IntersectsMoving(static_cast<BoundingVolume*>(this), va, vb, tfirst, tlast);
 }
 
 Point BoundingCircle::GetSeparationVector(BoundingBox* other)
 {
-	return other->GetSeparationVector((BoundingVolume*)this);
+	return other->GetSeparationVector(static_cast<BoundingVolume*>(this));
 }
 
 Point BoundingCircle::GetSeparationVector(BoundingCircle* other)
@@ -822,11 +822,11 @@ bool BoundingCapsule::Intersects(BoundingVolume* volume)
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return Intersects((BoundingBox*)volume);
+		return Intersects(static_cast<BoundingBox*>(volume));
 	case VolumeType::Circle:
-		return Intersects((BoundingCircle*)volume);
+		return Intersects(static_cast<BoundingCircle*>(volume));
 	case VolumeType::Capsule:
-		return Intersects((BoundingCapsule*)volume);
+		return Intersects(static_cast<BoundingCapsule*>(volume));
 	}
 
 	return false;
@@ -837,11 +837,11 @@ bool BoundingCapsule::IntersectsMoving(BoundingVolume* volume, const Point& va, 
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return IntersectsMoving((BoundingBox*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingBox*>(volume), va, vb, tfirst, tlast);
 	case VolumeType::Circle:
-		return IntersectsMoving((BoundingCircle*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingCircle*>(volume), va, vb, tfirst, tlast);
 	case VolumeType::Capsule:
-		return IntersectsMoving((BoundingCapsule*)volume, va, vb, tfirst, tlast);
+		return IntersectsMoving(static_cast<BoundingCapsule*>(volume), va, vb, tfirst, tlast);
 	}
 
 	return false;
@@ -852,11 +852,11 @@ Point BoundingCapsule::GetSeparationVector(BoundingVolume* volume)
 	switch (volume->GetType())
 	{
 	case VolumeType::Box:
-		return GetSeparationVector((BoundingBox*)volume);
+		return GetSeparationVector(static_cast<BoundingBox*>(volume));
 	case VolumeType::Circle:
-		return GetSeparationVector((BoundingCircle*)volume);
+		return GetSeparationVector(static_cast<BoundingCircle*>(volume));
 	case VolumeType::Capsule:
-		return GetSeparationVector((BoundingCapsule*)volume);
+		return GetSeparationVector(static_cast<BoundingCapsule*>(volume));
 	}
 
 	return Point();
@@ -929,15 +929,15 @@ bool BoundingCapsule::Intersects(BoundingCapsule* capsule)
 bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	BoundingCircle circle(m_radius, m_segment.start);
-	if (circle.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast))
+	if (circle.IntersectsMoving(static_cast<BoundingVolume*>(box), va, vb, tfirst, tlast))
 		return true;
 
 	circle.Update(m_segment.end);
-	if (circle.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast))
+	if (circle.IntersectsMoving(static_cast<BoundingVolume*>(box), va, vb, tfirst, tlast))
 		return true;
 
 	BoundingBox capBox(this);
-	return capBox.IntersectsMoving((BoundingVolume*)box, va, vb, tfirst, tlast);
+	return capBox.IntersectsMoving(static_cast<BoundingVolume*>(box), va, vb, tfirst, tlast);
 }
 
 bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -968,32 +968,32 @@ bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va
 	BoundingCircle otherEndpoint1(m_radius, m_segment.start);
 	BoundingCircle otherEndpoint2(m_radius, m_segment.end);
 
-	if (endpoint1.IntersectsMoving((BoundingVolume*)&otherEndpoint2, va, vb, tfirst, tlast))
+	if (endpoint1.IntersectsMoving(static_cast<BoundingVolume*>(&otherEndpoint2), va, vb, tfirst, tlast))
 		return true;
 
-	if (endpoint2.IntersectsMoving((BoundingVolume*)&otherEndpoint1, va, vb, tfirst, tlast))
+	if (endpoint2.IntersectsMoving(static_cast<BoundingVolume*>(&otherEndpoint1), va, vb, tfirst, tlast))
 		return true;
 
-	if (endpoint2.IntersectsMoving((BoundingVolume*)&otherEndpoint2, va, vb, tfirst, tlast))
+	if (endpoint2.IntersectsMoving(static_cast<BoundingVolume*>(&otherEndpoint2), va, vb, tfirst, tlast))
 		return true;
 
-	if (endpoint1.IntersectsMoving((BoundingVolume*)&otherEndpoint1, va, vb, tfirst, tlast))
+	if (endpoint1.IntersectsMoving(static_cast<BoundingVolume*>(&otherEndpoint1), va, vb, tfirst, tlast))
 		return true;
 
 	BoundingBox box1 = BoundingBox(this);
 	BoundingBox box2 = BoundingBox(capsule);
 
-	return box1.IntersectsMoving((BoundingVolume*)&box2, va, vb, tfirst, tlast);
+	return box1.IntersectsMoving(static_cast<BoundingVolume*>(&box2), va, vb, tfirst, tlast);
 }
 
 Point BoundingCapsule::GetSeparationVector(BoundingBox* other)
 {
-	return other->GetSeparationVector((BoundingVolume*)this);
+	return other->GetSeparationVector(static_cast<BoundingVolume*>(this));
 }
 
 Point BoundingCapsule::GetSeparationVector(BoundingCircle* other)
 {
-	return other->GetSeparationVector((BoundingVolume*)this);
+	return other->GetSeparationVector(static_cast<BoundingVolume*>(this));
 }
 
 Point BoundingCapsule::GetSeparationVector(BoundingCapsule* other)
