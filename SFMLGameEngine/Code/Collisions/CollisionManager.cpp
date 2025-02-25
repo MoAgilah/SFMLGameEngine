@@ -241,9 +241,6 @@ void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj
 
 void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2)
 {
-	if (!pnt::IsMovingTowards(obj1->GetBoundingBox()->GetPosition(), obj2->GetBoundingBox()->GetPosition(), obj1->GetVelocity(), obj2->GetVelocity()))
-		return;
-
 	float tFirst, tLast = 0;
 	if (obj1->GetColVolume()->IntersectsMoving(obj2->GetColVolume(), obj1->GetVelocity(), obj2->GetVelocity(), tFirst, tLast))
 		DynamicObjectToDynamicObjectResolution(obj1, obj2, tFirst);
