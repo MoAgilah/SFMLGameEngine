@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <array>
+#include <map>
 #include <SFML/Graphics.hpp>
 #include "../Drawables/Sprite.h"
 #include "../GameObjects/Enemy.h"
@@ -27,6 +28,9 @@ public:
 	virtual void AddObjects();
 	virtual void AddForeGroundSprites();
 
+	Object* GetObjectByName(const std::string& name);
+	Enemy* GetEnemyByName(const std::string& name);
+
 private:
 
 	virtual void UpdateGUI(float deltaTime);
@@ -38,6 +42,6 @@ protected:
 	Sprite m_backgroundSpr;
 	std::vector<sf::Text> m_texts;
 	std::vector<Sprite> m_sprites;
-	std::vector<std::shared_ptr<Enemy>> m_enemies;
-	std::vector<std::shared_ptr<Object>> m_objects;
+	std::map<std::string, std::shared_ptr<Enemy>> m_enemies;
+	std::map<std::string, std::shared_ptr<Object>> m_objects;
 };

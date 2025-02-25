@@ -16,7 +16,7 @@ void World::Update(float deltaTime)
 {
 	UpdateGUI(deltaTime);
 
-	for (const auto& enemy : m_enemies)
+	for (const auto& [_, enemy] : m_enemies)
 	{
 		if (!enemy->GetActive())
 			continue;
@@ -24,7 +24,7 @@ void World::Update(float deltaTime)
 		enemy->Update(deltaTime);
 	}
 
-	for (const auto& object : m_objects)
+	for (const auto& [_, object] : m_objects)
 	{
 		if (!object->GetActive())
 			continue;
@@ -37,7 +37,7 @@ void World::Render(sf::RenderWindow& window)
 {
 	m_backgroundSpr.Render(window);
 
-	for (const auto& enemy : m_enemies)
+	for (const auto& [_, enemy] : m_enemies)
 	{
 		if (!enemy->GetActive())
 			continue;
@@ -45,7 +45,7 @@ void World::Render(sf::RenderWindow& window)
 		enemy->Render(window);
 	}
 
-	for (const auto& object : m_objects)
+	for (const auto& [_, object] : m_objects)
 	{
 		if (!object->GetActive())
 			continue;
@@ -58,10 +58,10 @@ void World::Render(sf::RenderWindow& window)
 
 void World::ResetLevel()
 {
-	for (auto& enemy : m_enemies)
+	for (auto& [_, enemy] : m_enemies)
 		enemy->Reset();
 
-	for (auto& object : m_objects)
+	for (auto& [_, object] : m_objects)
 		object->Reset();
 }
 
@@ -69,10 +69,10 @@ void World::CheckIsInView()
 {
 	auto& camera = GameManager::Get()->GetCamera();
 
-	for (auto& enemy : m_enemies)
+	for (auto& [_, enemy] : m_enemies)
 		enemy->SetActive(camera.IsInView(enemy->GetBoundingBox()));
 
-	for (auto& object : m_objects)
+	for (auto& [_, object] : m_objects)
 		object->SetActive(camera.IsInView(object->GetBoundingBox()));
 }
 
@@ -90,6 +90,26 @@ void World::AddObjects()
 
 void World::AddForeGroundSprites()
 {
+}
+
+Object* World::GetObjectByName(const std::string& name)
+{
+	auto it = m_objects.find(name);
+
+	if (it != m_objects.end())
+		return it->second.get();
+
+	return nullptr;
+}
+
+Enemy* World::GetEnemyByName(const std::string& name)
+{
+	auto it = m_enemies.find(name);
+
+	if (it != m_enemies.end())
+		return it->second.get();
+
+	return nullptr;
 }
 
 void World::UpdateGUI(float deltaTime)
