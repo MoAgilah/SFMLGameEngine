@@ -109,9 +109,9 @@ public:
 
 	void SetPrevPosition(sf::Vector2f pos) { m_previousPos = pos; }
 	void SetPrevPosition(float x, float y) { m_previousPos = sf::Vector2f(x, y); }
-	sf::Vector2f GetPrevPosition() const { return m_previousPos; }
+	const sf::Vector2f& GetPrevPosition() const { return m_previousPos; }
 
-	sf::Vector2f GetVelocity() const { return m_velocity; }
+	const sf::Vector2f& GetVelocity() const { return m_velocity; }
 	void SetVelocity(sf::Vector2f vel) { m_velocity = vel; }
 	void SetVelocity(float x, float y) { m_velocity = sf::Vector2f(x, y); }
 
