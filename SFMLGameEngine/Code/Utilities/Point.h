@@ -19,11 +19,14 @@ public:
 	friend Point operator+(const Point& a, const Point& b);
 	friend Point operator*(const Point& a, float scalar);
 	friend Point operator*(float scalar, const Point& a);
+	friend Point operator/(const Point& a, float scalar);
+	friend Point operator/(float scalar, const Point& a);
 	friend Point operator/(const Point& a, const Point& b);
 
 	friend Point& operator+=(Point& a, const Point& b);
 	friend Point& operator-=(Point& a, const Point& b);
 	friend Point& operator*=(Point& a, float scalar);
+	friend Point& operator/=(Point& a, float scalar);
 	friend Point& operator/=(Point& a, const Point& b);
 
 	Point& operator=(const Point& other);

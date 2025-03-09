@@ -35,6 +35,13 @@ void FlashingText::Init(const std::string text, unsigned int charSize, const sf:
 	m_text.setPosition(pos);
 }
 
+void FlashingText::InitCountdown(int startFrom, unsigned int charSize, const sf::Vector2f pos)
+{
+	m_count = m_startFrom = startFrom;
+	Init(std::to_string(m_count), charSize, pos, false);
+	m_countdown = true;
+}
+
 void FlashingText::Reset(const std::string text)
 {
 	m_text.setString(text);
@@ -49,6 +56,12 @@ void FlashingText::Reset(const std::string text)
 	m_timer.ResetTime();
 	m_reduceAlpha = true;
 	m_paused = false;
+}
+
+void FlashingText::RestartCountDown()
+{
+	m_count = m_startFrom;
+	Reset(std::to_string(m_count));
 }
 
 void FlashingText::Update(float deltaTime)
@@ -84,7 +97,23 @@ void FlashingText::Update(float deltaTime)
 			}
 			else
 			{
-				m_paused = true;
+				if (m_countdown)
+				{
+					if (!CountHasEnded())
+					{
+						m_count--;
+						m_timer.ResetTime();
+						Reset(std::to_string(m_count));
+					}
+					else
+					{
+						m_paused = true;
+					}
+				}
+				else
+				{
+					m_paused = true;
+				}
 			}
 		}
 
