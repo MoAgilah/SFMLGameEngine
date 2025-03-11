@@ -21,24 +21,46 @@ FlashingText::FlashingText(const std::string fontName, float fadeTime)
 	m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
 }
 
-void FlashingText::Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, bool loop)
+void FlashingText::Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, TextAlignment alignment, bool loop)
 {
 	m_loop = loop;
+	if (m_countdown)
+		m_countdown = false;
 
 	m_text.setCharacterSize(charSize);
 	m_text.setString(text);
 	m_text.setOutlineThickness(charSize / 10.f);
 	m_text.setOutlineColor(sf::Color::Black);
 
-	CalculateTextOrigin(m_text);
 
-	m_text.setPosition(pos);
+	sf::FloatRect textBounds = m_text.getLocalBounds();
+
+	switch (alignment)
+	{
+	case LeftHand:
+		m_text.setPosition(10, GameConstants::ScreenDim.y / 2 - textBounds.height / 2);
+		break;
+	case Center:
+		m_text.setPosition((GameConstants::ScreenDim.x - textBounds.width) / 2 - textBounds.left,
+			GameConstants::ScreenDim.y / 2 - textBounds.height / 2);
+		break;
+	case RightHand:
+		m_text.setPosition(GameConstants::ScreenDim.x - textBounds.width - 10 - textBounds.left,
+			GameConstants::ScreenDim.y / 2 - textBounds.height / 2);
+		break;
+	default:
+		m_text.setPosition(pos);
+		CalculateTextOrigin(m_text);
+
+		break;
+	}
 }
 
 void FlashingText::InitCountdown(int startFrom, unsigned int charSize, const sf::Vector2f pos)
 {
+	m_alignment = TextAlignment::Center;
 	m_count = m_startFrom = startFrom;
-	Init(std::to_string(m_count), charSize, pos, false);
+	Init(std::to_string(m_count), charSize, pos, TextAlignment::Center, false);
 	m_countdown = true;
 }
 
@@ -46,12 +68,26 @@ void FlashingText::Reset(const std::string text)
 {
 	m_text.setString(text);
 
-	sf::FloatRect textRect = m_text.getLocalBounds();
-	unsigned int charSize = m_text.getCharacterSize();
-	auto len = m_text.getString().getSize();
+	sf::FloatRect textBounds = m_text.getLocalBounds();
 
-	m_text.setOrigin(((textRect.left + charSize) * len) / 2.0f,
-		(textRect.top + textRect.height) / 2.0f);
+	switch (m_alignment)
+	{
+	case LeftHand:
+		m_text.setPosition(10, GameConstants::ScreenDim.y / 2 - textBounds.height / 2);
+		break;
+	case Center:
+		m_text.setPosition((GameConstants::ScreenDim.x - textBounds.width) / 2 - textBounds.left,
+			GameConstants::ScreenDim.y / 2 - textBounds.height / 2);
+		break;
+	case RightHand:
+		m_text.setPosition(GameConstants::ScreenDim.x - textBounds.width - 10 - textBounds.left,
+			GameConstants::ScreenDim.y / 2 - textBounds.height / 2);
+		break;
+	default:
+		CalculateTextOrigin(m_text);
+
+		break;
+	}
 
 	m_timer.ResetTime();
 	m_reduceAlpha = true;
