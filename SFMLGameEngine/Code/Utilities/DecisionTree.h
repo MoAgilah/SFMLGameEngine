@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stdexcept>
+
 
 // Generic Decision Node
 template <typename T, typename S, typename U>
@@ -35,7 +37,7 @@ public:
     std::shared_ptr<DecisionNode<T, S, U>> GetBranchNode(std::string id, std::shared_ptr<DecisionNode<T, S, U>> parent, S(*condition)(U), T result, bool branch)
     {
         auto it = m_branches.find(id);
-        if (it != nodeMap.end())
+        if (it != m_branches.end())
             return it;
 
         return nullptr;
@@ -59,14 +61,14 @@ public:
 
     void Evaluate(U input)
     {
-        T result = evaluateTree(root, input);
-        results.push_back(result);
+        T result = evaluateTree(m_root, input);
+        m_results.push_back(result);
 
         // Execute additional trees if present
         for (auto& branchTree : m_branches)
         {
             branchTree->evaluate(input);
-            results.insert(results.end(), branchTree->results.begin(), branchTree->results.end());
+            m_results.insert(m_results.end(), branchTree->m_results.begin(), branchTree->m_results.end());
         }
     }
 
@@ -101,7 +103,7 @@ private:
         throw std::runtime_error("Decision tree evaluation failed");
     }
 
-    std::shared_ptr<DecisionNode<T, S, U>> root; // Root of the tree
-    std::map<std::string id, std::shared_ptr<DecisionNode<T, S, U>>> m_branches;
+    std::shared_ptr<DecisionNode<T, S, U>> m_root; // Root of the tree
+    std::map<std::string, std::shared_ptr<DecisionNode<T, S, U>>> m_branches;
     std::vector<T> m_results;
 };

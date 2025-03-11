@@ -168,9 +168,6 @@
     <ClCompile Include="Code\GameStates\PlayerState.cpp">
       <Filter>Source Files\Code\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Utilities\DecisionTree.cpp">
-      <Filter>Source Files\Code\Utilities</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\CollisionManager.h">

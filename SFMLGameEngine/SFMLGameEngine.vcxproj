@@ -50,7 +50,6 @@
     <ClCompile Include="Code\UIElements\FlashingText.cpp" />
     <ClCompile Include="Code\UIElements\Menu.cpp" />
     <ClCompile Include="Code\UIElements\MultiPageMenu.cpp" />
-    <ClCompile Include="Code\Utilities\DecisionTree.cpp" />
     <ClCompile Include="Code\Utilities\Point.cpp" />
     <ClCompile Include="Code\Utilities\Utilities.cpp" />
   </ItemGroup>
