@@ -1,52 +1,57 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <functional>
 #include <map>
 #include <stdexcept>
 
 
 // Generic Decision Node
-template <typename T, typename S, typename U>
+template <typename T, typename S, typename... Args>
 class DecisionNode {
 public:
     T m_result;
-    S(*m_condition)(U);
+    std::function<S(Args...)> m_condition;
     std::shared_ptr<DecisionNode> m_true;
     std::shared_ptr<DecisionNode> m_false;
 
-    DecisionNode(S(*condition)(U), T result)
-        : m_condition(condition), m_result(result), m_true(nullptr), m_false(nullptr) {
-    }
+    DecisionNode(std::function<S(Args...)> condition, T result)
+        : m_condition(condition), m_result(result), m_true(nullptr), m_false(nullptr)
+    {}
 };
 
 // Decision Tree Class
-template <typename T, typename S, typename U>
+template <typename T, typename S, typename... Args>
 class DecisionTree
 {
 public:
-    DecisionTree(std::shared_ptr<DecisionNode<T, S, U>> root)
-        : m_root(root) {}
+    DecisionTree(std::shared_ptr<DecisionNode<T, S, Args...>> root)
+        : m_root(root)
+    {}
 
-    std::shared_ptr<DecisionNode<T, S, U>> GetRoot() { return m_root; }
+    std::shared_ptr<DecisionNode<T, S, Args...>> GetRoot() { return m_root; }
 
-    void AddBranch(std::string id, std::shared_ptr<DecisionNode<T, S, U>> root)
+    void AddBranch(std::string id, std::shared_ptr<DecisionNode<T, S, Args...>> root)
     {
-        m_branches.emplace_back(id, root);
+        m_branches[id] = root;
     }
 
-    std::shared_ptr<DecisionNode<T, S, U>> GetBranchNode(std::string id, std::shared_ptr<DecisionNode<T, S, U>> parent, S(*condition)(U), T result, bool branch)
+    std::shared_ptr<DecisionNode<T, S, Args...>> GetBranchNode(std::string id)
     {
         auto it = m_branches.find(id);
         if (it != m_branches.end())
-            return it;
+            return it->second;
 
         return nullptr;
     }
 
     // Function to dynamically add a node
-    std::shared_ptr<DecisionNode<T, S, U>> AddNode(std::shared_ptr<DecisionNode<T, S, U>> parent, S(*condition)(U), T result, bool branch)
+    std::shared_ptr<DecisionNode<T, S, Args...>> AddNode(
+        std::shared_ptr<DecisionNode<T, S, Args...>> parent,
+        std::function<S(Args...)> condition,
+        T result, bool branch)
     {
-        auto newNode = std::make_shared<DecisionNode<T, S, U>>(condition, result);
+        auto newNode = std::make_shared<DecisionNode<T, S, Args...>>(condition, result);
         if (branch)
         {
             parent->m_true = newNode;
@@ -59,16 +64,14 @@ public:
         return newNode;
     }
 
-    void Evaluate(U input)
+    void Evaluate(Args... input)
     {
-        T result = evaluateTree(m_root, input);
+        T result = EvaluateTree(m_root, input...);
         m_results.push_back(result);
 
-        // Execute additional trees if present
-        for (auto& branchTree : m_branches)
+        for (auto& branchPair : m_branches)
         {
-            branchTree->evaluate(input);
-            m_results.insert(m_results.end(), branchTree->m_results.begin(), branchTree->m_results.end());
+            m_results.push_back(EvaluateTree(branchPair.second, input...));
         }
     }
 
@@ -76,14 +79,14 @@ public:
 
 private:
 
-    T EvaluateTree(std::shared_ptr<DecisionNode<T, S, U>> node, U input)
+    T EvaluateTree(std::shared_ptr<DecisionNode<T, S, Args...>> node, Args... input)
     {
         auto current = node;
         while (current)
         {
             if (current->m_condition)
             {
-                if (current->m_condition(input))
+                if (current->m_condition(input...))
                 {
                     if (!current->m_true)
                         return current->m_result;
@@ -96,14 +99,15 @@ private:
                     current = current->m_false;
                 }
             }
-            else {
+            else
+            {
                 return current->m_result;
             }
         }
         throw std::runtime_error("Decision tree evaluation failed");
     }
 
-    std::shared_ptr<DecisionNode<T, S, U>> m_root; // Root of the tree
-    std::map<std::string, std::shared_ptr<DecisionNode<T, S, U>>> m_branches;
+    std::shared_ptr<DecisionNode<T, S, Args...>> m_root; // Root of the tree
+    std::map<std::string, std::shared_ptr<DecisionNode<T, S, Args...>>> m_branches;
     std::vector<T> m_results;
 };
