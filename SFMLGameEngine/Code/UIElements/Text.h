@@ -39,6 +39,7 @@ public:
 private:
 
 	void Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment, bool loop, bool paused = false);
+	void SetTextPosition(const sf::Vector2f& pos);
 
 	int m_count = 0;
 	int m_startFrom = 0;
@@ -50,6 +51,7 @@ private:
 	float m_maxTime;
 	TextAlignment m_alignment;
 	Timer m_timer;
+	sf::Vector2f m_position;
 	sf::Text m_text;
 	std::shared_ptr<sf::Shader> m_textShader;
 };

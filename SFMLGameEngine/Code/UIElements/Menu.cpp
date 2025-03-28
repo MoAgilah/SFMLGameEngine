@@ -1,73 +1,46 @@
 #include "Menu.h"
 #include "../Game/GameManager.h"
 
-Menu::Menu(void(*func)(int), TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos, sf::Color color)
-	: m_actionFunc(func), m_charSize(charSize), m_marginSize(m_charSize + marginSize), m_position(pos), m_textType(textType), m_ActiveColour(color)
+Menu::Menu(std::function<void(int)> func, TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos, sf::Color color)
+	: m_actionFunc(func), m_charSize(charSize), m_marginSize(m_charSize + marginSize), m_position(pos), m_textType(textType), m_activeColour(color)
 {
-	Text menuItem;
-	switch (m_textType)
-	{
-	case Static:
-		menuItem.InitStaticText(text, charSize, m_position, m_ActiveColour);
-		break;
-	case Dynamic:
-		menuItem.InitFlashingText(text, charSize, m_position, m_ActiveColour);
-		break;
-	}
-
-	menuItem.InitFlashingText(text, charSize, m_position);
-	m_menuItems.push_back(menuItem);
+	m_menuItems.push_back(CreateMenuItem(text, m_activeColour));
 	m_position.y += m_marginSize;
 }
 
-void Menu::AddMenuItem(const std::string text, bool hasPassiveColor, sf::Color color)
+void Menu::AddMenuItem(const std::string text)
 {
-	Text menuItem;
-	switch (m_textType)
-	{
-	case Static:
-		menuItem.InitStaticText(text, m_charSize, m_position, hasPassiveColor ? color : m_ActiveColour);
-		break;
-	case Dynamic:
-		menuItem.InitFlashingText(text, m_charSize, m_position, hasPassiveColor ? color : m_ActiveColour);
-		break;
-	}
-	m_menuItems.push_back(menuItem);
+	sf::Color itemColor = m_hasPassiveColor ? m_passiveColour : m_activeColour;
+	m_menuItems.push_back(CreateMenuItem(text, itemColor));
 	m_position.y += m_marginSize;
-	m_maxMenuPosition++;
 }
 
 void Menu::ProcessInput()
 {
+	HandleNavigation();
+}
+
+Text Menu::CreateMenuItem(const std::string& text, sf::Color color)
+{
+	Text menuItem;
+	switch (m_textType)
+	{
+	case Static:
+		menuItem.InitStaticText(text, m_charSize, m_position, color);
+		break;
+	case Dynamic:
+		menuItem.InitFlashingText(text, m_charSize, m_position, color);
+		break;
+	}
+
+	return menuItem;
+}
+void Menu::HandleNavigation()
+{
 	auto& inputManager = GameManager::Get()->GetInputManager();
 
-	if (inputManager.GetKeyState(sf::Keyboard::Up))
-	{
-		if (m_canGoUp)
-		{
-			m_menuPosition--;
-			m_canGoUp = false;
-			m_menuMoved = true;
-		}
-	}
-	else
-	{
-		m_canGoUp = true;
-	}
-
-	if (inputManager.GetKeyState(sf::Keyboard::Down))
-	{
-		if (m_canGoDown)
-		{
-			m_menuPosition++;
-			m_canGoDown = false;
-			m_menuMoved = true;
-		}
-	}
-	else
-	{
-		m_canGoDown = true;
-	}
+	HandleDirection(inputManager.GetKeyState(sf::Keyboard::Up), m_canGoUp, -1);
+	HandleDirection(inputManager.GetKeyState(sf::Keyboard::Down), m_canGoDown, 1);
 
 	if (inputManager.GetKeyState(sf::Keyboard::Enter))
 	{
@@ -75,34 +48,62 @@ void Menu::ProcessInput()
 	}
 }
 
+void Menu::HandleDirection(bool isPressed, bool& canMove, int direction)
+{
+	if (isPressed)
+	{
+		if (canMove)
+		{
+			m_menuPosition += direction;
+			canMove = false;
+			m_menuMoved = true;
+		}
+	}
+	else
+	{
+		canMove = true;
+	}
+}
+
+void Menu::ClampMenuPosition()
+{
+	int maxIndex = static_cast<int>(m_menuItems.size()) - 1;
+	m_menuPosition = std::clamp(m_menuPosition, 0, maxIndex);
+}
+
 void Menu::Update(float deltaTime)
 {
 	if (m_menuMoved)
 	{
-		if (m_menuPosition < 0)
+		ClampMenuPosition();
+
+		for (int i = 0; i < m_menuItems.size(); ++i)
 		{
-			m_menuPosition = 0;
+			if (i == m_menuPosition)
+				m_menuItems[i].Resume();
+			else
+				m_menuItems[i].Pause();
 		}
-
-		if (m_menuPosition >= m_maxMenuPosition)
-		{
-			m_menuPosition = m_maxMenuPosition;
-		}
-
-		for (auto& menuItem : m_menuItems)
-			menuItem.Pause();
-
-		m_menuItems[m_menuPosition].Resume();
 
 		m_menuMoved = false;
 	}
 
 	for (auto& menuItem : m_menuItems)
+	{
 		menuItem.Update(deltaTime);
+	}
 }
 
 void Menu::Render(sf::RenderWindow& window)
 {
 	for (auto& menuItem : m_menuItems)
+	{
 		menuItem.Render(window);
+	}
+}
+
+void Menu::SetPassiveColour(sf::Color color)
+{
+	m_passiveColour = color;
+	m_hasPassiveColor = m_activeColour == m_passiveColour;
 }
