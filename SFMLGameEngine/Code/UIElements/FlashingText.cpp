@@ -6,11 +6,9 @@
 
 void CalculateTextOrigin(sf::Text& text)
 {
-	sf::FloatRect textRect = text.getLocalBounds();
-	auto len = text.getString().getSize();
-
-	text.setOrigin(((textRect.left + text.getCharacterSize()) * len) / 2.0f,
-		(textRect.top + textRect.height) / 2.0f);
+	sf::FloatRect bounds = text.getLocalBounds();
+	text.setOrigin(bounds.left + bounds.width / 2.0f,
+		bounds.top + bounds.height / 2.0f);
 }
 
 FlashingText::FlashingText(const std::string fontName, float fadeTime)
