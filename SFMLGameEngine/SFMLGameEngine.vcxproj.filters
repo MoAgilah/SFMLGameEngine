@@ -153,7 +153,7 @@
     <ClCompile Include="Code\Collisions\BoundingVolume.cpp">
       <Filter>Source Files\Code\Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Code\UIElements\FlashingText.cpp">
+    <ClCompile Include="Code\UIElements\Text.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\Menu.cpp">
@@ -257,7 +257,7 @@
     <ClInclude Include="Code\Collisions\BoundingVolume.h">
       <Filter>Header Files\Code\Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Code\UIElements\FlashingText.h">
+    <ClInclude Include="Code\UIElements\Text.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\Menu.h">

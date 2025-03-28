@@ -1,14 +1,14 @@
 #pragma once
 
-#include "FlashingText.h"
+#include "Text.h"
 
 class Menu
 {
 public:
-	Menu(void (*func)(int), const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos);
+	Menu(void (*func)(int), TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos, sf::Color color = sf::Color::Black);
 	~Menu() = default;
 
-	void AddMenuItem(const std::string text);
+	void AddMenuItem(const std::string text, bool hasPassiveColor = false, sf::Color color = sf::Color::Black);
 
 	void ProcessInput();
 	void Update(float deltaTime);
@@ -25,5 +25,7 @@ private:
 	unsigned int m_marginSize;
 	void (*m_actionFunc)(int);
 	sf::Vector2f m_position;
-	std::vector<FlashingText> m_menuItems;
+	TextType m_textType;
+	sf::Color m_ActiveColour;
+	std::vector<Text> m_menuItems;
 };

@@ -22,6 +22,6 @@ public:
 private:
 
 	Sprite m_backgroundSpr;
-	FlashingText m_loadingMessage;
+	Text m_loadingMessage;
 	GameManager* m_gameMgr;
 };

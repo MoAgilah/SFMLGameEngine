@@ -1,20 +1,37 @@
 #include "Menu.h"
 #include "../Game/GameManager.h"
 
-Menu::Menu(void(*func)(int), const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos)
-	: m_actionFunc(func), m_charSize(charSize), m_marginSize(m_charSize + marginSize), m_position(pos)
+Menu::Menu(void(*func)(int), TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos, sf::Color color)
+	: m_actionFunc(func), m_charSize(charSize), m_marginSize(m_charSize + marginSize), m_position(pos), m_textType(textType), m_ActiveColour(color)
 {
-	FlashingText menuItem;
-	menuItem.Init(text, charSize, m_position);
+	Text menuItem;
+	switch (m_textType)
+	{
+	case Static:
+		menuItem.InitStaticText(text, charSize, m_position, m_ActiveColour);
+		break;
+	case Dynamic:
+		menuItem.InitFlashingText(text, charSize, m_position, m_ActiveColour);
+		break;
+	}
+
+	menuItem.InitFlashingText(text, charSize, m_position);
 	m_menuItems.push_back(menuItem);
 	m_position.y += m_marginSize;
 }
 
-void Menu::AddMenuItem(const std::string text)
+void Menu::AddMenuItem(const std::string text, bool hasPassiveColor, sf::Color color)
 {
-	FlashingText menuItem;
-	menuItem.Init(text, m_charSize, m_position);
-	menuItem.Pause();
+	Text menuItem;
+	switch (m_textType)
+	{
+	case Static:
+		menuItem.InitStaticText(text, m_charSize, m_position, hasPassiveColor ? color : m_ActiveColour);
+		break;
+	case Dynamic:
+		menuItem.InitFlashingText(text, m_charSize, m_position, hasPassiveColor ? color : m_ActiveColour);
+		break;
+	}
 	m_menuItems.push_back(menuItem);
 	m_position.y += m_marginSize;
 	m_maxMenuPosition++;

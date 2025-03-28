@@ -11,7 +11,7 @@ void CalculateTextOrigin(sf::Text& text)
 		bounds.top + bounds.height / 2.0f);
 }
 
-FlashingText::FlashingText(const std::string fontName, float fadeTime)
+Text::Text(const std::string fontName, float fadeTime)
 	: m_paused(false), m_maxTime(fadeTime), m_timer(m_maxTime)
 {
 	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(fontName));
@@ -19,16 +19,24 @@ FlashingText::FlashingText(const std::string fontName, float fadeTime)
 	m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
 }
 
-void FlashingText::Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, TextAlignment alignment, bool loop)
+void Text::Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment, bool loop, bool paused)
 {
 	m_loop = loop;
-	if (m_countdown)
-		m_countdown = false;
+	m_countdown = false;
+
+	if (paused)
+	{
+		Pause();
+	}
+	else
+	{
+		Resume();
+	}
 
 	m_text.setCharacterSize(charSize);
 	m_text.setString(text);
 	m_text.setOutlineThickness(charSize / 10.f);
-	m_text.setOutlineColor(sf::Color::Black);
+	m_text.setOutlineColor(color);
 
 
 	sf::FloatRect textBounds = m_text.getLocalBounds();
@@ -54,15 +62,27 @@ void FlashingText::Init(const std::string text, unsigned int charSize, const sf:
 	}
 }
 
-void FlashingText::InitCountdown(int startFrom, unsigned int charSize, const sf::Vector2f pos)
+void Text::InitCountdown(int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment)
 {
-	m_alignment = TextAlignment::Center;
+	m_alignment = alignment;
 	m_count = m_startFrom = startFrom;
-	Init(std::to_string(m_count), charSize, pos, TextAlignment::Center, false);
+	Init(std::to_string(m_count), charSize, pos, color, m_alignment, false);
 	m_countdown = true;
 }
 
-void FlashingText::Reset(const std::string text)
+void Text::InitStaticText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment)
+{
+	m_alignment = alignment;
+	Init(text, charSize, pos, color, m_alignment, true, true);
+}
+
+void Text::InitFlashingText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment, bool paused)
+{
+	m_alignment = alignment;
+	Init(text, charSize, pos, color, m_alignment, true, paused);
+}
+
+void Text::Reset(const std::string text)
 {
 	m_text.setString(text);
 
@@ -92,17 +112,17 @@ void FlashingText::Reset(const std::string text)
 	m_paused = false;
 }
 
-void FlashingText::RestartCountDown()
+void Text::RestartCountDown()
 {
 	m_count = m_startFrom;
 	Reset(std::to_string(m_count));
 }
 
-void FlashingText::Update(float deltaTime)
+void Text::Update(float deltaTime)
 {
 	if (m_paused)
 	{
-		m_textShader->setUniform("time", m_loop ? 1.f : 0.f);
+		m_time = m_loop ? 1.f : 0.f;
 	}
 	else
 	{
@@ -151,21 +171,22 @@ void FlashingText::Update(float deltaTime)
 			}
 		}
 
-		m_textShader->setUniform("time", val);
+		m_time = val;
 	}
 }
 
-void FlashingText::Render(sf::RenderWindow& window)
+void Text::Render(sf::RenderWindow& window)
 {
+	m_textShader->setUniform("time", m_time);
 	window.draw(m_text, m_textShader.get());
 }
 
-void FlashingText::Pause()
+void Text::Pause()
 {
 	m_paused = true;
 }
 
-void FlashingText::Resume()
+void Text::Resume()
 {
 	m_paused = false;
 }
