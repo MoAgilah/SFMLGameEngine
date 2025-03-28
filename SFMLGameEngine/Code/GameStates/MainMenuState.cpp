@@ -12,6 +12,7 @@ void MainMenuActionFunc(int menuPosition)
 MainMenuState::MainMenuState(GameManager* gameMgr)
 	: GameState("MainMenu"),
 	m_menu(&MainMenuActionFunc,
+		"Standard",
 		TextType::Dynamic,
 		"Start",
 		30,
