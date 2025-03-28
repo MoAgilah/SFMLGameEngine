@@ -113,7 +113,14 @@ void Text::Update(float deltaTime)
 			if (m_countdown && !CountHasEnded())
 			{
 				--m_count;
-				Reset(std::to_string(m_count));
+				if (m_count != 0)
+				{
+					Reset(std::to_string(m_count));
+				}
+				else
+				{
+					Reset(m_countdownMsg);
+				}
 			}
 			else
 			{
@@ -129,8 +136,9 @@ void Text::Render(sf::RenderWindow& window)
 	window.draw(m_text, m_textShader.get());
 }
 
-void Text::InitCountdown(int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment)
+void Text::InitCountdown(const std::string text, int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment)
 {
+	m_countdownMsg = text;
 	m_count = m_startFrom = startFrom;
 	Init(std::to_string(m_count), charSize, pos, color, alignment, false);
 	m_countdown = true;

@@ -20,7 +20,7 @@ public:
 	Text(const std::string fontName = "Standard", float fadeTime = 0.75f);
 	~Text() = default;
 
-	void InitCountdown(int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = Center);
+	void InitCountdown(const std::string text, int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = Center);
 	void InitStaticText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = None);
 	void InitFlashingText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = None, bool paused = false);
 
@@ -44,6 +44,7 @@ private:
 	int m_count = 0;
 	int m_startFrom = 0;
 	bool m_countdown = false;
+	std::string m_countdownMsg;
 	bool m_loop = true;
 	bool m_paused;
 	bool m_reduceAlpha = true;
