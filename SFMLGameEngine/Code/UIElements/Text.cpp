@@ -10,14 +10,14 @@ void CalculateTextOrigin(sf::Text& text)
 	text.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
 }
 
-Text::Text(const std::string fontName, float fadeTime)
+Text::Text(const std::string& fontName, float fadeTime)
 	: m_paused(false), m_maxTime(fadeTime), m_timer(m_maxTime), m_time(1.f)
 {
 	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(fontName));
 	m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
 }
 
-void Text::Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment, bool loop, bool paused)
+void Text::Init(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment, bool loop, bool paused)
 {
 	m_loop = loop;
 	m_countdown = false;
@@ -37,7 +37,7 @@ void Text::Init(const std::string text, unsigned int charSize, const sf::Vector2
 	SetTextPosition(pos);
 }
 
-void Text::SetTextPosition(const sf::Vector2f& pos)
+void Text::SetTextPosition(const Point& pos)
 {
 	sf::FloatRect bounds = m_text.getLocalBounds();
 
@@ -60,7 +60,7 @@ void Text::SetTextPosition(const sf::Vector2f& pos)
 	}
 }
 
-void Text::Reset(const std::string text)
+void Text::Reset(const std::string& text)
 {
 	m_text.setString(text);
 	SetTextPosition(m_position);
@@ -136,7 +136,7 @@ void Text::Render(sf::RenderWindow& window)
 	window.draw(m_text, m_textShader.get());
 }
 
-void Text::InitCountdown(const std::string text, int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment)
+void Text::InitCountdown(const std::string& text, int startFrom, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment)
 {
 	m_countdownMsg = text;
 	m_count = m_startFrom = startFrom;
@@ -144,12 +144,12 @@ void Text::InitCountdown(const std::string text, int startFrom, unsigned int cha
 	m_countdown = true;
 }
 
-void Text::InitStaticText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment)
+void Text::InitStaticText(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment)
 {
 	Init(text, charSize, pos, color, alignment, true, true);
 }
 
-void Text::InitFlashingText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment, bool paused)
+void Text::InitFlashingText(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment, bool paused)
 {
 	Init(text, charSize, pos, color, alignment, true, paused);
 }

@@ -14,7 +14,7 @@ Object::Object(const std::string& texID, float radius)
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
-Object::Object(const std::string& texID, const sf::Vector2f& boxSize)
+Object::Object(const std::string& texID, const Point& boxSize)
 	: m_texID(texID)
 {
 	m_sprite = std::make_unique<Sprite>(m_texID);
@@ -41,7 +41,7 @@ Object::Object(const std::string& texID, const AnimationData& animData, float ra
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
 
-Object::Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize)
+Object::Object(const std::string& texID, const AnimationData& animData, const Point& boxSize)
 	: m_texID(texID)
 {
 	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
@@ -82,7 +82,7 @@ void Object::Reset()
 	m_active = false;
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
-	m_colVolume->Update(sf::Vector2f(GetPosition().x, GetPosition().y + 3.5f));
+	m_colVolume->Update({ GetPosition().x, GetPosition().y + 3.5f });
 }
 
 void Object::SetDirection(bool dir)
@@ -106,7 +106,7 @@ DynamicObject::DynamicObject(const std::string& texID, float radius)
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
 
-DynamicObject::DynamicObject(const std::string& texID, const sf::Vector2f& boxSize)
+DynamicObject::DynamicObject(const std::string& texID, const Point& boxSize)
 	: Object(texID, boxSize)
 {
 	m_physicsCtrl = std::make_unique<PhysicsController>();
@@ -124,7 +124,7 @@ DynamicObject::DynamicObject(const std::string& texID, const AnimationData& anim
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
 
-DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize)
+DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, const Point& boxSize)
 	: Object(texID, animData, boxSize)
 {
 	m_physicsCtrl = std::make_unique<PhysicsController>();
@@ -145,7 +145,7 @@ bool DynamicObject::Intersects(DynamicObject* obj)
 void DynamicObject::Reset()
 {
 	Object::Reset();
-	SetVelocity(sf::Vector2f(0.0f, 0.0f));
+	SetVelocity(Point());
 	m_onGround = false;
 }
 
@@ -219,10 +219,10 @@ void DynamicObject::SetSlideRight(bool right)
 void DynamicObject::Move(float x, float y)
 {
 	GetSprite()->Move(x, y);
-	GetColVolume()->Move(sf::Vector2f(x, y));
+	GetColVolume()->Move(x, y);
 }
 
-void DynamicObject::Move(const sf::Vector2f& pos)
+void DynamicObject::Move(const Point& pos)
 {
 	GetSprite()->Move(pos.x, pos.y);
 	GetColVolume()->Move(pos);
@@ -230,7 +230,7 @@ void DynamicObject::Move(const sf::Vector2f& pos)
 
 Direction DynamicObject::GetFacingDirection()
 {
-	const sf::Vector2f& currentVel = m_velocity;
+	const Point& currentVel = m_velocity;
 
 	Direction currentDir = Direction::DDIR;
 

@@ -34,7 +34,7 @@ public:
 	bool GetActive() const { return m_visible; }
 	void SetActive(bool vis) { m_visible = vis; }
 
-	void SetPosition(sf::Vector2f pos);
+	void SetPosition(const Point& pos);
 	Point GetPosition() { return m_aabb.GetPosition(); }
 	Point GetOrigin() { return m_aabb.GetOrigin(); }
 

@@ -1,13 +1,13 @@
 #include "Enemy.h"
 #include "../Game/GameManager.h"
 
-Enemy::Enemy(const std::string& texID, const sf::Vector2f& boxSize, int maxLives)
+Enemy::Enemy(const std::string& texID, const Point& boxSize, int maxLives)
 	: DynamicObject(texID, boxSize), m_numLives(maxLives), m_maxLives(m_numLives),
 	m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
 {
 }
 
-Enemy::Enemy(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, int maxLives)
+Enemy::Enemy(const std::string& texID, const AnimationData& animData, const Point& boxSize, int maxLives)
 	: DynamicObject(texID, animData, boxSize),
 	m_numLives(maxLives), m_maxLives(m_numLives), m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
 {

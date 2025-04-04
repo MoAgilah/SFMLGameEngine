@@ -1,7 +1,7 @@
 #include "Box.h"
 #include "../Game/GameManager.h"
 
-Box::Box(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+Box::Box(const std::string& texID, const Point& boxSize, const Point& initPos)
 	: Object(texID, boxSize)
 {
 	SetInitialDirection(true);
@@ -11,7 +11,7 @@ Box::Box(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector
 	GetBoundingBox()->Update(GetPosition());
 }
 
-Box::Box(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+Box::Box(const std::string& texID, const AnimationData& animData, const Point& boxSize, const Point& initPos)
 	: Object(texID, animData, boxSize)
 {
 	SetInitialDirection(true);

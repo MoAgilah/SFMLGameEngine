@@ -3,6 +3,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "../Game/Timer.h"
+#include "Utilities/Point.h"
 
 enum TextAlignment
 {
@@ -17,14 +18,14 @@ enum TextType
 class Text
 {
 public:
-	Text(const std::string fontName = "Standard", float fadeTime = 0.75f);
+	Text(const std::string& fontName = "Standard", float fadeTime = 0.75f);
 	~Text() = default;
 
-	void InitCountdown(const std::string text, int startFrom, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = Center);
-	void InitStaticText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = None);
-	void InitFlashingText(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color = sf::Color::Black, TextAlignment alignment = None, bool paused = false);
+	void InitCountdown(const std::string& text, int startFrom, unsigned int charSize, const Point& pos, sf::Color color = sf::Color::Black, TextAlignment alignment = Center);
+	void InitStaticText(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color = sf::Color::Black, TextAlignment alignment = None);
+	void InitFlashingText(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color = sf::Color::Black, TextAlignment alignment = None, bool paused = false);
 
-	void Reset(const std::string text);
+	void Reset(const std::string& text);
 	void RestartCountDown();
 
 	void Update(float deltaTime);
@@ -38,8 +39,8 @@ public:
 
 private:
 
-	void Init(const std::string text, unsigned int charSize, const sf::Vector2f pos, sf::Color color, TextAlignment alignment, bool loop, bool paused = false);
-	void SetTextPosition(const sf::Vector2f& pos);
+	void Init(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment, bool loop, bool paused = false);
+	void SetTextPosition(const Point& pos);
 
 	int m_count = 0;
 	int m_startFrom = 0;
@@ -52,7 +53,7 @@ private:
 	float m_maxTime;
 	TextAlignment m_alignment;
 	Timer m_timer;
-	sf::Vector2f m_position;
+	Point m_position;
 	sf::Text m_text;
 	std::shared_ptr<sf::Shader> m_textShader;
 };

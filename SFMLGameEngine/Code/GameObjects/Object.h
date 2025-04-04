@@ -12,7 +12,7 @@
 struct SpawnData
 {
 	bool initialDir = true;
-	sf::Vector2f initialPos;
+	Point initialPos;
 };
 
 struct AnimationData
@@ -30,10 +30,10 @@ class Object
 {
 public:
 	Object(const std::string& texID, float radius);
-	Object(const std::string& texID, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, const Point& boxSize);
 	Object(const std::string& texID, float radius, float length, float angle);
 	Object(const std::string& texID, const AnimationData& animData, float circleRadius);
-	Object(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
+	Object(const std::string& texID, const AnimationData& animData, const Point& boxSize);
 	Object(const std::string& texID, const AnimationData& animData, float radius, float length, float angle);
 	virtual ~Object() = default;
 
@@ -65,17 +65,17 @@ public:
 	bool GetDirection() const { return m_direction; }
 	void SetDirection(bool dir);
 
-	const sf::Vector2f& GetPosition() const { return m_sprite->GetPosition(); };
-	void SetPosition(const sf::Vector2f& pos) { m_sprite->SetPosition(pos); }
-	void SetPosition(float x, float y) { m_sprite->SetPosition(sf::Vector2f(x, y)); }
+	Point GetPosition() const { return m_sprite->GetPosition(); };
+	void SetPosition(const Point& pos) { m_sprite->SetPosition(pos); }
+	void SetPosition(float x, float y) { m_sprite->SetPosition({ x, y }); }
 
-	sf::Vector2f GetOrigin() const { return m_sprite->GetOrigin(); }
+	Point GetOrigin() const { return m_sprite->GetOrigin(); }
 
 	bool GetInitialDirection() const { return m_spawnData.initialDir; };
 	void SetInitialDirection(bool dir) { m_spawnData.initialDir = dir; }
 
-	const sf::Vector2f& GetInitialPosition() const { return m_spawnData.initialPos; }
-	void SetInitialPosition(const sf::Vector2f& pos) { m_spawnData.initialPos = pos; }
+	Point GetInitialPosition() const { return m_spawnData.initialPos; }
+	void SetInitialPosition(const Point& pos) { m_spawnData.initialPos = pos; }
 
 	virtual float GetRestitution() { return m_restitution; }
 
@@ -96,10 +96,10 @@ class DynamicObject : public Object
 {
 public:
 	DynamicObject(const std::string& texID, float radius);
-	DynamicObject(const std::string& texID, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, const Point& boxSize);
 	DynamicObject(const std::string& texID, float radius, float length, float angle);
 	DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius);
-	DynamicObject(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize);
+	DynamicObject(const std::string& texID, const AnimationData& animData, const Point& boxSize);
 	DynamicObject(const std::string& texID, const AnimationData& animData, float radius, float length, float angle);
 	~DynamicObject() override = default;
 
@@ -107,13 +107,13 @@ public:
 
 	void Reset() override;
 
-	void SetPrevPosition(sf::Vector2f pos) { m_previousPos = pos; }
-	void SetPrevPosition(float x, float y) { m_previousPos = sf::Vector2f(x, y); }
-	const sf::Vector2f& GetPrevPosition() const { return m_previousPos; }
+	void SetPrevPosition(Point pos) { m_previousPos = pos; }
+	void SetPrevPosition(float x, float y) { m_previousPos = Point(x, y); }
+	Point GetPrevPosition() const { return m_previousPos; }
 
-	const sf::Vector2f& GetVelocity() const { return m_velocity; }
-	void SetVelocity(sf::Vector2f vel) { m_velocity = vel; }
-	void SetVelocity(float x, float y) { m_velocity = sf::Vector2f(x, y); }
+	Point GetVelocity() const { return m_velocity; }
+	void SetVelocity(const Point& vel) { m_velocity = vel; }
+	void SetVelocity(float x, float y) { m_velocity = Point(x, y); }
 
 	float GetXVelocity() const { return m_velocity.x; }
 	void SetXVelocity(float x) { m_velocity.x = x; }
@@ -144,7 +144,7 @@ public:
 	void SetSlideRight(bool right);
 
 	void Move(float x, float y);
-	void Move(const sf::Vector2f& pos);
+	void Move(const Point& pos);
 
 	Direction GetFacingDirection();
 
@@ -160,7 +160,7 @@ private:
 	bool m_shouldSlideRight = false;
 	bool m_slideRight = false;
 	bool m_onGround = false;
-	sf::Vector2f m_velocity;
-	sf::Vector2f m_previousPos;
+	Point m_velocity;
+	Point m_previousPos;
 	std::unique_ptr<PhysicsController> m_physicsCtrl;
 };

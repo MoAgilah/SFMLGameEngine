@@ -22,7 +22,7 @@ void Sprite::SetTexture(const std::string& texId)
 		std::cout << e.what() << std::endl;
 	}
 
-	SetOrigin(sf::Vector2f((float)m_sprite.getTexture()->getSize().x * 0.5f, (float)m_sprite.getTexture()->getSize().y * 0.5f));
+	SetOrigin({ (float)m_sprite.getTexture()->getSize().x * 0.5f, (float)m_sprite.getTexture()->getSize().y * 0.5f });
 }
 
 void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int currentAnim)
@@ -31,8 +31,8 @@ void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int curren
 
 	//set first frame to display
 	SetTextureRect(sf::IntRect(currentFrame * m_frameSize.x, currentAnim * m_frameSize.y, m_frameSize.x, m_frameSize.y));
-	SetScale(sf::Vector2f(GameConstants::Scale));
-	SetOrigin(sf::Vector2f((float)m_frameSize.x / 2.f, (float)m_frameSize.y / 2.f));
+	SetScale(GameConstants::Scale);
+	SetOrigin({ (float)m_frameSize.x / 2.f, (float)m_frameSize.y / 2.f });
 }
 
 AnimatedSprite::AnimatedSprite(const std::string& texId, int rows, int columns, float framesPerSec, bool symmetrical, float animSpeed)

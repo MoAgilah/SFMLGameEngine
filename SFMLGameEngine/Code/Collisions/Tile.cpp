@@ -162,14 +162,14 @@ void Tile::ResolveCollision(DynamicObject* obj)
 	}
 }
 
-void Tile::SetPosition(sf::Vector2f pos)
+void Tile::SetPosition(const Point& pos)
 {
 	m_aabb.Update(pos);
 	if (m_type == DIAGU)
 	{
 		m_slope.setPointCount(3);
-		m_slope.setPoint(0, m_aabb.GetPosition() + sf::Vector2f(-m_aabb.GetExtents().x, m_aabb.GetExtents().y));
-		m_slope.setPoint(1, m_aabb.GetPosition() + sf::Vector2f(m_aabb.GetExtents().x, -m_aabb.GetExtents().y));
+		m_slope.setPoint(0, m_aabb.GetPosition() + Point(-m_aabb.GetExtents().x, m_aabb.GetExtents().y));
+		m_slope.setPoint(1, m_aabb.GetPosition() + Point(m_aabb.GetExtents().x, -m_aabb.GetExtents().y));
 		m_slope.setPoint(2, m_aabb.GetPosition() + m_aabb.GetExtents());
 		m_slope.setFillColor(sf::Color::Yellow);
 	}
@@ -177,9 +177,9 @@ void Tile::SetPosition(sf::Vector2f pos)
 	if (m_type == DIAGD)
 	{
 		m_slope.setPointCount(3);
-		m_slope.setPoint(0, m_aabb.GetPosition() - sf::Vector2f(m_aabb.GetExtents().x, m_aabb.GetExtents().y));
+		m_slope.setPoint(0, m_aabb.GetPosition() - Point(m_aabb.GetExtents().x, m_aabb.GetExtents().y));
 		m_slope.setPoint(1, m_aabb.GetPosition() + m_aabb.GetExtents());
-		m_slope.setPoint(2, m_aabb.GetPosition() - sf::Vector2f(m_aabb.GetExtents().x, -m_aabb.GetExtents().y));
+		m_slope.setPoint(2, m_aabb.GetPosition() - Point(m_aabb.GetExtents().x, -m_aabb.GetExtents().y));
 		m_slope.setFillColor(sf::Color::Yellow);
 	}
 
@@ -286,7 +286,7 @@ bool Tile::ResolveObjectToSlopeIncline(DynamicObject* obj, int start, int end)
 			obj->GetBoundingBox()->GetPosition().y,
 			GetTileHeight());
 
-		obj->Move(sf::Vector2f(0, yOffset));
+		obj->Move(0, yOffset);
 		obj->SetOnSlope(true);
 
 		return true;
@@ -308,7 +308,7 @@ bool Tile::ResolveObjectToSlopeDecline(DynamicObject* obj, int start, int end)
 			obj->GetBoundingBox()->GetPosition().y,
 			GetTileHeight());
 
-		obj->Move(sf::Vector2f(0, -yOffset));
+		obj->Move(0, -yOffset);
 		obj->SetOnSlope(true);
 
 		return true;

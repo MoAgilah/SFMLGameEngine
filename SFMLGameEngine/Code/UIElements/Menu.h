@@ -6,7 +6,7 @@
 class Menu
 {
 public:
-	Menu(std::function<void(int)> func, std::string m_fontName, TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos, sf::Color color = sf::Color::Black);
+	Menu(std::function<void(int)> func, std::string m_fontName, TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const Point& pos, sf::Color color = sf::Color::Black);
 	~Menu() = default;
 
 	void AddMenuItem(const std::string text);
@@ -31,7 +31,7 @@ private:
 	unsigned int m_charSize;
 	unsigned int m_marginSize;
 	std::function<void(int)> m_actionFunc;
-	sf::Vector2f m_position;
+	Point m_position;
 	std::string m_fontName;
 	TextType m_textType;
 	sf::Color m_activeColour;

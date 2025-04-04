@@ -8,8 +8,8 @@ class Player;
 class StaticCollectable : public Object
 {
 public:
-	StaticCollectable(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
-	StaticCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	StaticCollectable(const std::string& texID, const Point& boxSize, const Point& initPos);
+	StaticCollectable(const std::string& texID, const AnimationData& animData, const Point& boxSize, const Point& initPos);
 	~StaticCollectable() override = default;
 
 	bool GetActive() const final { return !GetCollected() && Object::GetActive(); }
@@ -27,8 +27,8 @@ private:
 class DynamicCollectable : public DynamicObject
 {
 public:
-	DynamicCollectable(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
-	DynamicCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	DynamicCollectable(const std::string& texID, const Point& boxSize, const Point& initPos);
+	DynamicCollectable(const std::string& texID, const AnimationData& animData, const Point& boxSize, const Point& initPos);
 	~DynamicCollectable() override = default;
 
 	bool GetActive() const final { return !GetCollected() && Object::GetActive(); }

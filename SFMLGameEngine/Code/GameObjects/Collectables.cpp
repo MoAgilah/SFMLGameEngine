@@ -1,7 +1,7 @@
 #include "Collectables.h"
 #include "../Game/GameManager.h"
 
-StaticCollectable::StaticCollectable(const std::string& texId, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+StaticCollectable::StaticCollectable(const std::string& texId, const Point& boxSize, const Point& initPos)
 	: Object(texId, boxSize)
 {
 	SetInitialDirection(true);
@@ -11,7 +11,7 @@ StaticCollectable::StaticCollectable(const std::string& texId, const sf::Vector2
 	GetBoundingBox()->Update(GetPosition());
 }
 
-StaticCollectable::StaticCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+StaticCollectable::StaticCollectable(const std::string& texID, const AnimationData& animData, const Point& boxSize, const Point& initPos)
 	: Object(texID, animData, boxSize)
 {
 	SetInitialDirection(true);
@@ -21,7 +21,7 @@ StaticCollectable::StaticCollectable(const std::string& texID, const AnimationDa
 	GetBoundingBox()->Update(GetPosition());
 }
 
-DynamicCollectable::DynamicCollectable(const std::string& texId, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+DynamicCollectable::DynamicCollectable(const std::string& texId, const Point& boxSize, const Point& initPos)
 	: DynamicObject(texId, boxSize)
 {
 	SetInitialDirection(false);
@@ -31,7 +31,7 @@ DynamicCollectable::DynamicCollectable(const std::string& texId, const sf::Vecto
 	GetBoundingBox()->Update(GetPosition());
 }
 
-DynamicCollectable::DynamicCollectable(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos)
+DynamicCollectable::DynamicCollectable(const std::string& texID, const AnimationData& animData, const Point& boxSize, const Point& initPos)
 	: DynamicObject(texID, animData, boxSize)
 {
 	SetInitialDirection(false);

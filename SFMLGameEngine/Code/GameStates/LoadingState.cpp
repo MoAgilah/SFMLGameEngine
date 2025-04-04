@@ -17,10 +17,10 @@ LoadingState::LoadingState(GameManager* gameMgr)
 void LoadingState::Initialise()
 {
 	m_backgroundSpr.SetTexture("");
-	m_backgroundSpr.SetScale(sf::Vector2f(GameConstants::Scale));
-	m_backgroundSpr.SetOrigin(sf::Vector2f(0, 0));
+	m_backgroundSpr.SetScale(GameConstants::Scale);
+	m_backgroundSpr.SetOrigin(Point());
 
-	m_loadingMessage.InitFlashingText("Loading", 30, sf::Vector2f(GameConstants::ScreenDim.x / 2.0f, GameConstants::ScreenDim.y / 2.0f));
+	m_loadingMessage.InitFlashingText("Loading", 30, { GameConstants::ScreenDim / 2.0f });
 
 	std::thread t(LoadResources);
 	t.detach();

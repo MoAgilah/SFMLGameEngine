@@ -49,3 +49,23 @@ float GetYDist(const Point& p1, const Point& p2);
 // Solves a*t^2 + b*t + c = 0.
 // Returns false if there are no real roots; otherwise, returns the roots in t0 and t1.
 bool SolveQuadratic(float a, float b, float c, float& t0, float& t1);
+
+struct FloatRect
+{
+	float m_left;
+	float m_top;
+	float m_width;
+	float m_height;
+
+	FloatRect(float left, float top, float width, float height);
+
+	Point Min() { return m_min; }
+	Point Max() { return m_max; }
+	Point MidPoint() { return m_midPoint; }
+
+private:
+
+	Point m_min;
+	Point m_max;
+	Point m_midPoint;
+};

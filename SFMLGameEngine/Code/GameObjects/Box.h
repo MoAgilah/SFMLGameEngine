@@ -7,8 +7,8 @@
 class Box : public Object
 {
 public:
-	Box(const std::string& texID, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
-	Box(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, const sf::Vector2f& initPos);
+	Box(const std::string& texID, const Point& boxSize, const Point& initPos);
+	Box(const std::string& texID, const AnimationData& animData, const Point& boxSize, const Point& initPos);
 	~Box() override = default;
 
 	void Reset() override;

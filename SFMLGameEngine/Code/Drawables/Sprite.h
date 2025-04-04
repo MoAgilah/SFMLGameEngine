@@ -5,6 +5,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "../Game/TextureManager.h"
+#include "Utilities/Point.h"
 
 class Sprite
 {
@@ -23,16 +24,16 @@ public:
 
 	void Move(float x, float y) { m_sprite.move(x, y); }
 
-	const sf::Vector2f& GetPosition() const { return m_sprite.getPosition(); }
-	void SetPosition(const sf::Vector2f& pos) { m_sprite.setPosition(pos); }
+	Point GetPosition() const { return m_sprite.getPosition(); }
+	void SetPosition(const Point& pos) { m_sprite.setPosition(pos); }
 
-	const sf::Vector2f& GetOrigin() const { return m_sprite.getOrigin(); }
-	void SetOrigin(const sf::Vector2f& pos) { m_sprite.setOrigin(pos); }
+	Point GetOrigin() const { return m_sprite.getOrigin(); }
+	void SetOrigin(const Point& pos) { m_sprite.setOrigin(pos); }
 
 	sf::Vector2u GetTextureSize() const { return m_sprite.getTexture()->getSize(); }
 	void SetTextureRect(const sf::IntRect& rect) { m_sprite.setTextureRect(rect); }
 
-	void SetScale(const sf::Vector2f& factors) { m_sprite.setScale(factors); }
+	void SetScale(const Point& factors) { m_sprite.setScale(factors); }
 
 	sf::Vector2u GetFrameSize() const { return m_frameSize; }
 	void SetFrameSize(const sf::Vector2u& size, int currentFrame = 1, int currentAnim = 1);

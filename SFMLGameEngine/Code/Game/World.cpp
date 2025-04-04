@@ -8,7 +8,7 @@ World::World()
 {
 	AddGUI();
 
-	m_foregroundBox.Reset(sf::Vector2f(32, 47));
+	m_foregroundBox.Reset({ 32, 47 });
 }
 
 

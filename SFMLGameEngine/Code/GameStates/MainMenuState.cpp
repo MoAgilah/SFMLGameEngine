@@ -17,7 +17,7 @@ MainMenuState::MainMenuState(GameManager* gameMgr)
 		"Start",
 		30,
 		20,
-		sf::Vector2f(GameConstants::ScreenDim.x / 2.0f, GameConstants::ScreenDim.y / 2.0f))
+		GameConstants::ScreenDim / 2.0f)
 {
 	m_gameMgr = gameMgr;
 }
@@ -25,8 +25,8 @@ MainMenuState::MainMenuState(GameManager* gameMgr)
 void MainMenuState::Initialise()
 {
 	m_backgroundSpr.SetTexture("");
-	m_backgroundSpr.SetScale(sf::Vector2f(GameConstants::Scale));
-	m_backgroundSpr.SetOrigin(sf::Vector2f(0, 0));
+	m_backgroundSpr.SetScale(GameConstants::Scale);
+	m_backgroundSpr.SetOrigin(Point());
 }
 
 void MainMenuState::Pause()

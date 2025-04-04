@@ -1,7 +1,7 @@
 #include "Menu.h"
 #include "../Game/GameManager.h"
 
-Menu::Menu(std::function<void(int)> func, std::string fontName, TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const sf::Vector2f& pos, sf::Color color)
+Menu::Menu(std::function<void(int)> func, std::string fontName, TextType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const Point& pos, sf::Color color)
 	: m_actionFunc(func), m_charSize(charSize), m_marginSize(m_charSize + marginSize), m_position(pos), m_fontName(fontName), m_textType(textType), m_activeColour(color)
 {
 	m_menuItems.push_back(CreateMenuItem(text, m_activeColour));

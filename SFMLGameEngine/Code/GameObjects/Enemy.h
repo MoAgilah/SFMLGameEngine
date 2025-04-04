@@ -9,8 +9,8 @@ class Player;
 class Enemy : public DynamicObject
 {
 public:
-	Enemy(const std::string& texID, const sf::Vector2f& boxSize, int maxLives = 1);
-	Enemy(const std::string& texID, const AnimationData& animData, const sf::Vector2f& boxSize, int maxLives = 1);
+	Enemy(const std::string& texID, const Point& boxSize, int maxLives = 1);
+	Enemy(const std::string& texID, const AnimationData& animData, const Point& boxSize, int maxLives = 1);
 	~Enemy() override = default;
 
 	bool GetActive() const final { return GetIsAlive() && Object::GetActive(); }

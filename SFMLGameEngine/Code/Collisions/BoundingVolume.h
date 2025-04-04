@@ -89,8 +89,8 @@ class BoundingBox : public BoundingVolume
 {
 public:
 	BoundingBox();
-	BoundingBox(const sf::Vector2f& size);
-	BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos);
+	BoundingBox(const Point& size);
+	BoundingBox(const Point& size, const Point& pos);
 	BoundingBox(BoundingCapsule* capsule);
 	~BoundingBox() = default;
 
@@ -150,7 +150,7 @@ class BoundingCircle : public BoundingVolume
 public:
 	BoundingCircle();
 	BoundingCircle(float radius);
-	BoundingCircle(float radius, const sf::Vector2f& pos);
+	BoundingCircle(float radius, const Point& pos);
 	~BoundingCircle() = default;
 
 	void Reset(float radius);
@@ -196,7 +196,7 @@ class BoundingCapsule : public BoundingVolume
 public:
 	BoundingCapsule();
 	BoundingCapsule(float radius, float length, float angle);
-	BoundingCapsule(float radius, float length, float angle, const sf::Vector2f& pos);
+	BoundingCapsule(float radius, float length, float angle, const Point& pos);
 	BoundingCapsule(float radius, const Line& segment);
 	~BoundingCapsule() = default;
 

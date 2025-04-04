@@ -181,3 +181,12 @@ bool SolveQuadratic(float a, float b, float c, float& t0, float& t1)
 	t1 = (-b + sqrtDiscriminant) / (2.0f * a);
 	return true;
 }
+
+FloatRect::FloatRect(float left, float top, float width, float height)
+	:m_left(left), m_top(top), m_width(width), m_height(height)
+{
+	m_min = { m_left, m_top };
+	m_max = { m_left + m_width, m_top + m_height };
+	m_midPoint = { (m_min.x + m_max.x) / 2.f,
+	(m_min.y + m_max.y) / 2.f };
+}

@@ -18,7 +18,7 @@ void BoundingVolume::Render(sf::RenderWindow& window)
 
 void BoundingVolume::Move(float x, float y)
 {
-	m_shape->move(sf::Vector2f(x, y));
+	m_shape->move(Point(x, y));
 	Update(GetPosition());
 }
 
@@ -57,7 +57,7 @@ BoundingBox::BoundingBox()
 	Update(Point(10, 10));
 }
 
-BoundingBox::BoundingBox(const sf::Vector2f& size)
+BoundingBox::BoundingBox(const Point& size)
 	: BoundingVolume(VolumeType::Box), m_size(size)
 {
 	m_boxNumber = s_count++;
@@ -66,7 +66,7 @@ BoundingBox::BoundingBox(const sf::Vector2f& size)
 	Update(GetPosition());
 }
 
-BoundingBox::BoundingBox(const sf::Vector2f& size, const sf::Vector2f& pos)
+BoundingBox::BoundingBox(const Point& size, const Point& pos)
 	: BoundingVolume(VolumeType::Box), m_size(size)
 {
 	m_boxNumber = s_count++;
@@ -481,7 +481,7 @@ BoundingCircle::BoundingCircle(float radius)
 	Update(GetPosition());
 }
 
-BoundingCircle::BoundingCircle(float radius, const sf::Vector2f& pos)
+BoundingCircle::BoundingCircle(float radius, const Point& pos)
 	: BoundingVolume(VolumeType::Circle), m_radius(radius)
 {
 	m_circleNumber = s_count++;
@@ -708,7 +708,7 @@ BoundingCapsule::BoundingCapsule(float radius, float length, float angle)
 	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
 }
 
-BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const sf::Vector2f& pos)
+BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const Point& pos)
 	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(angle)
 {
 	m_capsuleNumber = s_count++;
