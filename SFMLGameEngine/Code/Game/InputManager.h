@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <chrono>
 #include "SFML/Window/event.hpp"
 
 class InputManager
@@ -17,6 +18,13 @@ public:
 
 	bool IsAnyKeyPressed();
 
+	std::chrono::steady_clock::time_point GetKeyPressTimestamp(sf::Keyboard::Key key) const
+	{
+		return m_keyPressTimestamps[key];
+	}
+
+	sf::Keyboard::Key GetFirstPressedKey(const std::vector<sf::Keyboard::Key>& keys) const;
+
 private:
 
 	void SetKeyPressed(sf::Keyboard::Key key);
@@ -24,4 +32,5 @@ private:
 	void SetKeyState(sf::Keyboard::Key key, bool state) { m_keyStates[key] = state; }
 
 	std::array<bool, sf::Keyboard::Key::KeyCount> m_keyStates;
+	std::array<std::chrono::steady_clock::time_point, sf::Keyboard::Key::KeyCount> m_keyPressTimestamps;
 };
