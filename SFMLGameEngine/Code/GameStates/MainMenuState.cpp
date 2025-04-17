@@ -13,11 +13,11 @@ MainMenuState::MainMenuState(GameManager* gameMgr)
 	: GameState("MainMenu"),
 	m_menu(&MainMenuActionFunc,
 		"Standard",
-		TextType::Dynamic,
+		TextAnimType::Flashing,
 		"Start",
 		30,
 		20,
-		GameConstants::ScreenDim / 2.0f)
+		{GameConstants::ScreenDim / 2.0f})
 {
 	m_gameMgr = gameMgr;
 }

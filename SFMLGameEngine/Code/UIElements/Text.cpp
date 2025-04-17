@@ -1,81 +1,198 @@
-#include "Menu.h"
-#include "../Game/GameManager.h"
-#include "../Game/Constants.h"
-#include <format>
-#include <iostream>
+#include "Text.h"
 
-void CalculateTextOrigin(sf::Text& text)
+#include "../Game/GameManager.h"
+
+void NCalculateTextOrigin(sf::Text& text)
 {
 	sf::FloatRect bounds = text.getLocalBounds();
 	text.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
 }
 
-Text::Text(const std::string& fontName, float fadeTime)
-	: m_paused(false), m_maxTime(fadeTime), m_timer(m_maxTime), m_time(1.f)
+Text::Text(const std::string& fontName, TextConfig config)
+	: m_config(config)
 {
 	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(fontName));
-	m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
 }
 
-void Text::Init(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment, bool loop, bool paused)
+void Text::Update(float deltaTime)
 {
-	m_loop = loop;
-	m_countdown = false;
-	m_position = pos;
-	m_alignment = alignment;
+	// does nothing sf::text is static
+}
 
-	if (paused)
-		Pause();
-	else
-		Resume();
+void Text::Render(sf::RenderWindow& window)
+{
+	window.draw(m_text);
+}
 
-	m_text.setCharacterSize(charSize);
+void Text::Reset(const std::string& text)
+{
 	m_text.setString(text);
-	m_text.setOutlineThickness(charSize / 10.f);
-	m_text.setOutlineColor(color);
+	SetTextPosition(m_config.m_position);
+}
 
-	SetTextPosition(pos);
+void Text::SetText(const std::string& text, std::optional<TextConfig> config)
+{
+	if (config)
+		m_config = *config;
+
+	m_text.setCharacterSize(m_config.m_charSize);
+	m_text.setString(text);
+	m_text.setOutlineThickness(m_config.m_charSize / 10.f);
+	m_text.setOutlineColor(m_config.m_colour);
+
+	SetTextPosition(m_config.m_position);
+}
+
+void Text::SetPosition(const Point& pos)
+{
+	m_config.m_position = pos;
+}
+
+Point Text::GetPosition()
+{
+	return m_text.getPosition();
+}
+
+void Text::SetCharSize(unsigned int charSize)
+{
+	m_text.setCharacterSize(charSize);
+}
+
+void Text::SetTextAlignment(TextAlignment alignment)
+{
+	m_config.m_alignment = alignment;
+}
+
+void Text::SetOutlineColour(const sf::Color& colour)
+{
+	m_text.setOutlineColor(colour);
+}
+
+void Text::SetFillColour(const sf::Color& colour)
+{
+	m_text.setFillColor(colour);
 }
 
 void Text::SetTextPosition(const Point& pos)
 {
 	sf::FloatRect bounds = m_text.getLocalBounds();
 
-	switch (m_alignment) {
-	case LeftHand:
-		m_text.setPosition(10.f, GameConstants::ScreenDim.y / 2.f - bounds.height / 2.f);
+	switch (m_config.m_alignment)
+	{
+	case NLeftHand:
+		m_text.setPosition(pos.x, pos.y - bounds.height / 2.f);
 		break;
-	case Center:
-		m_text.setPosition((GameConstants::ScreenDim.x - bounds.width) / 2.f - bounds.left,
-							GameConstants::ScreenDim.y / 2.f - bounds.height / 2.f);
+	case NCenter:
+		m_text.setPosition(pos.x - bounds.width / 2.f - bounds.left,
+			pos.y - bounds.height / 2.f);
 		break;
-	case RightHand:
-		m_text.setPosition(GameConstants::ScreenDim.x - bounds.width - 10.f - bounds.left,
-							GameConstants::ScreenDim.y / 2.f - bounds.height / 2.f);
+	case NRightHand:
+		m_text.setPosition(pos.x - bounds.width - bounds.left,
+			pos.y - bounds.height / 2.f);
 		break;
 	default:
 		m_text.setPosition(pos);
-		CalculateTextOrigin(m_text);
+		NCalculateTextOrigin(m_text);
 		break;
 	}
 }
 
-void Text::Reset(const std::string& text)
+AnimatedText::AnimatedText(const std::string& fontName, TextConfig config, TextAnimType animType)
+	: Text(fontName, config), m_timer(m_maxTime), m_time(1.f)
 {
-	m_text.setString(text);
-	SetTextPosition(m_position);
+	m_animType = animType;
+	switch (m_animType)
+	{
+	case Flashing:
+	case Countdown:
+		m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
+		break;
+	}
+}
+
+void AnimatedText::Update(float deltaTime)
+{
+	switch (m_animType)
+	{
+	case Flashing:
+	case Countdown:
+		FadeInAndOutUpdate(deltaTime);
+		break;
+	case Custom:
+		if (m_customUpdate)
+			m_customUpdate(deltaTime);
+		break;
+	}
+}
+
+void AnimatedText::Render(sf::RenderWindow& window)
+{
+	switch (m_animType)
+	{
+	case Flashing:
+	case Countdown:
+		FadeInFadeOutRender(window);
+		break;
+	case Custom:
+		if (m_customRender)
+			m_customRender(window);
+		break;
+	}
+}
+
+void AnimatedText::Reset(const std::string& text)
+{
+	Text::Reset(text);
 	m_timer.ResetTime();
 	m_reduceAlpha = true;
 	m_paused = false;
 }
 
-void Text::RestartCountDown()
+void AnimatedText::InitFlashingText(const std::string& text, bool loop, std::optional<TextConfig> config)
 {
-	m_count = m_startFrom;
-	Reset(std::to_string(m_count));
+	if (m_animType != Flashing)
+		m_animType = Flashing;
+
+	if (config)
+		m_config = *config;
+
+	m_loop = loop;
+	SetText(text, m_config);
 }
 
-void Text::Update(float deltaTime)
+void AnimatedText::InitCountdownText(int startFrom, const std::string& countDownMessage, std::optional<TextConfig> config)
+{
+	if (m_animType != Countdown)
+		m_animType = Countdown;
+
+	if (config)
+		m_config = *config;
+
+	m_countdownMsg = countDownMessage;
+
+	m_count = m_maxCount = startFrom;
+	m_loop = false;
+	SetText(std::to_string(m_maxCount), m_config);
+}
+
+void AnimatedText::InitCustomTextAnim(const std::string& text, UpdateFunc updator, RenderFunc rendaror, const std::string& shaderName, std::optional<TextConfig> config)
+{
+	if (m_animType != Custom)
+		m_animType = Custom;
+
+	if (!shaderName.empty())
+		m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader(shaderName));
+
+	if (config)
+		m_config = *config;
+
+	m_customUpdate = updator;
+	m_customRender = rendaror;
+
+	SetText(text, m_config);
+}
+
+void AnimatedText::FadeInAndOutUpdate(float deltaTime)
 {
 	if (m_paused)
 	{
@@ -110,7 +227,7 @@ void Text::Update(float deltaTime)
 		}
 		else
 		{
-			if (m_countdown && !CountHasEnded())
+			if (!CountHasEnded())
 			{
 				--m_count;
 				if (m_count != 0)
@@ -130,36 +247,8 @@ void Text::Update(float deltaTime)
 	}
 }
 
-void Text::Render(sf::RenderWindow& window)
+void AnimatedText::FadeInFadeOutRender(sf::RenderWindow& window)
 {
 	m_textShader->setUniform("time", m_time);
 	window.draw(m_text, m_textShader.get());
-}
-
-void Text::InitCountdown(const std::string& text, int startFrom, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment)
-{
-	m_countdownMsg = text;
-	m_count = m_startFrom = startFrom;
-	Init(std::to_string(m_count), charSize, pos, color, alignment, false);
-	m_countdown = true;
-}
-
-void Text::InitStaticText(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment)
-{
-	Init(text, charSize, pos, color, alignment, true, true);
-}
-
-void Text::InitFlashingText(const std::string& text, unsigned int charSize, const Point& pos, sf::Color color, TextAlignment alignment, bool paused)
-{
-	Init(text, charSize, pos, color, alignment, true, paused);
-}
-
-void Text::Pause()
-{
-	m_paused = true;
-}
-
-void Text::Resume()
-{
-	m_paused = false;
 }

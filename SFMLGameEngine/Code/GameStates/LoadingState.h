@@ -2,6 +2,7 @@
 
 #include "GameState.h"
 #include "../Game/GameManager.h"
+#include "../UIElements/Text.h"
 #include "../UIElements/Menu.h"
 
 void LoadResources();
@@ -22,6 +23,6 @@ public:
 private:
 
 	Sprite m_backgroundSpr;
-	Text m_loadingMessage;
+	AnimatedText m_loadingMessage;
 	GameManager* m_gameMgr;
 };

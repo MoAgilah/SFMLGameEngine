@@ -9,7 +9,7 @@ void LoadResources()
 }
 
 LoadingState::LoadingState(GameManager* gameMgr)
-	: GameState("Loading")
+	: GameState("Loading"), m_loadingMessage("Standard", { 30, { GameConstants::ScreenDim / 2.0f } }, Flashing)
 {
 	m_gameMgr = gameMgr;
 }
@@ -20,7 +20,7 @@ void LoadingState::Initialise()
 	m_backgroundSpr.SetScale(GameConstants::Scale);
 	m_backgroundSpr.SetOrigin(Point());
 
-	m_loadingMessage.InitFlashingText("Loading", 30, { GameConstants::ScreenDim / 2.0f });
+	m_loadingMessage.SetText("Loading");
 
 	std::thread t(LoadResources);
 	t.detach();
@@ -45,9 +45,7 @@ void LoadingState::Update(float deltaTime)
 	m_loadingMessage.Update(deltaTime);
 
 	if (GameConstants::GameIsReady)
-	{
 		m_gameMgr->GetGameStateMgr()->PopState();
-	}
 }
 
 void LoadingState::Render()
@@ -55,6 +53,5 @@ void LoadingState::Render()
 	sf::RenderWindow& window = m_gameMgr->GetRenderWindow();
 
 	m_backgroundSpr.Render(window);
-
 	m_loadingMessage.Render(window);
 }
