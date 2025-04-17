@@ -8,10 +8,19 @@ MenuItem::MenuItem(const std::string& fontName, const TextConfig& config, bool p
 	AssignText(fontName, config);
 }
 
-MenuItem::MenuItem(const std::string& texId, bool paused)
+MenuItem::MenuItem(const std::string& texId, const Point& position, bool paused)
 	: m_menuItemType(ImageOnly), m_paused(paused)
 {
 	m_sprite = std::make_unique<Sprite>(texId);
+	SetPosition(position);
+}
+
+MenuItem::MenuItem(const std::string& fontName, const TextConfig& config, const std::string& texId, const Point& position, bool paused)
+	: m_menuItemType(Combination), m_paused(paused)
+{
+	m_sprite = std::make_unique<Sprite>(texId);
+	AssignText(fontName, config);
+	SetPosition(position);
 }
 
 MenuItem::MenuItem(const std::string& fontName, const TextConfig& config, const std::string& texId, SpriteAnchorPos anchor, bool paused, float gap)
@@ -58,6 +67,13 @@ void MenuItem::AssignText(const std::string& fontName, const TextConfig& config)
 	}
 }
 
+void MenuItem::SetPosition(const Point& position)
+{
+	Point spriteSize = m_sprite->GetSize();
+	m_sprite->SetOrigin(spriteSize / 2.f);
+	m_sprite->SetPosition(position);
+}
+
 void MenuItem::CalculateSpritePosition(SpriteAnchorPos anchor, float gap)
 {
 	Point textPos = m_text->GetPosition();
@@ -81,5 +97,5 @@ void MenuItem::CalculateSpritePosition(SpriteAnchorPos anchor, float gap)
 		break;
 	}
 
-	m_sprite->SetPosition(pos);
+	SetPosition(pos);
 }

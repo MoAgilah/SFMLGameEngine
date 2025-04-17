@@ -24,7 +24,8 @@ class MenuItem
 {
 public:
 	MenuItem(const std::string& fontName, const TextConfig& config, bool paused);
-	MenuItem(const std::string& texId, bool paused);
+	MenuItem(const std::string& texId, const Point& position, bool paused);
+	MenuItem(const std::string& fontName, const TextConfig& config, const std::string& texId, const Point& position, bool paused);
 	MenuItem(const std::string& fontName, const TextConfig& config, const std::string& texId, SpriteAnchorPos anchor, bool paused, float gap = 5.0f);
 	~MenuItem() = default;
 
@@ -37,6 +38,7 @@ public:
 private:
 
 	void AssignText(const std::string& fontName, const TextConfig& config);
+	void SetPosition(const Point& position);
 	void CalculateSpritePosition(SpriteAnchorPos anchor, float gap);
 
 	bool m_paused = true;
