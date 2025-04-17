@@ -28,11 +28,11 @@ Text* Menu::CreateMenuItem(const std::string& text, sf::Color color)
 	switch (m_textType)
 	{
 	case Static:
-		menuItem = new Text(m_fontName, TextConfig(m_charSize, m_position, color));
+		menuItem = new Text(m_fontName, TextConfig(m_charSize, m_position, m_textType, color));
 		menuItem->SetText(text);
 		break;
 	case Flashing:
-		menuItem = new AnimatedText(m_fontName, TextConfig(m_charSize, m_position, color), m_textType);
+		menuItem = new AnimatedText(m_fontName, TextConfig(m_charSize, m_position, m_textType, color));
 		if (m_initial)
 		{
 			m_initial = false;

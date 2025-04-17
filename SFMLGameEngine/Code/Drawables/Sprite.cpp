@@ -25,6 +25,17 @@ void Sprite::SetTexture(const std::string& texId)
 	SetOrigin({ (float)m_sprite.getTexture()->getSize().x * 0.5f, (float)m_sprite.getTexture()->getSize().y * 0.5f });
 }
 
+void Sprite::Update(float dt)
+{
+	// does nothing
+}
+
+Point Sprite::GetSize() const
+{
+	auto bounds = m_sprite.getGlobalBounds();
+	return Point(bounds.width, bounds.height);
+}
+
 void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int currentAnim)
 {
 	m_frameSize = size;
@@ -85,6 +96,12 @@ void AnimatedSprite::Update(float dt)
 		//set new frame
 		SetTextureRect(sf::IntRect(m_frame.m_current * GetFrameSize().x, m_animation.m_current * GetFrameSize().y, GetFrameSize().x, GetFrameSize().y));
 	}
+}
+
+Point AnimatedSprite::GetSize() const
+{
+	auto frameSize = GetFrameSize();
+	return Point((float)frameSize.x, (float)frameSize.y);
 }
 
 void  AnimatedSprite::ChangeAnim(int animNum)

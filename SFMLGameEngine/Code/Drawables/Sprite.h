@@ -18,6 +18,7 @@ public:
 
 	void SetTexture(const std::string& texId);
 
+	virtual void Update(float dt);
 	void Render(sf::RenderWindow& window) const { window.draw(m_sprite); }
 
 	sf::Sprite* GetSprite() { return &m_sprite; }
@@ -26,6 +27,8 @@ public:
 
 	Point GetPosition() const { return m_sprite.getPosition(); }
 	void SetPosition(const Point& pos) { m_sprite.setPosition(pos); }
+
+	virtual Point GetSize() const;
 
 	Point GetOrigin() const { return m_sprite.getOrigin(); }
 	void SetOrigin(const Point& pos) { m_sprite.setOrigin(pos); }
@@ -58,7 +61,9 @@ public:
 	AnimatedSprite(const std::string& texId, float framesPerSec, bool symmetrical, float animationSpeed);
 	~AnimatedSprite() final = default;
 
-	void Update(float dt);
+	void Update(float dt) override;
+
+	Point GetSize() const;
 
 	void ChangeAnim(int animNum);
 	int GetCurrentAnim() const { return m_animation.m_current; }

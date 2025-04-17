@@ -2,13 +2,7 @@
 
 #include "../Game/GameManager.h"
 
-void NCalculateTextOrigin(sf::Text& text)
-{
-	sf::FloatRect bounds = text.getLocalBounds();
-	text.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
-}
-
-Text::Text(const std::string& fontName, TextConfig config)
+Text::Text(const std::string& fontName, const TextConfig& config)
 	: m_config(config)
 {
 	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(fontName));
@@ -53,6 +47,12 @@ Point Text::GetPosition()
 	return m_text.getPosition();
 }
 
+Point Text::GetSize()
+{
+	sf::FloatRect bounds = m_text.getLocalBounds();
+	return Point(bounds.width, bounds.height);
+}
+
 void Text::SetCharSize(unsigned int charSize)
 {
 	m_text.setCharacterSize(charSize);
@@ -73,35 +73,40 @@ void Text::SetFillColour(const sf::Color& colour)
 	m_text.setFillColor(colour);
 }
 
+void Text::CalculateTextOrigin()
+{
+	sf::FloatRect bounds = m_text.getLocalBounds();
+	m_text.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
+}
+
 void Text::SetTextPosition(const Point& pos)
 {
 	sf::FloatRect bounds = m_text.getLocalBounds();
 
 	switch (m_config.m_alignment)
 	{
-	case NLeftHand:
+	case LeftHand:
 		m_text.setPosition(pos.x, pos.y - bounds.height / 2.f);
 		break;
-	case NCenter:
+	case Center:
 		m_text.setPosition(pos.x - bounds.width / 2.f - bounds.left,
 			pos.y - bounds.height / 2.f);
 		break;
-	case NRightHand:
+	case RightHand:
 		m_text.setPosition(pos.x - bounds.width - bounds.left,
 			pos.y - bounds.height / 2.f);
 		break;
 	default:
 		m_text.setPosition(pos);
-		NCalculateTextOrigin(m_text);
+		CalculateTextOrigin();
 		break;
 	}
 }
 
-AnimatedText::AnimatedText(const std::string& fontName, TextConfig config, TextAnimType animType)
+AnimatedText::AnimatedText(const std::string& fontName, const TextConfig& config)
 	: Text(fontName, config), m_timer(m_maxTime), m_time(1.f)
 {
-	m_animType = animType;
-	switch (m_animType)
+	switch (m_config.m_animType)
 	{
 	case Flashing:
 	case Countdown:
@@ -112,7 +117,7 @@ AnimatedText::AnimatedText(const std::string& fontName, TextConfig config, TextA
 
 void AnimatedText::Update(float deltaTime)
 {
-	switch (m_animType)
+	switch (m_config.m_animType)
 	{
 	case Flashing:
 	case Countdown:
@@ -127,7 +132,7 @@ void AnimatedText::Update(float deltaTime)
 
 void AnimatedText::Render(sf::RenderWindow& window)
 {
-	switch (m_animType)
+	switch (m_config.m_animType)
 	{
 	case Flashing:
 	case Countdown:
@@ -150,9 +155,6 @@ void AnimatedText::Reset(const std::string& text)
 
 void AnimatedText::InitFlashingText(const std::string& text, bool loop, std::optional<TextConfig> config)
 {
-	if (m_animType != Flashing)
-		m_animType = Flashing;
-
 	if (config)
 		m_config = *config;
 
@@ -162,9 +164,6 @@ void AnimatedText::InitFlashingText(const std::string& text, bool loop, std::opt
 
 void AnimatedText::InitCountdownText(int startFrom, const std::string& countDownMessage, std::optional<TextConfig> config)
 {
-	if (m_animType != Countdown)
-		m_animType = Countdown;
-
 	if (config)
 		m_config = *config;
 
@@ -177,9 +176,6 @@ void AnimatedText::InitCountdownText(int startFrom, const std::string& countDown
 
 void AnimatedText::InitCustomTextAnim(const std::string& text, UpdateFunc updator, RenderFunc rendaror, const std::string& shaderName, std::optional<TextConfig> config)
 {
-	if (m_animType != Custom)
-		m_animType = Custom;
-
 	if (!shaderName.empty())
 		m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader(shaderName));
 

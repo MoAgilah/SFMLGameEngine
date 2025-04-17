@@ -7,9 +7,14 @@
 #include <functional>
 #include <string>
 
+enum TextAnimType
+{
+	Unassigned, Static, Flashing, Countdown, Custom
+};
+
 enum TextAlignment
 {
-	NNone, NLeftHand, NCenter, NRightHand
+	None, LeftHand, Center, RightHand
 };
 
 struct TextConfig
@@ -17,31 +22,27 @@ struct TextConfig
 	unsigned int m_charSize;
 	Point m_position;
 	sf::Color m_colour;
+	TextAnimType m_animType;
 	TextAlignment m_alignment;
 
 	TextConfig()
-		: m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_alignment(NNone)
+		: m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_animType(Static), m_alignment(None)
 	{
 	}
 
-	TextConfig(unsigned int charSize, const Point& position, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::NNone)
-		: m_charSize(charSize), m_position(position), m_colour(colour), m_alignment(alignment)
+	TextConfig(unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::None)
+		: m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
 	{}
 
 	TextConfig(const TextConfig& config)
-		: m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_alignment(config.m_alignment)
+		: m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_animType(config.m_animType), m_alignment(config.m_alignment)
 	{}
-};
-
-enum TextAnimType
-{
-	Static, Flashing, Countdown, Custom
 };
 
 class Text
 {
 public:
-	Text(const std::string& fontName, TextConfig config);
+	Text(const std::string& fontName, const TextConfig& config);
 	~Text() = default;
 
 	virtual void Update(float deltaTime);
@@ -54,6 +55,8 @@ public:
 	void SetPosition(const Point& pos);
 	Point GetPosition();
 
+	Point GetSize();
+
 	void SetCharSize(unsigned int charSize);
 	void SetTextAlignment(TextAlignment alignment);
 	void SetOutlineColour(const sf::Color& colour);
@@ -61,12 +64,12 @@ public:
 
 protected:
 
-	TextAnimType m_animType = Static;
 	TextConfig m_config;
 	sf::Text m_text;
 
 private:
 
+	void CalculateTextOrigin();
 	void SetTextPosition(const Point& pos);
 };
 
@@ -76,7 +79,7 @@ using RenderFunc = std::function<void(sf::RenderWindow&)>;
 class AnimatedText : public Text
 {
 public:
-	AnimatedText(const std::string& fontName, TextConfig config, TextAnimType animType);
+	AnimatedText(const std::string& fontName, const TextConfig& config);
 	~AnimatedText() = default;
 
 	void Update(float deltaTime) override;
