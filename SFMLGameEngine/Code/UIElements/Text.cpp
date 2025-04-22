@@ -2,10 +2,10 @@
 
 #include "../Game/GameManager.h"
 
-Text::Text(const std::string& fontName, const TextConfig& config)
+Text::Text(const TextConfig& config)
 	: m_config(config)
 {
-	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(fontName));
+	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(config.m_fontName));
 }
 
 void Text::Update(float deltaTime)
@@ -103,8 +103,8 @@ void Text::SetTextPosition(const Point& pos)
 	}
 }
 
-AnimatedText::AnimatedText(const std::string& fontName, const TextConfig& config)
-	: Text(fontName, config), m_timer(m_maxTime), m_time(1.f)
+AnimatedText::AnimatedText(const TextConfig& config)
+	: Text(config), m_timer(m_maxTime), m_time(1.f)
 {
 	switch (m_config.m_animType)
 	{

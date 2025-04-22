@@ -2,33 +2,33 @@
 
 #include "../Game/GameManager.h"
 
-MenuItem::MenuItem(const std::string& fontName, const TextConfig& config, bool paused)
-	: m_menuItemType(MenuItemType::TextOnly), m_paused(paused)
+MenuItem::MenuItem(const std::string& text, const TextConfig& config, bool paused)
+	: m_menuItemType(MenuItemType::TextOnly), m_textConfig(config)
 {
-	AssignText(fontName, config);
+	AssignText(text, m_textConfig.value(), paused);
 }
 
 MenuItem::MenuItem(const std::string& texId, const Point& position, bool paused)
-	: m_menuItemType(ImageOnly), m_paused(paused)
+	: m_menuItemType(ImageOnly), m_textConfig(std::nullopt)
 {
 	m_sprite = std::make_unique<Sprite>(texId);
 	SetPosition(position);
 }
 
-MenuItem::MenuItem(const std::string& fontName, const TextConfig& config, const std::string& texId, const Point& position, bool paused)
-	: m_menuItemType(Combination), m_paused(paused)
+MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std::string& texId, const Point& position, bool paused)
+	: m_menuItemType(ImagePositioned), m_textConfig(config)
 {
 	m_sprite = std::make_unique<Sprite>(texId);
-	AssignText(fontName, config);
+	AssignText(text, m_textConfig.value(), paused);
 	SetPosition(position);
 }
 
-MenuItem::MenuItem(const std::string& fontName, const TextConfig& config, const std::string& texId, SpriteAnchorPos anchor, bool paused, float gap)
-	: m_menuItemType(Combination), m_paused(paused)
+MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std::string& texId, const SpriteAnchorData& anchorData, bool paused)
+	: m_menuItemType(ImageAnchored)
 {
 	m_sprite = std::make_unique<Sprite>(texId);
-	AssignText(fontName, config);
-	CalculateSpritePosition(anchor, gap);
+	AssignText(text, m_textConfig.value(), paused);
+	CalculateSpritePosition(anchorData);
 }
 
 void MenuItem::Update(float deltaTime)
@@ -40,10 +40,8 @@ void MenuItem::Update(float deltaTime)
 		m_sprite->Update(deltaTime);
 }
 
-void MenuItem::Render()
+void MenuItem::Render(sf::RenderWindow& window)
 {
-	sf::RenderWindow& window = GameManager::Get()->GetRenderWindow();
-
 	if (m_text)
 		m_text->Render(window);
 
@@ -51,18 +49,49 @@ void MenuItem::Render()
 		m_sprite->Render(window);
 }
 
-void MenuItem::AssignText(const std::string& fontName, const TextConfig& config)
+void MenuItem::Pause()
+{
+	if (m_text)
+	{
+		auto aniText = dynamic_cast<AnimatedText*>(m_text.get());
+		if (aniText)
+		{
+			aniText->Pause();
+		}
+	}
+}
+
+void MenuItem::Resume()
+{
+	if (m_text)
+	{
+		auto aniText = dynamic_cast<AnimatedText*>(m_text.get());
+		if (aniText)
+		{
+			aniText->Resume();
+		}
+	}
+}
+
+void MenuItem::AssignText(const std::string& text, const TextConfig& config, bool paused)
 {
 	switch (config.m_animType)
 	{
 	case Static:
-		m_text = std::make_unique<Text>(fontName, config);
+		m_text = std::make_unique<Text>(config);
+		m_text->SetText(text);
 		break;
 	case Flashing:
-		m_text = std::make_unique<AnimatedText>(fontName, config);
+		m_text = std::make_unique<AnimatedText>(config);
+		m_text->SetText(text);
+		if (paused)
+			dynamic_cast<AnimatedText*>(m_text.get())->Pause();
 		break;
 	case Custom:
-		m_text = std::make_unique<AnimatedText>(fontName, config);
+		m_text = std::make_unique<AnimatedText>(config);
+		m_text->SetText(text);
+		if (paused)
+			dynamic_cast<AnimatedText*>(m_text.get())->Pause();
 		break;
 	}
 }
@@ -74,7 +103,7 @@ void MenuItem::SetPosition(const Point& position)
 	m_sprite->SetPosition(position);
 }
 
-void MenuItem::CalculateSpritePosition(SpriteAnchorPos anchor, float gap)
+void MenuItem::CalculateSpritePosition(const SpriteAnchorData& anchorData)
 {
 	Point textPos = m_text->GetPosition();
 	Point textSize = m_text->GetSize();
@@ -84,16 +113,16 @@ void MenuItem::CalculateSpritePosition(SpriteAnchorPos anchor, float gap)
 	Point pos;
 	pos.x = textPos.x + (textSize.x - spriteSize.x) / 2;
 
-	switch (anchor)
+	switch (anchorData.m_imgAnchor)
 	{
 	case Centered:
 		pos.y = textPos.y + (textSize.y - spriteSize.y) / 2;
 		break;
 	case Above:
-		pos.y = textPos.y - spriteSize.y - gap;
+		pos.y = textPos.y - spriteSize.y - anchorData.m_margin;
 		break;
 	case Below:
-		pos.y = textPos.y + textSize.y + gap;
+		pos.y = textPos.y + textSize.y + anchorData.m_margin;
 		break;
 	}
 

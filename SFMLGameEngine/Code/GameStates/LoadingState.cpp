@@ -9,7 +9,7 @@ void LoadResources()
 }
 
 LoadingState::LoadingState(GameManager* gameMgr)
-	: GameState("Loading"), m_loadingMessage("Standard", { 30, { GameConstants::ScreenDim / 2.0f }, Flashing })
+	: GameState("Loading"), m_loadingMessage({"Standard", 30, { GameConstants::ScreenDim / 2.0f }, Flashing })
 {
 	m_gameMgr = gameMgr;
 }

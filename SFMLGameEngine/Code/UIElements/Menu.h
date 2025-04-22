@@ -1,43 +1,88 @@
 #pragma once
 
-#include "Text.h"
+#include "MenuItem.h"
+#include <optional>
 #include <functional>
 #include <map>
 
 class Menu
 {
 public:
-	Menu(std::function<void(int)> func, std::string fontName, TextAnimType textType, const std::string text, unsigned int charSize, unsigned int marginSize, const Point& pos, sf::Color color = sf::Color::Black);
-	~Menu() = default;
+	virtual ~Menu() = default;
 
-	void AddMenuItem(const std::string text);
+	void Start();
 
 	void ProcessInput();
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
 
-	void SetPassiveColour(sf::Color color);
+	void SetHorizontalScrolling() { m_verticalScroll = false; }
 
 private:
 
-	Text* CreateMenuItem(const std::string& text, sf::Color color);
 	void HandleNavigation();
+
 	void HandleDirection(bool isPressed, bool& canMove, int direction);
+
 	void ClampMenuPosition();
 
-	bool m_initial = true;
-	bool m_menuMoved = false;
-	bool m_canGoDown = true;
-	bool m_canGoUp = true;
+	bool m_canIncMenu = true;
+	bool m_canDecMenu = false;
+
+	int m_prevMenuPosition = 0;
+
+protected:
+
+	Point GetNextDrawablePosition(const Point& size, const Point& pos);
+
+	bool m_verticalScroll = true;
+	MenuItemType m_menuType;
 	int m_menuPosition = 0;
-	unsigned int m_charSize;
-	unsigned int m_marginSize;
 	std::function<void(int)> m_actionFunc;
-	Point m_position;
-	std::string m_fontName;
-	TextAnimType m_textType;
-	sf::Color m_activeColour;
-	bool m_hasPassiveColor = false;
-	sf::Color m_passiveColour;
-	std::vector<std::unique_ptr<Text>> m_menuItems;
+	unsigned int m_marginSize = 0;
+	std::vector<std::unique_ptr<MenuItem>> m_menuItems;
+};
+
+class TextBasedMenu : public Menu
+{
+public:
+	TextBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, unsigned int marginSize, std::optional<sf::Color> passiveColour = std::nullopt);
+	~TextBasedMenu() = default;
+
+	void AddMenuItem(const std::string& text);
+
+private:
+
+	TextConfig m_textConfig;
+	std::optional<sf::Color> m_passiveColour;
+};
+
+class ImageBasedMenu : public Menu
+
+{
+public:
+	ImageBasedMenu(std::function<void(int)> func, const std::string& texID, const Point& imgPos, unsigned int marginSize);
+	~ImageBasedMenu() = default;
+
+	void AddMenuItem(const std::string& texID);
+};
+
+class TextImageBasedMenu : public Menu
+{
+public:
+	TextImageBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, std::optional<sf::Color> passiveColour,
+		const std::string& texID, const Point& imgPos, unsigned int marginSize);
+
+	TextImageBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, std::optional<sf::Color> passiveColour,
+		const std::string& texID, const SpriteAnchorData& AnchorData, unsigned int marginSize);
+
+	~TextImageBasedMenu() = default;
+
+	void AddMenuItem(const std::string& text, const std::string& filename);
+
+private:
+
+	TextConfig m_textConfig;
+	std::optional<sf::Color> m_passiveColour;
+	std::optional<SpriteAnchorData> m_anchorData;
 };

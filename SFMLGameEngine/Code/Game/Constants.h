@@ -6,6 +6,8 @@
 class GameConstants
 {
 public:
+	static void Init();
+
 	static bool DRender;
 	static bool GameIsReady;
 	static float FPS;

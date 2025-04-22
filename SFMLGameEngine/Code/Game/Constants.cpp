@@ -14,3 +14,21 @@ std::string GameConstants::ShaderFilePaths = "../SFMLGameEngine/SFMLGameEngine/R
 std::string GameConstants::SoundFilePaths = "../SFMLGameEngine/SFMLGameEngine/Resources/Sounds/";
 std::string GameConstants::MusicFilePaths = "../SFMLGameEngine/SFMLGameEngine/Resources/Music/";
 std::string GameConstants::TextureFilePaths = "../SFMLGameEngine/SFMLGameEngine/Resources/Textures/";
+
+void GameConstants::Init()
+{
+	// Touch the values so linker pulls this file in early
+	(void)DRender;
+	(void)GameIsReady;
+	(void)FPS;
+	(void)WindowColour;
+	(void)ScreenDim;
+	(void)Scale;
+	(void)WindowTitle;
+	(void)TileFilePaths;
+	(void)FontFilePaths;
+	(void)ShaderFilePaths;
+	(void)SoundFilePaths;
+	(void)MusicFilePaths;
+	(void)TextureFilePaths;
+}

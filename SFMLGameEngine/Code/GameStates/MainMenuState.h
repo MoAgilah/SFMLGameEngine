@@ -19,7 +19,7 @@ public:
 
 private:
 
-	Menu m_menu;
+	TextBasedMenu m_menu;
 	Sprite m_backgroundSpr;
 	GameManager* m_gameMgr;
 };

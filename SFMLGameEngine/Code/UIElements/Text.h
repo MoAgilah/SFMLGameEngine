@@ -19,6 +19,7 @@ enum TextAlignment
 
 struct TextConfig
 {
+	std::string m_fontName;
 	unsigned int m_charSize;
 	Point m_position;
 	sf::Color m_colour;
@@ -26,23 +27,23 @@ struct TextConfig
 	TextAlignment m_alignment;
 
 	TextConfig()
-		: m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_animType(Static), m_alignment(None)
+		: m_fontName("Standard"), m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_animType(Static), m_alignment(None)
 	{
 	}
 
-	TextConfig(unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::None)
-		: m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
+	TextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::None)
+		: m_fontName(fontName), m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
 	{}
 
 	TextConfig(const TextConfig& config)
-		: m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_animType(config.m_animType), m_alignment(config.m_alignment)
+		: m_fontName(config.m_fontName), m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_animType(config.m_animType), m_alignment(config.m_alignment)
 	{}
 };
 
 class Text
 {
 public:
-	Text(const std::string& fontName, const TextConfig& config);
+	Text(const TextConfig& config);
 	~Text() = default;
 
 	virtual void Update(float deltaTime);
@@ -79,7 +80,7 @@ using RenderFunc = std::function<void(sf::RenderWindow&)>;
 class AnimatedText : public Text
 {
 public:
-	AnimatedText(const std::string& fontName, const TextConfig& config);
+	AnimatedText(const TextConfig& config);
 	~AnimatedText() = default;
 
 	void Update(float deltaTime) override;
