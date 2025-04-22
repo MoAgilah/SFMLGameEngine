@@ -11,12 +11,16 @@ public:
 	virtual ~Menu() = default;
 
 	void Start();
+	void Pause();
+	void Resume();
 
 	void ProcessInput();
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
 
 	void SetHorizontalScrolling() { m_verticalScroll = false; }
+
+	void AddCursor(Sprite* cursor, SpriteAnchorData cursorAnchorData, bool toText = true);
 
 private:
 
@@ -40,6 +44,9 @@ protected:
 	int m_menuPosition = 0;
 	std::function<void(int)> m_actionFunc;
 	unsigned int m_marginSize = 0;
+	bool m_anchorToText = true;
+	std::shared_ptr<Sprite> m_cursor;
+	std::optional<SpriteAnchorData> m_cursorAnchorData = std::nullopt;
 	std::vector<std::unique_ptr<MenuItem>> m_menuItems;
 };
 

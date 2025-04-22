@@ -168,6 +168,9 @@
     <ClCompile Include="Code\UIElements\MenuItem.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="Code\UIElements\MultiPageMenu.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\CollisionManager.h">
@@ -273,6 +276,9 @@
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\MenuItem.h">
+      <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\MultiPageMenu.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
   </ItemGroup>

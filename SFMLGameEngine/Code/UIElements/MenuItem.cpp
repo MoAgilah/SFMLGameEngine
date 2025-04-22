@@ -12,7 +12,7 @@ MenuItem::MenuItem(const std::string& texId, const Point& position, bool paused)
 	: m_menuItemType(ImageOnly), m_textConfig(std::nullopt)
 {
 	m_sprite = std::make_unique<Sprite>(texId);
-	SetPosition(position);
+	SetImgPosition(position);
 }
 
 MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std::string& texId, const Point& position, bool paused)
@@ -20,7 +20,7 @@ MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std:
 {
 	m_sprite = std::make_unique<Sprite>(texId);
 	AssignText(text, m_textConfig.value(), paused);
-	SetPosition(position);
+	SetImgPosition(position);
 }
 
 MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std::string& texId, const SpriteAnchorData& anchorData, bool paused)
@@ -28,7 +28,7 @@ MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std:
 {
 	m_sprite = std::make_unique<Sprite>(texId);
 	AssignText(text, m_textConfig.value(), paused);
-	CalculateSpritePosition(anchorData);
+	CalculateSpritePosition(m_text.get(), m_sprite.get(), anchorData);
 }
 
 void MenuItem::Update(float deltaTime)
@@ -96,35 +96,36 @@ void MenuItem::AssignText(const std::string& text, const TextConfig& config, boo
 	}
 }
 
-void MenuItem::SetPosition(const Point& position)
+void MenuItem::SetImgPosition(const Point& position)
 {
 	Point spriteSize = m_sprite->GetSize();
 	m_sprite->SetOrigin(spriteSize / 2.f);
 	m_sprite->SetPosition(position);
 }
 
-void MenuItem::CalculateSpritePosition(const SpriteAnchorData& anchorData)
+void CalculateSpritePosition(SizePosExtractor extracts, Sprite* sprite, const SpriteAnchorData& anchorData)
 {
-	Point textPos = m_text->GetPosition();
-	Point textSize = m_text->GetSize();
+	Point extractsPos = extracts.m_position;
+	Point extractsSize = extracts.m_size;
 
-	Point spriteSize = m_sprite->GetSize();
+	Point spriteSize = sprite->GetSize();
 
 	Point pos;
-	pos.x = textPos.x + (textSize.x - spriteSize.x) / 2;
+	pos.x = extractsPos.x + (extractsSize.x - spriteSize.x) / 2;
 
 	switch (anchorData.m_imgAnchor)
 	{
 	case Centered:
-		pos.y = textPos.y + (textSize.y - spriteSize.y) / 2;
+		pos.y = extractsPos.y + (extractsSize.y - spriteSize.y) / 2;
 		break;
 	case Above:
-		pos.y = textPos.y - spriteSize.y - anchorData.m_margin;
+		pos.y = extractsPos.y - spriteSize.y - anchorData.m_margin;
 		break;
 	case Below:
-		pos.y = textPos.y + textSize.y + anchorData.m_margin;
+		pos.y = extractsPos.y + extractsSize.y + anchorData.m_margin;
 		break;
 	}
 
-	SetPosition(pos);
+	sprite->SetOrigin(spriteSize / 2.f);
+	sprite->SetPosition(pos);
 }

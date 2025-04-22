@@ -6,6 +6,32 @@ void Menu::Start()
 	m_menuPosition = 0;
 }
 
+void Menu::Pause()
+{
+	for (auto& menuItem : m_menuItems)
+		menuItem->Pause();
+}
+
+void Menu::Resume()
+{
+	auto& currentMenuItem = m_menuItems[m_menuPosition];
+	currentMenuItem->Resume();
+
+	if (m_cursor)
+	{
+		if (m_anchorToText)
+			CalculateSpritePosition(currentMenuItem->GetTextElement(), m_cursor.get(), *m_cursorAnchorData);
+		else
+			CalculateSpritePosition(currentMenuItem->GetSpriteElement(), m_cursor.get(), *m_cursorAnchorData);
+	}
+
+	for (size_t i = 0; i < m_menuPosition; i++)
+		m_menuItems[i]->Pause();
+
+	for (size_t i = m_menuPosition + 1; i < m_menuItems.size(); i++)
+		m_menuItems[i]->Pause();
+}
+
 void Menu::ProcessInput()
 {
 	HandleNavigation();
@@ -15,13 +41,9 @@ void Menu::Update(float deltaTime)
 {
 	if (m_prevMenuPosition != m_menuPosition)
 	{
-		m_menuItems[m_menuPosition]->Resume();
+		Resume();
 
-		for (size_t i = 0; i < m_menuPosition; i++)
-			m_menuItems[i]->Pause();
 
-		for (size_t i = m_menuPosition + 1; i < m_menuItems.size(); i++)
-			m_menuItems[i]->Pause();
 
 		m_prevMenuPosition = m_menuPosition;
 	}
@@ -34,6 +56,13 @@ void Menu::Render(sf::RenderWindow& window)
 {
 	for (auto& menuItem : m_menuItems)
 		menuItem->Render(window);
+}
+
+void Menu::AddCursor(Sprite* cursor, SpriteAnchorData cursorAnchorData, bool toText)
+{
+	m_anchorToText = toText;
+	m_cursor = std::shared_ptr<Sprite>(cursor);
+	m_cursorAnchorData = cursorAnchorData;
 }
 
 void Menu::HandleNavigation()
@@ -94,6 +123,7 @@ TextBasedMenu::TextBasedMenu(std::function<void(int)> func, const std::string& t
 	m_menuType = TextOnly;
 	m_actionFunc = func;
 	m_marginSize = marginSize;
+	m_cursor = nullptr;
 
 	m_menuItems.push_back(std::make_unique<MenuItem>(text, m_textConfig, false));
 }
@@ -117,6 +147,7 @@ ImageBasedMenu::ImageBasedMenu(std::function<void(int)> func, const std::string&
 	m_menuType = ImageOnly;
 	m_actionFunc = func;
 	m_marginSize = marginSize;
+	m_cursor = nullptr;
 
 	m_menuItems.push_back(std::make_unique<MenuItem>(texID, imgPos, false));
 }
@@ -137,6 +168,7 @@ TextImageBasedMenu::TextImageBasedMenu(std::function<void(int)> func, const std:
 	m_menuType = ImagePositioned;
 	m_actionFunc = func;
 	m_marginSize = marginSize;
+	m_cursor = nullptr;
 
 	m_menuItems.push_back(std::make_unique<MenuItem>(text, m_textConfig, texId, imgPos, false));
 }

@@ -27,6 +27,22 @@ struct SpriteAnchorData
 	float m_margin;
 };
 
+struct SizePosExtractor
+{
+	Point m_size;
+	Point m_position;
+
+	SizePosExtractor(Text* text)
+		: m_size(text->GetSize()), m_position(text->GetPosition())
+	{}
+
+	SizePosExtractor(Sprite* spr)
+		: m_size(spr->GetSize()), m_position(spr->GetPosition())
+	{}
+};
+
+void CalculateSpritePosition(SizePosExtractor extracts, Sprite* sprite, const SpriteAnchorData& anchorData);
+
 class MenuItem
 {
 public:
@@ -48,8 +64,7 @@ public:
 private:
 
 	void AssignText(const std::string& text, const TextConfig& config, bool paused);
-	void SetPosition(const Point& position);
-	void CalculateSpritePosition(const SpriteAnchorData& anchorData);
+	void SetImgPosition(const Point& position);
 
 	MenuItemType m_menuItemType;
 	std::optional<TextConfig> m_textConfig;
