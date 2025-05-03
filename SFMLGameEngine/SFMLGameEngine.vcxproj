@@ -47,10 +47,9 @@
     <ClCompile Include="Code\Game\TextureManager.cpp" />
     <ClCompile Include="Code\Game\Timer.cpp" />
     <ClCompile Include="Code\Game\World.cpp" />
-    <ClCompile Include="Code\UIElements\MenuItem.cpp" />
-    <ClCompile Include="Code\UIElements\MultiPageMenu.cpp" />
-    <ClCompile Include="Code\UIElements\Text.cpp" />
     <ClCompile Include="Code\UIElements\Menu.cpp" />
+    <ClCompile Include="Code\UIElements\MenuItem.cpp" />
+    <ClCompile Include="Code\UIElements\Text.cpp" />
     <ClCompile Include="Code\Utilities\Point.cpp" />
     <ClCompile Include="Code\Utilities\Utilities.cpp" />
   </ItemGroup>
@@ -83,10 +82,9 @@
     <ClInclude Include="Code\Game\TextureManager.h" />
     <ClInclude Include="Code\Game\Timer.h" />
     <ClInclude Include="Code\Game\World.h" />
-    <ClInclude Include="Code\UIElements\MenuItem.h" />
-    <ClInclude Include="Code\UIElements\MultiPageMenu.h" />
-    <ClInclude Include="Code\UIElements\Text.h" />
     <ClInclude Include="Code\UIElements\Menu.h" />
+    <ClInclude Include="Code\UIElements\MenuItem.h" />
+    <ClInclude Include="Code\UIElements\Text.h" />
     <ClInclude Include="Code\Utilities\DecisionTree.h" />
     <ClInclude Include="Code\Utilities\Point.h" />
     <ClInclude Include="Code\Utilities\ResourceLoader.h" />

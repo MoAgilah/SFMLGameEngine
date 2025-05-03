@@ -4,17 +4,9 @@
 
 enum MenuPosition { Automation, Manual };
 
-void MainMenuActionFunc(int menuPosition)
-{
-	GameManager::Get()->GetGameStateMgr()->ChangeState(new DebugState(GameManager::Get()));
-}
-//TextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::None)
-
-//TextBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, unsigned int marginSize, std::optional<sf::Color> passiveColour = std::nullopt);
 MainMenuState::MainMenuState(GameManager* gameMgr)
 	: GameState("MainMenu"),
-	m_menu(&MainMenuActionFunc, "Start",
-		{ "Standard" ,30, { GameConstants::ScreenDim / 2.0f }, TextAnimType::Flashing }, 20)
+	m_menu({ GameConstants::ScreenDim.x * 0.8f, GameConstants::ScreenDim.y * 0.4f }, 2.f, { 1,2 }, { MenuPositionMode::Anchored, GameConstants::ScreenDim })
 {
 	m_gameMgr = gameMgr;
 }
@@ -25,7 +17,26 @@ void MainMenuState::Initialise()
 	m_backgroundSpr.SetScale(GameConstants::Scale);
 	m_backgroundSpr.SetOrigin(Point());
 
-	m_menu.Start();
+	// Set up menu
+	TextConfig textConfig;
+	textConfig.m_fontName = "Standard";
+	textConfig.m_animType = TextAnimType::Flashing;
+	textConfig.m_alignment = TextAlignment::Center;
+	textConfig.m_colour = sf::Color::Black;
+
+	auto cellSize = m_menu.GetCellSize();
+
+	auto cell = m_menu.GetCell({ 0, 0 });
+	textConfig.m_charSize = (int)(cellSize.y * 0.25f);
+	textConfig.m_position = cell->GetPosition();
+
+	auto text = cell->AddTextElement(new AnimatedText(textConfig));
+	dynamic_cast<AnimatedText*>(text)->InitFlashingText("Start");
+	cell->SetMenuSlotNumber(0);
+
+	m_menu.SetCurrCellNumber(0);
+
+	m_menu.SetActiveCells();
 }
 
 void MainMenuState::Pause()
@@ -38,7 +49,6 @@ void MainMenuState::Resume()
 
 void MainMenuState::ProcessInputs()
 {
-	m_menu.ProcessInput();
 }
 
 void MainMenuState::Update(float deltaTime)

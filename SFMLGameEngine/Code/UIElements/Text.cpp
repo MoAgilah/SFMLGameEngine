@@ -2,6 +2,30 @@
 
 #include "../Game/GameManager.h"
 
+Point CalculateTextOrigin(const sf::FloatRect& bounds)
+{
+	return { bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f };
+}
+
+Point SetTextPosition(TextAlignment alignment, const Point& pos, const sf::FloatRect& bounds)
+{
+	switch (alignment)
+	{
+	case LeftHand:
+		return { pos.x, pos.y - bounds.height / 2.f };
+	case Center:
+		return { pos.x - bounds.width / 2.f - bounds.left,
+			pos.y - bounds.height / 2.f };
+	case RightHand:
+		return { pos.x - bounds.width - bounds.left,
+			pos.y - bounds.height / 2.f };
+		break;
+	default:
+		CalculateTextOrigin(bounds);
+		return pos;
+	}
+}
+
 Text::Text(const TextConfig& config)
 	: m_config(config)
 {
@@ -21,7 +45,7 @@ void Text::Render(sf::RenderWindow& window)
 void Text::Reset(const std::string& text)
 {
 	m_text.setString(text);
-	SetTextPosition(m_config.m_position);
+	m_text.setPosition(SetTextPosition(m_config.m_alignment, m_config.m_position, m_text.getLocalBounds()));
 }
 
 void Text::SetText(const std::string& text, std::optional<TextConfig> config)
@@ -34,7 +58,7 @@ void Text::SetText(const std::string& text, std::optional<TextConfig> config)
 	m_text.setOutlineThickness(m_config.m_charSize / 10.f);
 	m_text.setOutlineColor(m_config.m_colour);
 
-	SetTextPosition(m_config.m_position);
+	m_text.setPosition(SetTextPosition(m_config.m_alignment, m_config.m_position, m_text.getLocalBounds()));
 }
 
 void Text::SetPosition(const Point& pos)
@@ -71,36 +95,6 @@ void Text::SetOutlineColour(const sf::Color& colour)
 void Text::SetFillColour(const sf::Color& colour)
 {
 	m_text.setFillColor(colour);
-}
-
-void Text::CalculateTextOrigin()
-{
-	sf::FloatRect bounds = m_text.getLocalBounds();
-	m_text.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
-}
-
-void Text::SetTextPosition(const Point& pos)
-{
-	sf::FloatRect bounds = m_text.getLocalBounds();
-
-	switch (m_config.m_alignment)
-	{
-	case LeftHand:
-		m_text.setPosition(pos.x, pos.y - bounds.height / 2.f);
-		break;
-	case Center:
-		m_text.setPosition(pos.x - bounds.width / 2.f - bounds.left,
-			pos.y - bounds.height / 2.f);
-		break;
-	case RightHand:
-		m_text.setPosition(pos.x - bounds.width - bounds.left,
-			pos.y - bounds.height / 2.f);
-		break;
-	default:
-		m_text.setPosition(pos);
-		CalculateTextOrigin();
-		break;
-	}
 }
 
 AnimatedText::AnimatedText(const TextConfig& config)

@@ -1,68 +1,202 @@
 #include "Menu.h"
-#include "../Game/GameManager.h"
 
-void Menu::Start()
+#include "Game/Constants.h"
+#include "Game/GameManager.h"
+
+Menu::Menu(const Point& menuSize, float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData)
+	: m_menuSpace(menuSize), m_outlineThickness(outlineThickness), m_dimensions(dimensions), m_menuPositionData(menuPositionData)
 {
-	m_menuPosition = 0;
+	BuildMenuSpace();
 }
 
-void Menu::Pause()
+void Menu::Update(float deltaTime)
 {
-	for (auto& menuItem : m_menuItems)
-		menuItem->Pause();
+	ProcessInput();
+
+	if (m_currCellNumber != m_prevCellNumber)
+	{
+		if (m_cursor)
+			MoveCursor();
+
+		SetActiveTextElement();
+	}
+
+	for (auto cellNo : m_activeCells)
+	{
+		auto cell = GetCell(cellNo);
+		if (cell)
+		{
+			cell->Update(deltaTime);
+		}
+	}
+
+	m_prevCellNumber = m_currCellNumber;
 }
 
-void Menu::Resume()
+void Menu::Render(sf::RenderWindow& window)
 {
-	auto& currentMenuItem = m_menuItems[m_menuPosition];
-	currentMenuItem->Resume();
+	DebugRender(window);
+
+	for (auto& row : m_rows)
+	{
+		for (auto& cell : row)
+			cell.Render(window);
+	}
 
 	if (m_cursor)
 	{
-		if (m_anchorToText)
-			CalculateSpritePosition(currentMenuItem->GetTextElement(), m_cursor.get(), *m_cursorAnchorData);
-		else
-			CalculateSpritePosition(currentMenuItem->GetSpriteElement(), m_cursor.get(), *m_cursorAnchorData);
+		m_cursor.value().Render(window);
+	}
+}
+
+void Menu::SetActiveCells()
+{
+	for (size_t i = 0; i < m_rows.size(); i++)
+	{
+		for (size_t j = 0; j < m_rows[i].size(); j++)
+		{
+			if (m_rows[i][j].GetMenuSlotNumber() >= 0)
+			{
+				m_activeCells.emplace_back(i, j);
+			}
+		}
+	}
+}
+
+Sprite* Menu::GetCursor()
+{
+	if (m_cursor)
+		return &m_cursor.value();
+
+	return nullptr;
+}
+
+void Menu::SetCurrCellNumber(int cellNumber)
+{
+	if (cellNumber < m_activeCells.size())
+		m_currCellNumber = cellNumber;
+}
+
+MenuItem* Menu::GetCell(const std::pair<int, int>& colRow)
+{
+	if (colRow.first <= m_rows.size() - 1)
+	{
+		if (colRow.second <= m_rows[colRow.first].size() - 1)
+			return &m_rows[colRow.first][colRow.second];
 	}
 
-	for (size_t i = 0; i < m_menuPosition; i++)
-		m_menuItems[i]->Pause();
+	return nullptr;
+}
 
-	for (size_t i = m_menuPosition + 1; i < m_menuItems.size(); i++)
-		m_menuItems[i]->Pause();
+MenuItem* Menu::GetCellByCellNumber(unsigned int cellNumber)
+{
+	if (cellNumber < m_activeCells.size())
+	{
+		return GetCell(m_activeCells[cellNumber]);
+	}
+	return nullptr;
+}
+
+void Menu::BuildMenuSpace()
+{
+	m_menuSpace.setOrigin(Point(m_menuSpace.getSize()) / 2.f);
+
+	switch (m_menuPositionData.m_positionMode)
+	{
+	case MenuPositionMode::Centered:
+	{
+		// Center menu at m_centerPoint
+		m_menuSpace.setPosition(*(m_menuPositionData.m_centerPoint));
+		break;
+	}
+	case MenuPositionMode::Anchored:
+	{
+		// Compute border area from anchor bounds (like screen size)
+		Point border = (*(m_menuPositionData.m_anchorBounds) - m_menuSpace.getSize()) / 2.f;
+		border.x += m_menuSpace.getOrigin().x;  // Shift to align left
+		m_menuSpace.setPosition(border);
+		break;
+	}
+	}
+
+	m_menuSpace.setOutlineThickness(m_outlineThickness);
+	m_menuSpace.setOutlineColor(sf::Color::Red);
+
+	BuildColumns();
+	BuildRows();
+}
+
+void Menu::BuildColumns()
+{
+	float columnWidth = m_menuSpace.getSize().x / m_dimensions.x;
+
+	m_columnsSize = Point(columnWidth, m_menuSpace.getSize().y);
+
+	for (size_t i = 0; i < m_dimensions.x; i++)
+		m_columns.push_back(sf::RectangleShape(m_columnsSize));
+
+	for (auto& column : m_columns)
+	{
+		column.setOrigin(m_columnsSize/ 2.f);
+		column.setOutlineColor(sf::Color::Yellow);
+		column.setOutlineThickness(m_outlineThickness);
+	}
+
+	m_menuSpaceTopLeft = m_menuSpace.getPosition() - m_menuSpace.getOrigin();
+
+	m_columns[0].setPosition(m_menuSpaceTopLeft + m_columns[0].getOrigin());
+
+	for (size_t i = 1; i < m_dimensions.x; i++)
+		m_columns[i].setPosition(m_columns[i - 1].getPosition() + Point(m_columns[i - 1].getSize().x, 0));
+}
+
+void Menu::BuildRows()
+{
+	float rowHeight = m_menuSpace.getSize().y / m_dimensions.y;
+	m_cellsSize = Point(m_columnsSize.x, rowHeight);
+
+	for (size_t i = 0; i < m_dimensions.y; i++)
+	{
+		std::vector<MenuItem> row;
+		for (size_t j = 0; j < m_dimensions.x; j++)
+			row.emplace_back(m_cellsSize, m_outlineThickness);  // constructs in-place
+
+		m_rows.push_back(std::move(row));
+	}
+
+	if (m_rows.empty())
+		return;
+
+	// 1st row
+	auto& row = m_rows[0];
+
+	if (row.empty())
+		return;
+
+	row[0].SetPosition(m_menuSpaceTopLeft + row[0].GetOrigin());
+
+	for (size_t i = 1; i < row.size(); i++)
+		row[i].SetPosition(row[i-1].GetPosition() + sf::Vector2f(row[i-1].GetSize().x, 0));
+
+	// remaining rows
+	for (size_t i = 1; i < m_rows.size(); i++)
+	{
+		for (size_t j = 0; j < m_rows[i].size(); j++)
+			m_rows[i][j].SetPosition(m_rows[i - 1][j].GetPosition() + sf::Vector2f(0, m_rows[i - 1][j].GetSize().y));
+	}
+}
+
+void Menu::DebugRender(sf::RenderWindow& window)
+{
+	window.draw(m_menuSpace);
+
+	for (auto& col : m_columns)
+		window.draw(col);
 }
 
 void Menu::ProcessInput()
 {
 	HandleNavigation();
-}
-
-void Menu::Update(float deltaTime)
-{
-	if (m_prevMenuPosition != m_menuPosition)
-	{
-		Resume();
-
-
-
-		m_prevMenuPosition = m_menuPosition;
-	}
-
-	for (auto& menuItem : m_menuItems)
-		menuItem->Update(deltaTime);
-}
-
-void Menu::Render(sf::RenderWindow& window)
-{
-	for (auto& menuItem : m_menuItems)
-		menuItem->Render(window);
-}
-
-void Menu::AddCursor(Sprite* cursor, SpriteAnchorData cursorAnchorData, bool toText)
-{
-	m_anchorToText = toText;
-	m_cursor = std::shared_ptr<Sprite>(cursor);
-	m_cursorAnchorData = cursorAnchorData;
 }
 
 void Menu::HandleNavigation()
@@ -79,11 +213,6 @@ void Menu::HandleNavigation()
 		HandleDirection(inputManager.GetKeyState(sf::Keyboard::Left), m_canIncMenu, -1);
 		HandleDirection(inputManager.GetKeyState(sf::Keyboard::Right), m_canDecMenu, 1);
 	}
-
-	if (inputManager.GetKeyState(sf::Keyboard::Enter))
-	{
-		m_actionFunc(m_menuPosition);
-	}
 }
 
 void Menu::HandleDirection(bool isPressed, bool& canMove, int direction)
@@ -92,9 +221,8 @@ void Menu::HandleDirection(bool isPressed, bool& canMove, int direction)
 	{
 		if (canMove)
 		{
-			m_menuPosition += direction;
+			SetCurrCellNumber(m_currCellNumber + direction);
 			canMove = false;
-			ClampMenuPosition();
 		}
 	}
 	else
@@ -103,109 +231,40 @@ void Menu::HandleDirection(bool isPressed, bool& canMove, int direction)
 	}
 }
 
-void Menu::ClampMenuPosition()
+void Menu::MoveCursor()
 {
-	int maxIndex = static_cast<int>(m_menuItems.size()) - 1;
-	m_menuPosition = std::clamp(m_menuPosition, 0, maxIndex);
+	auto cell = GetCellByCellNumber(m_currCellNumber);
+	if (m_cursor)
+		m_cursor->SetPosition(cell->GetPosition());
 }
 
-Point Menu::GetNextDrawablePosition(const Point& size, const Point& pos)
+void Menu::SetActiveTextElement()
 {
-	if (m_verticalScroll)
-		return Point(pos.x, pos.y + size.y + m_marginSize);
-	else
-		return Point(pos.x + size.x + m_marginSize, pos.y);
-}
-
-TextBasedMenu::TextBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, unsigned int marginSize, std::optional<sf::Color> passiveColour)
-	: m_textConfig(config), m_passiveColour(passiveColour)
-{
-	m_menuType = TextOnly;
-	m_actionFunc = func;
-	m_marginSize = marginSize;
-	m_cursor = nullptr;
-
-	m_menuItems.push_back(std::make_unique<MenuItem>(text, m_textConfig, false));
-}
-
-void TextBasedMenu::AddMenuItem(const std::string& text)
-{
-	TextConfig config = TextConfig(m_textConfig);
-
-	if (m_passiveColour)
-		config.m_colour = *m_passiveColour;
-
-	auto currTextElement = m_menuItems[m_menuPosition]->GetTextElement();
-	config.m_position = GetNextDrawablePosition(currTextElement->GetSize(), currTextElement->GetPosition());
-
-	m_menuItems.push_back(std::make_unique<MenuItem>(text, config, true));
-	m_menuPosition++;
-}
-
-ImageBasedMenu::ImageBasedMenu(std::function<void(int)> func, const std::string& texID, const Point& imgPos, unsigned int marginSize)
-{
-	m_menuType = ImageOnly;
-	m_actionFunc = func;
-	m_marginSize = marginSize;
-	m_cursor = nullptr;
-
-	m_menuItems.push_back(std::make_unique<MenuItem>(texID, imgPos, false));
-}
-
-void ImageBasedMenu::AddMenuItem(const std::string& texID)
-{
-	auto currSprElement = m_menuItems[m_menuPosition]->GetSpriteElement();
-	auto newPos = GetNextDrawablePosition(currSprElement->GetSize(), currSprElement->GetPosition());
-
-	m_menuItems.push_back(std::make_unique<MenuItem>(texID, newPos, true));
-	m_menuPosition++;
-}
-
-TextImageBasedMenu::TextImageBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, std::optional<sf::Color> passiveColour,
-	const std::string& texId, const Point& imgPos, unsigned int marginSize)
-	: m_textConfig(config), m_passiveColour(passiveColour)
-{
-	m_menuType = ImagePositioned;
-	m_actionFunc = func;
-	m_marginSize = marginSize;
-	m_cursor = nullptr;
-
-	m_menuItems.push_back(std::make_unique<MenuItem>(text, m_textConfig, texId, imgPos, false));
-}
-
-TextImageBasedMenu::TextImageBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config,
-	std::optional<sf::Color> passiveColour, const std::string& texID, const SpriteAnchorData& anchorData, unsigned int marginSize)
-	: m_textConfig(config), m_passiveColour(passiveColour), m_anchorData(anchorData)
-{
-	m_menuType = ImagePositioned;
-	m_actionFunc = func;
-	m_marginSize = marginSize;
-
-	m_menuItems.push_back(std::make_unique<MenuItem>(text, m_textConfig, texID, *m_anchorData, false));
-}
-
-void TextImageBasedMenu::AddMenuItem(const std::string& text, const std::string& texID)
-{
-	TextConfig config = TextConfig(m_textConfig);
-
-	if (m_passiveColour)
-		config.m_colour = *m_passiveColour;
-
-	auto currTextElement = m_menuItems[m_menuPosition]->GetTextElement();
-	config.m_position = GetNextDrawablePosition(currTextElement->GetSize(), currTextElement->GetPosition());
-
-	switch (m_menuType)
+	for (auto cellID : m_activeCells)
 	{
-	case ImageAnchored:
-		m_menuItems.push_back(std::make_unique<MenuItem>(text, config, texID, *m_anchorData, true));
-		break;
-	case ImagePositioned:
-		auto currSprElement = m_menuItems[m_menuPosition]->GetSpriteElement();
-		auto imgPos = GetNextDrawablePosition(currSprElement->GetSize(), currSprElement->GetPosition());
+		auto cell = GetCell(cellID);
+		if (cell)
+		{
+			auto text = cell->GetTextElement();
+			if (text)
+			{
+				if (cell->GetMenuSlotNumber() == m_currCellNumber)
+				{
+					if (text->IsAnimated())
+						dynamic_cast<AnimatedText*>(text)->Resume();
 
-		m_menuItems.push_back(std::make_unique<MenuItem>(text, config, texID, imgPos, true));
-		break;
+					if (m_passiveColour)
+						text->ResetOutlineColour();
+				}
+				else
+				{
+					if (text->IsAnimated())
+						dynamic_cast<AnimatedText*>(text)->Pause();
+
+					if (m_passiveColour)
+						text->SetOutlineColour(*m_passiveColour);
+				}
+			}
+		}
 	}
-
-	m_menuPosition++;
 }

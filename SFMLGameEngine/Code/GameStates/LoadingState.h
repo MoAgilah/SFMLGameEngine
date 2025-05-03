@@ -3,7 +3,6 @@
 #include "GameState.h"
 #include "../Game/GameManager.h"
 #include "../UIElements/Text.h"
-#include "../UIElements/Menu.h"
 
 void LoadResources();
 

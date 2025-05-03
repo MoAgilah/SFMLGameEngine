@@ -31,7 +31,7 @@ struct TextConfig
 	{
 	}
 
-	TextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::None)
+	TextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::Center)
 		: m_fontName(fontName), m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
 	{}
 
@@ -39,6 +39,9 @@ struct TextConfig
 		: m_fontName(config.m_fontName), m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_animType(config.m_animType), m_alignment(config.m_alignment)
 	{}
 };
+
+Point CalculateTextOrigin(const sf::FloatRect& bounds);
+Point SetTextPosition(TextAlignment alignment, const Point& pos, const sf::FloatRect& bounds);
 
 class Text
 {
@@ -63,15 +66,14 @@ public:
 	void SetOutlineColour(const sf::Color& colour);
 	void SetFillColour(const sf::Color& colour);
 
+	void ResetOutlineColour() { SetOutlineColour(m_config.m_colour); }
+
+	bool IsAnimated() { return m_config.m_animType > TextAnimType::Static; }
+
 protected:
 
 	TextConfig m_config;
 	sf::Text m_text;
-
-private:
-
-	void CalculateTextOrigin();
-	void SetTextPosition(const Point& pos);
 };
 
 using UpdateFunc = std::function<void(float)>;

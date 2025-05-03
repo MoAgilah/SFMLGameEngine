@@ -1,95 +1,100 @@
 #pragma once
 
 #include "MenuItem.h"
+#include "../Drawables/Sprite.h"
+#include "../Utilities/Point.h"
+#include <SFML/Graphics.hpp>
+#include <vector>
 #include <optional>
-#include <functional>
-#include <map>
+
+enum MenuPositionMode
+{
+	Centered,
+	Anchored
+};
+
+struct MenuPositionData
+{
+	MenuPositionMode m_positionMode;
+	std::optional<Point> m_centerPoint;
+	std::optional<Point> m_anchorBounds;
+
+	MenuPositionData(MenuPositionMode positionMode, const Point& centerOrAnchor)
+		: m_positionMode(positionMode)
+	{
+		switch (m_positionMode)
+		{
+		case Centered:
+			m_centerPoint = centerOrAnchor;
+			m_anchorBounds = std::nullopt;
+			break;
+		case Anchored:
+			m_anchorBounds = centerOrAnchor;
+			m_centerPoint = std::nullopt;
+			break;
+		}
+	}
+};
 
 class Menu
 {
 public:
-	virtual ~Menu() = default;
+	Menu(const Point& menuSize, float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData);
+	~Menu() = default;
 
-	void Start();
-	void Pause();
-	void Resume();
-
-	void ProcessInput();
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
 
 	void SetHorizontalScrolling() { m_verticalScroll = false; }
 
-	void AddCursor(Sprite* cursor, SpriteAnchorData cursorAnchorData, bool toText = true);
+	void SetActiveCells();
+
+	Point GetCellSize() const { return m_cellsSize; }
+
+	void SetCursor(const std::string& texID) { m_cursor = Sprite(texID); }
+	Sprite* GetCursor();
+
+	void SetCurrCellNumber(int cellNumber);
+
+	void SetPassiveColour(const sf::Color& colour) { m_passiveColour = colour; }
+
+	MenuItem* GetCell(const std::pair<int,int>& colRow);
+	MenuItem* GetCellByCellNumber(unsigned int cellNumber);
 
 private:
+
+	void BuildMenuSpace();
+	void BuildColumns();
+	void BuildRows();
+
+	void DebugRender(sf::RenderWindow& window);
+
+	void ProcessInput();
+
+	void MoveCursor();
+	void SetActiveTextElement();
 
 	void HandleNavigation();
 
 	void HandleDirection(bool isPressed, bool& canMove, int direction);
 
-	void ClampMenuPosition();
-
 	bool m_canIncMenu = true;
-	bool m_canDecMenu = false;
-
-	int m_prevMenuPosition = 0;
-
-protected:
-
-	Point GetNextDrawablePosition(const Point& size, const Point& pos);
-
+	bool m_canDecMenu = true;
 	bool m_verticalScroll = true;
-	MenuItemType m_menuType;
-	int m_menuPosition = 0;
-	std::function<void(int)> m_actionFunc;
-	unsigned int m_marginSize = 0;
-	bool m_anchorToText = true;
-	std::shared_ptr<Sprite> m_cursor;
-	std::optional<SpriteAnchorData> m_cursorAnchorData = std::nullopt;
-	std::vector<std::unique_ptr<MenuItem>> m_menuItems;
-};
 
-class TextBasedMenu : public Menu
-{
-public:
-	TextBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, unsigned int marginSize, std::optional<sf::Color> passiveColour = std::nullopt);
-	~TextBasedMenu() = default;
-
-	void AddMenuItem(const std::string& text);
-
-private:
-
-	TextConfig m_textConfig;
+	Point m_cellsSize;
+	Point m_dimensions;
+	Point m_columnsSize;
+	Point m_menuSpaceCenter;
+	Point m_menuSpaceTopLeft;
+	float m_outlineThickness;
+	unsigned int m_currCellNumber;
+	unsigned int m_prevCellNumber = -1;
+	sf::RectangleShape m_menuSpace;
+	std::optional<Sprite> m_cursor;
+	MenuPositionData m_menuPositionData;
 	std::optional<sf::Color> m_passiveColour;
-};
-
-class ImageBasedMenu : public Menu
-
-{
-public:
-	ImageBasedMenu(std::function<void(int)> func, const std::string& texID, const Point& imgPos, unsigned int marginSize);
-	~ImageBasedMenu() = default;
-
-	void AddMenuItem(const std::string& texID);
-};
-
-class TextImageBasedMenu : public Menu
-{
-public:
-	TextImageBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, std::optional<sf::Color> passiveColour,
-		const std::string& texID, const Point& imgPos, unsigned int marginSize);
-
-	TextImageBasedMenu(std::function<void(int)> func, const std::string& text, const TextConfig& config, std::optional<sf::Color> passiveColour,
-		const std::string& texID, const SpriteAnchorData& AnchorData, unsigned int marginSize);
-
-	~TextImageBasedMenu() = default;
-
-	void AddMenuItem(const std::string& text, const std::string& filename);
-
-private:
-
-	TextConfig m_textConfig;
-	std::optional<sf::Color> m_passiveColour;
-	std::optional<SpriteAnchorData> m_anchorData;
+	std::vector<sf::RectangleShape> m_columns;
+	std::vector<std::vector<MenuItem>> m_rows;
+	std::vector<std::pair<int, int>> m_activeCells;
 };

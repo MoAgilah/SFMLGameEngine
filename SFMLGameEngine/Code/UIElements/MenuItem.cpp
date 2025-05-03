@@ -1,131 +1,70 @@
 #include "MenuItem.h"
 
-#include "../Game/GameManager.h"
-
-MenuItem::MenuItem(const std::string& text, const TextConfig& config, bool paused)
-	: m_menuItemType(MenuItemType::TextOnly), m_textConfig(config)
+MenuItem::MenuItem(const Point& menuSize, float outlineThickness)
+	: m_menuSlotNumber(-1), m_cellSpace(menuSize), m_textElement(nullptr), m_spriteElement(nullptr)
 {
-	AssignText(text, m_textConfig.value(), paused);
-}
-
-MenuItem::MenuItem(const std::string& texId, const Point& position, bool paused)
-	: m_menuItemType(ImageOnly), m_textConfig(std::nullopt)
-{
-	m_sprite = std::make_unique<Sprite>(texId);
-	SetImgPosition(position);
-}
-
-MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std::string& texId, const Point& position, bool paused)
-	: m_menuItemType(ImagePositioned), m_textConfig(config)
-{
-	m_sprite = std::make_unique<Sprite>(texId);
-	AssignText(text, m_textConfig.value(), paused);
-	SetImgPosition(position);
-}
-
-MenuItem::MenuItem(const std::string& text, const TextConfig& config, const std::string& texId, const SpriteAnchorData& anchorData, bool paused)
-	: m_menuItemType(ImageAnchored)
-{
-	m_sprite = std::make_unique<Sprite>(texId);
-	AssignText(text, m_textConfig.value(), paused);
-	CalculateSpritePosition(m_text.get(), m_sprite.get(), anchorData);
+	m_cellSpace.setOrigin(Point(m_cellSpace.getSize()) / 2.f);
+	m_cellSpace.setOutlineThickness(outlineThickness);
+	m_cellSpace.setOutlineColor(sf::Color::Green);
 }
 
 void MenuItem::Update(float deltaTime)
 {
-	if (m_text)
-		m_text->Update(deltaTime);
+	if (m_textElement)
+	{
+		m_textElement->Update(deltaTime);
+	}
 
-	if (m_sprite)
-		m_sprite->Update(deltaTime);
+	if (m_spriteElement)
+	{
+		m_spriteElement->Update(deltaTime);
+	}
 }
 
 void MenuItem::Render(sf::RenderWindow& window)
 {
-	if (m_text)
-		m_text->Render(window);
+	DebugRender(window);
 
-	if (m_sprite)
-		m_sprite->Render(window);
-}
-
-void MenuItem::Pause()
-{
-	if (m_text)
+	if (m_textElement)
 	{
-		auto aniText = dynamic_cast<AnimatedText*>(m_text.get());
-		if (aniText)
-		{
-			aniText->Pause();
-		}
+		m_textElement->Render(window);
+	}
+
+	if (m_spriteElement)
+	{
+		m_spriteElement->Render(window);
 	}
 }
 
-void MenuItem::Resume()
+Text* MenuItem::AddTextElement(Text* text)
 {
-	if (m_text)
-	{
-		auto aniText = dynamic_cast<AnimatedText*>(m_text.get());
-		if (aniText)
-		{
-			aniText->Resume();
-		}
-	}
+	m_textElement = std::shared_ptr<Text>(text);
+	return GetTextElement();
 }
 
-void MenuItem::AssignText(const std::string& text, const TextConfig& config, bool paused)
+Text* MenuItem::GetTextElement()
 {
-	switch (config.m_animType)
-	{
-	case Static:
-		m_text = std::make_unique<Text>(config);
-		m_text->SetText(text);
-		break;
-	case Flashing:
-		m_text = std::make_unique<AnimatedText>(config);
-		m_text->SetText(text);
-		if (paused)
-			dynamic_cast<AnimatedText*>(m_text.get())->Pause();
-		break;
-	case Custom:
-		m_text = std::make_unique<AnimatedText>(config);
-		m_text->SetText(text);
-		if (paused)
-			dynamic_cast<AnimatedText*>(m_text.get())->Pause();
-		break;
-	}
+	if (m_textElement)
+		return m_textElement.get();
+
+	return nullptr;
 }
 
-void MenuItem::SetImgPosition(const Point& position)
+Sprite* MenuItem::AddSpriteElement(Sprite* spr)
 {
-	Point spriteSize = m_sprite->GetSize();
-	m_sprite->SetOrigin(spriteSize / 2.f);
-	m_sprite->SetPosition(position);
+	m_spriteElement = std::shared_ptr<Sprite>(spr);
+	return GetSpriteElement();
 }
 
-void CalculateSpritePosition(SizePosExtractor extracts, Sprite* sprite, const SpriteAnchorData& anchorData)
+Sprite* MenuItem::GetSpriteElement()
 {
-	Point extractsPos = extracts.m_position;
-	Point extractsSize = extracts.m_size;
+	if (m_spriteElement)
+		return m_spriteElement.get();
 
-	Point spriteSize = sprite->GetSize();
+	return nullptr;
+}
 
-	Point pos;
-	pos.x = extractsPos.x + (extractsSize.x - spriteSize.x) / 2;
-
-	switch (anchorData.m_imgAnchor)
-	{
-	case Centered:
-		pos.y = extractsPos.y + (extractsSize.y - spriteSize.y) / 2;
-		break;
-	case Above:
-		pos.y = extractsPos.y - spriteSize.y - anchorData.m_margin;
-		break;
-	case Below:
-		pos.y = extractsPos.y + extractsSize.y + anchorData.m_margin;
-		break;
-	}
-
-	sprite->SetOrigin(spriteSize / 2.f);
-	sprite->SetPosition(pos);
+void MenuItem::DebugRender(sf::RenderWindow& window)
+{
+	window.draw(m_cellSpace);
 }

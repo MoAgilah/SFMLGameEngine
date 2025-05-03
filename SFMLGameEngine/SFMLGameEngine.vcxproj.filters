@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Code\Drawables">
       <UniqueIdentifier>{edcb146b-9d76-4b09-bc91-8cf929d83dfd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Code\Game">
-      <UniqueIdentifier>{37e36a15-64ef-463b-b097-daaa73768b6e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Code\GameObjects">
       <UniqueIdentifier>{5192685e-36e1-4480-90fb-224e7a9006d4}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,9 @@
     </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{e67edff7-99ac-41ea-8886-20c6cf0d297e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Game">
+      <UniqueIdentifier>{37e36a15-64ef-463b-b097-daaa73768b6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,9 +153,6 @@
     <ClCompile Include="Code\Collisions\BoundingVolume.cpp">
       <Filter>Source Files\Code\Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Code\UIElements\Menu.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
-    </ClCompile>
     <ClCompile Include="Code\GameStates\MenuState.cpp">
       <Filter>Source Files\Code\GameStates</Filter>
     </ClCompile>
@@ -165,10 +162,10 @@
     <ClCompile Include="Code\UIElements\Text.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
-    <ClCompile Include="Code\UIElements\MenuItem.cpp">
+    <ClCompile Include="Code\UIElements\Menu.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
-    <ClCompile Include="Code\UIElements\MultiPageMenu.cpp">
+    <ClCompile Include="Code\UIElements\MenuItem.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,9 +257,6 @@
     <ClInclude Include="Code\Collisions\BoundingVolume.h">
       <Filter>Header Files\Code\Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Code\UIElements\Menu.h">
-      <Filter>Header Files\Code\UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Code\GameStates\MenuState.h">
       <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
@@ -275,10 +269,10 @@
     <ClInclude Include="Code\UIElements\Text.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
-    <ClInclude Include="Code\UIElements\MenuItem.h">
+    <ClInclude Include="Code\UIElements\Menu.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
-    <ClInclude Include="Code\UIElements\MultiPageMenu.h">
+    <ClInclude Include="Code\UIElements\MenuItem.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
   </ItemGroup>
