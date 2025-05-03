@@ -45,7 +45,7 @@ void Menu::Render(sf::RenderWindow& window)
 
 	if (m_cursor)
 	{
-		m_cursor.value().Render(window);
+		m_cursor->Render(window);
 	}
 }
 
@@ -66,7 +66,7 @@ void Menu::SetActiveCells()
 Sprite* Menu::GetCursor()
 {
 	if (m_cursor)
-		return &m_cursor.value();
+		return m_cursor.get();
 
 	return nullptr;
 }

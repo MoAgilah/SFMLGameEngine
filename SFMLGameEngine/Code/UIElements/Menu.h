@@ -51,7 +51,7 @@ public:
 
 	Point GetCellSize() const { return m_cellsSize; }
 
-	void SetCursor(const std::string& texID) { m_cursor = Sprite(texID); }
+	void SetCursor(Sprite* spr) { m_cursor = std::shared_ptr<Sprite>(spr); }
 	Sprite* GetCursor();
 
 	void SetCurrCellNumber(int cellNumber);
@@ -91,7 +91,7 @@ private:
 	unsigned int m_currCellNumber;
 	unsigned int m_prevCellNumber = -1;
 	sf::RectangleShape m_menuSpace;
-	std::optional<Sprite> m_cursor;
+	std::shared_ptr<Sprite> m_cursor;
 	MenuPositionData m_menuPositionData;
 	std::optional<sf::Color> m_passiveColour;
 	std::vector<sf::RectangleShape> m_columns;
