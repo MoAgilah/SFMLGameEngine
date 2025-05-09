@@ -19,3 +19,14 @@ void MenuCursor::Render(sf::RenderWindow& window)
 	if (m_cursor)
 		m_cursor->Render(window);
 }
+
+void MenuCursor::SetScale(const Point& cellSize)
+{
+	// Compute scale factors
+	Point scaleXY = cellSize / m_cursor->GetSize();
+
+	// Choose the smaller scale to preserve aspect ratio
+	float scale = std::min(scaleXY.x, scaleXY.y);
+
+	m_cursor->SetScale({ scale,scale });
+}

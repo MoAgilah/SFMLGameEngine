@@ -16,6 +16,7 @@ public:
 	void Render(sf::RenderWindow& window);
 
 	void SetPosition(const Point& pos) { m_cursor->SetPosition(pos); };
+	void SetScale(const Point& cellSize);
 
 	MenuNav* GetMenuNav() { return &m_menuNav; }
 	Sprite* GetSprite() { return m_cursor.get(); }

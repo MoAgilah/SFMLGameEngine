@@ -16,10 +16,12 @@ void PaginatedMenu::Render(sf::RenderWindow& window)
 	m_menuPages[m_currentMenuNum]->Render(window);
 }
 
-void PaginatedMenu::SetCurrentMenuNumber(int menuNumer)
+void PaginatedMenu::SetCurrentMenuNumber(int menuNo)
 {
-	if (menuNumer < m_menuPages.size())
-		m_currentMenuNum = menuNumer;
+	if (menuNo >= 0 && menuNo < m_menuPages.size())
+	{
+		m_currentMenuNum = menuNo;
+	}
 }
 
 Menu* PaginatedMenu::AddMenu(Menu* menu)
@@ -29,13 +31,13 @@ Menu* PaginatedMenu::AddMenu(Menu* menu)
 	return GetMenuByNumber((int)(m_menuPages.size() - 1));
 }
 
-Menu* PaginatedMenu::GetMenuByNumber(int menuNumber)
+Menu* PaginatedMenu::GetMenuByNumber(int menuNo)
 {
 	if (m_menuPages.empty())
 		return nullptr;
 
-	if (menuNumber < m_menuPages.size())
-		return m_menuPages[menuNumber].get();
+	if (menuNo >= 0 && menuNo < m_menuPages.size())
+		return m_menuPages[menuNo].get();
 
 	return nullptr;
 }
