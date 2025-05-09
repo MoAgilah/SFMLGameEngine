@@ -4,7 +4,7 @@
 #include "Game/GameManager.h"
 
 Menu::Menu(const Point& menuSize, float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData)
-	: m_menuSpace(menuSize), m_outlineThickness(outlineThickness), m_dimensions(dimensions), m_menuPositionData(menuPositionData)
+	: m_menuSpace(menuSize), m_outlineThickness(outlineThickness), m_dimensions(dimensions), m_menuPositionData(menuPositionData), m_menuNavigation(sf::Keyboard::Up, sf::Keyboard::Down)
 {
 	BuildMenuSpace();
 }
@@ -13,15 +13,33 @@ void Menu::Update(float deltaTime)
 {
 	ProcessInput();
 
-	if (m_currCellNumber != m_prevCellNumber)
+	if (!m_cursors.empty())
 	{
-		if (m_cursor)
-			MoveCursor();
+		for (auto& cursor : m_cursors)
+		{
+			auto menuNav = cursor.GetMenuNav();
 
-		SetActiveTextElement();
+			if (menuNav->HasMoved())
+			{
+				int cellNo = menuNav->GetCurrCursorPos();
+				auto cell = GetCellByCellNumber(cellNo);
+				if (cell)
+				{
+					cursor.SetPosition(cell->GetPosition());
+					menuNav->SetPrevCursorPos(cellNo);
+				}
+			}
+		}
+	}
+	else
+	{
+		if (m_menuNavigation.HasMoved())
+		{
+			SetActiveTextElement();
+		}
 	}
 
-	for (auto cellNo : m_activeCells)
+	for (const auto& cellNo : m_activeCells)
 	{
 		auto cell = GetCell(cellNo);
 		if (cell)
@@ -29,8 +47,6 @@ void Menu::Update(float deltaTime)
 			cell->Update(deltaTime);
 		}
 	}
-
-	m_prevCellNumber = m_currCellNumber;
 }
 
 void Menu::Render(sf::RenderWindow& window)
@@ -43,9 +59,10 @@ void Menu::Render(sf::RenderWindow& window)
 			cell.Render(window);
 	}
 
-	if (m_cursor)
+	if (!m_cursors.empty())
 	{
-		m_cursor->Render(window);
+		for (auto& cursor : m_cursors)
+			cursor.Render(window);
 	}
 }
 
@@ -63,25 +80,26 @@ void Menu::SetActiveCells()
 	}
 }
 
-Sprite* Menu::GetCursor()
+void Menu::AddCursor(Sprite* spr, const MenuNav& menuNav)
 {
-	if (m_cursor)
-		return m_cursor.get();
+	m_cursors.push_back({ spr, menuNav });
+}
+
+MenuCursor* Menu::GetCursor(unsigned int cursorNumber)
+{
+	if (cursorNumber >= 0 && cursorNumber < m_cursors.size())
+	{
+		return &m_cursors[cursorNumber];
+	}
 
 	return nullptr;
 }
 
-void Menu::SetCurrCellNumber(int cellNumber)
-{
-	if (cellNumber < m_activeCells.size())
-		m_currCellNumber = cellNumber;
-}
-
 MenuItem* Menu::GetCell(const std::pair<int, int>& colRow)
 {
-	if (colRow.first <= m_rows.size() - 1)
+	if (colRow.first >= 0 && colRow.first < m_rows.size())
 	{
-		if (colRow.second <= m_rows[colRow.first].size() - 1)
+		if (colRow.second >= 0 && colRow.second < m_rows[colRow.first].size())
 			return &m_rows[colRow.first][colRow.second];
 	}
 
@@ -90,10 +108,9 @@ MenuItem* Menu::GetCell(const std::pair<int, int>& colRow)
 
 MenuItem* Menu::GetCellByCellNumber(unsigned int cellNumber)
 {
-	if (cellNumber < m_activeCells.size())
-	{
+	if (cellNumber >= 0 && cellNumber < m_activeCells.size())
 		return GetCell(m_activeCells[cellNumber]);
-	}
+
 	return nullptr;
 }
 
@@ -196,51 +213,20 @@ void Menu::DebugRender(sf::RenderWindow& window)
 
 void Menu::ProcessInput()
 {
-	HandleNavigation();
-}
-
-void Menu::HandleNavigation()
-{
-	auto& inputManager = GameManager::Get()->GetInputManager();
-
-	if (m_verticalScroll)
+	if (!m_cursors.empty())
 	{
-		HandleDirection(inputManager.GetKeyState(sf::Keyboard::Up), m_canIncMenu, -1);
-		HandleDirection(inputManager.GetKeyState(sf::Keyboard::Down), m_canDecMenu, 1);
+		for (auto& cursor : m_cursors)
+			cursor.GetMenuNav()->HandleNavigation();
 	}
 	else
 	{
-		HandleDirection(inputManager.GetKeyState(sf::Keyboard::Left), m_canIncMenu, -1);
-		HandleDirection(inputManager.GetKeyState(sf::Keyboard::Right), m_canDecMenu, 1);
+		m_menuNavigation.HandleNavigation();
 	}
-}
-
-void Menu::HandleDirection(bool isPressed, bool& canMove, int direction)
-{
-	if (isPressed)
-	{
-		if (canMove)
-		{
-			SetCurrCellNumber(m_currCellNumber + direction);
-			canMove = false;
-		}
-	}
-	else
-	{
-		canMove = true;
-	}
-}
-
-void Menu::MoveCursor()
-{
-	auto cell = GetCellByCellNumber(m_currCellNumber);
-	if (m_cursor)
-		m_cursor->SetPosition(cell->GetPosition());
 }
 
 void Menu::SetActiveTextElement()
 {
-	for (auto cellID : m_activeCells)
+	for (const auto& cellID : m_activeCells)
 	{
 		auto cell = GetCell(cellID);
 		if (cell)
@@ -248,7 +234,7 @@ void Menu::SetActiveTextElement()
 			auto text = cell->GetTextElement();
 			if (text)
 			{
-				if (cell->GetMenuSlotNumber() == m_currCellNumber)
+				if (cell->GetMenuSlotNumber() == m_menuNavigation.GetCurrCursorPos())
 				{
 					if (text->IsAnimated())
 						dynamic_cast<AnimatedText*>(text)->Resume();

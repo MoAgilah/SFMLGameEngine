@@ -34,9 +34,12 @@ void MainMenuState::Initialise()
 	dynamic_cast<AnimatedText*>(text)->InitFlashingText("Start");
 	cell->SetMenuSlotNumber(0);
 
-	m_menu.SetCurrCellNumber(0);
-
 	m_menu.SetActiveCells();
+
+	auto menuNav = m_menu.GetMenuNav();
+
+	menuNav->SetCursorRange({ 0 });
+	menuNav->SetCurrCursorPos(0);
 }
 
 void MainMenuState::Pause()

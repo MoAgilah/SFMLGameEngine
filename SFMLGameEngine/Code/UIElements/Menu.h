@@ -1,11 +1,15 @@
 #pragma once
 
 #include "MenuItem.h"
+#include "MenuCursor.h"
+#include "MenuNavigation.h"
 #include "../Drawables/Sprite.h"
 #include "../Utilities/Point.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <vector>
 #include <optional>
+#include <tuple>
 
 enum MenuPositionMode
 {
@@ -45,16 +49,14 @@ public:
 	void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
 
-	void SetHorizontalScrolling() { m_verticalScroll = false; }
-
 	void SetActiveCells();
+
+	MenuNav* GetMenuNav() { return &m_menuNavigation; }
 
 	Point GetCellSize() const { return m_cellsSize; }
 
-	void SetCursor(Sprite* spr) { m_cursor = std::shared_ptr<Sprite>(spr); }
-	Sprite* GetCursor();
-
-	void SetCurrCellNumber(int cellNumber);
+	void AddCursor(Sprite* spr, const MenuNav& menuNav);
+	MenuCursor* GetCursor(unsigned int cursorNumber);
 
 	void SetPassiveColour(const sf::Color& colour) { m_passiveColour = colour; }
 
@@ -71,16 +73,7 @@ private:
 
 	void ProcessInput();
 
-	void MoveCursor();
 	void SetActiveTextElement();
-
-	void HandleNavigation();
-
-	void HandleDirection(bool isPressed, bool& canMove, int direction);
-
-	bool m_canIncMenu = true;
-	bool m_canDecMenu = true;
-	bool m_verticalScroll = true;
 
 	Point m_cellsSize;
 	Point m_dimensions;
@@ -88,13 +81,13 @@ private:
 	Point m_menuSpaceCenter;
 	Point m_menuSpaceTopLeft;
 	float m_outlineThickness;
-	unsigned int m_currCellNumber;
 	unsigned int m_prevCellNumber = -1;
+	MenuNav m_menuNavigation;
 	sf::RectangleShape m_menuSpace;
-	std::shared_ptr<Sprite> m_cursor;
 	MenuPositionData m_menuPositionData;
 	std::optional<sf::Color> m_passiveColour;
 	std::vector<sf::RectangleShape> m_columns;
 	std::vector<std::vector<MenuItem>> m_rows;
 	std::vector<std::pair<int, int>> m_activeCells;
+	std::vector<MenuCursor> m_cursors;
 };

@@ -168,6 +168,15 @@
     <ClCompile Include="Code\UIElements\MenuItem.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="Code\UIElements\PaginatedMenu.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\UIElements\MenuCursor.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\UIElements\MenuNavigation.cpp">
+      <Filter>Source Files\Code\UIElements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\CollisionManager.h">
@@ -273,6 +282,15 @@
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\MenuItem.h">
+      <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\PaginatedMenu.h">
+      <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\MenuCursor.h">
+      <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UIElements\MenuNavigation.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
   </ItemGroup>
