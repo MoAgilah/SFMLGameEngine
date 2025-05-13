@@ -1,4 +1,5 @@
 #include "ShaderManager.h"
+
 #include "../Game/Constants.h"
 
 ShaderManager::ShaderManager()

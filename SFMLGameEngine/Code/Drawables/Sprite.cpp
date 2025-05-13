@@ -1,8 +1,9 @@
 #include "Sprite.h"
-#include <format>
-#include <iostream>
+
 #include "../Game/Constants.h"
 #include "../Game/GameManager.h"
+#include <format>
+#include <iostream>
 
 Sprite::Sprite(const std::string& id)
 {

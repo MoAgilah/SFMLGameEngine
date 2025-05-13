@@ -1,15 +1,15 @@
 #pragma once
 
-#include <memory>
-#include <array>
-#include <map>
-#include <SFML/Graphics.hpp>
 #include "../Drawables/Sprite.h"
 #include "../GameObjects/Enemy.h"
 #include "../GameObjects/Object.h"
+#include <array>
+#include <map>
+#include <memory>
+#include <SFML/Graphics.hpp>
 
 enum class Texts { Max };
-enum class Sprites { Max};
+enum class Sprites { Max };
 
 class World
 {
@@ -38,8 +38,8 @@ private:
 
 protected:
 
-	BoundingBox m_foregroundBox;
 	Sprite m_backgroundSpr;
+	BoundingBox m_foregroundBox;
 	std::vector<sf::Text> m_texts;
 	std::vector<Sprite> m_sprites;
 	std::map<std::string, std::shared_ptr<Enemy>> m_enemies;

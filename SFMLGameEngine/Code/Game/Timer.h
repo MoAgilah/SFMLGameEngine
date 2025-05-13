@@ -19,7 +19,7 @@ public:
 
 private:
 
-	bool m_stopped = false;
 	float m_time = 0;
 	float m_maxTime;
+	bool m_stopped = false;
 };

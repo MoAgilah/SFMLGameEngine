@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "../Collisions/BoundingVolume.h"
+#include <SFML/Graphics.hpp>
 
 class Camera
 {
@@ -20,6 +20,6 @@ public:
 
 private:
 
-	BoundingBox m_viewBox;
 	sf::View m_camera;
+	BoundingBox m_viewBox;
 };

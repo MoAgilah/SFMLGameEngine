@@ -1,4 +1,5 @@
 #include "InputManager.h"
+
 #include <iostream>
 #include <chrono>
 
@@ -20,20 +21,20 @@ void InputManager::ProcessKeyReleasedEvent(sf::Event& event)
 
 sf::Keyboard::Key InputManager::GetFirstPressedKey(const std::vector<sf::Keyboard::Key>& keys) const
 {
-    sf::Keyboard::Key firstKey = sf::Keyboard::Unknown;
-    auto earliestTime = std::chrono::steady_clock::time_point::max();
+	sf::Keyboard::Key firstKey = sf::Keyboard::Unknown;
+	auto earliestTime = std::chrono::steady_clock::time_point::max();
 
-    for (auto key : keys)
-    {
-        auto time = m_keyPressTimestamps[key];
-        if (time != std::chrono::steady_clock::time_point::min() && time < earliestTime)
-        {
-            earliestTime = time;
-            firstKey = key;
-        }
-    }
+	for (auto key : keys)
+	{
+		auto time = m_keyPressTimestamps[key];
+		if (time != std::chrono::steady_clock::time_point::min() && time < earliestTime)
+		{
+			earliestTime = time;
+			firstKey = key;
+		}
+	}
 
-    return firstKey;
+	return firstKey;
 }
 
 void InputManager::SetKeyPressed(sf::Keyboard::Key key)

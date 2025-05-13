@@ -1,4 +1,5 @@
 #include "../Game/Camera.h"
+
 #include "../Game/GameManager.h"
 #include "../Game/Constants.h"
 
@@ -13,7 +14,6 @@ Camera::Camera()
 	m_viewBox.Update(m_camera.getCenter());
 	m_viewBox.SetFillColour(sf::Color(255, 0, 0, 128));
 }
-
 
 void Camera::Update()
 {

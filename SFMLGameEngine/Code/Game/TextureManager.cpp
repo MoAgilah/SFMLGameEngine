@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+
 #include "Game/Constants.h"
 
 TextureManager::TextureManager()

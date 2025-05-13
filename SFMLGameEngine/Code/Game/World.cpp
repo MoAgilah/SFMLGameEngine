@@ -1,4 +1,5 @@
 #include "World.h"
+
 #include "GameManager.h"
 #include "../Collisions/BoundingVolume.h"
 #include "../Game/Constants.h"
@@ -10,7 +11,6 @@ World::World()
 
 	m_foregroundBox.Reset({ 32, 47 });
 }
-
 
 void World::Update(float deltaTime)
 {

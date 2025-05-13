@@ -1,7 +1,8 @@
 #pragma once
-#include <string>
-#include <SFML/Graphics.hpp>
+
 #include "../Utilities/Point.h"
+#include <SFML/Graphics.hpp>
+#include <string>
 
 class GameConstants
 {

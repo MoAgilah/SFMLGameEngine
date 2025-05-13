@@ -1,8 +1,5 @@
 #pragma once
 
-#include <array>
-#include <memory>
-#include <SFML/Graphics.hpp>
 #include "Timer.h"
 #include "Camera.h"
 #include "InputManager.h"
@@ -13,6 +10,9 @@
 #include "World.h"
 #include "../Collisions/CollisionManager.h"
 #include "../GameStates/GameStateMgr.h"
+#include <SFML/Graphics.hpp>
+#include <array>
+#include <memory>
 
 class GameManager
 {

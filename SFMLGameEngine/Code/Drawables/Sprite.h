@@ -1,11 +1,11 @@
 #pragma once
 
+#include "../Game/TextureManager.h"
+#include "Utilities/Point.h"
+#include <SFML/Graphics.hpp>
 #include <span>
 #include <string>
 #include <vector>
-#include <SFML/Graphics.hpp>
-#include "../Game/TextureManager.h"
-#include "Utilities/Point.h"
 
 class Sprite
 {
@@ -80,16 +80,14 @@ public:
 
 private:
 
-	bool m_loop = true;
-	int m_animCycles = 0;
-	float m_currentTime = 0;
-	int m_frameTime = 0;
-	float m_animSpeed = 0;
-	float m_framesPerSecond = 0;
-	bool m_symmetrical;
-
 	Range m_frame;
 	Range m_animation;
-
+	bool m_symmetrical;
+	bool m_loop = true;
+	int m_frameTime = 0;
+	int m_animCycles = 0;
+	float m_animSpeed = 0;
+	float m_currentTime = 0;
+	float m_framesPerSecond = 0;
 	std::vector<int> m_numFrames;
 };

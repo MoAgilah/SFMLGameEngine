@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../Utilities/Point.h"
 #include <utility>
 #include <vector>
-#include "../Utilities/Point.h"
 
 enum XVelocity
 {
@@ -47,15 +47,15 @@ private:
 
 	int m_currX;
 	int m_currY;
+	float m_airTime;
 	PhysicsType m_currType;
-	std::pair<Velocity, float> m_maxVelocity;
 	Point m_currAccelerations;
 	float m_groundAcceleration;
-	float m_airTime;
-	std::vector<Velocity> m_groundVelocities;
-	std::vector<Velocity> m_slopedVelocities;
+	std::vector<float> m_aerialTimer;
 	std::vector<float> m_aerialVelocities;
 	std::vector<float> m_slopedAccelerations;
 	std::vector<float> m_aerialAccelerations;
-	std::vector<float> m_aerialTimer;
+	std::pair<Velocity, float> m_maxVelocity;
+	std::vector<Velocity> m_groundVelocities;
+	std::vector<Velocity> m_slopedVelocities;
 };

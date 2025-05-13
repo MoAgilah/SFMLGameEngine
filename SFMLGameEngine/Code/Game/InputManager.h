@@ -1,8 +1,8 @@
 #pragma once
 
+#include <SFML/Window/event.hpp>
 #include <array>
 #include <chrono>
-#include "SFML/Window/event.hpp"
 
 class InputManager
 {
