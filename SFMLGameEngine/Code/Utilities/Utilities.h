@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include <SFML/Graphics.hpp>
 #include "Point.h"
+#include <SFML/Graphics.hpp>
 
 namespace obj
 {

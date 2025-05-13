@@ -1,7 +1,7 @@
 #include "Point.h"
-#include <stdexcept>
-#include "../Code/Collisions/BoundingVolume.h"
 
+#include "../Code/Collisions/BoundingVolume.h"
+#include <stdexcept>
 
 Point::Point()
 	: x(0), y(0)
@@ -208,7 +208,7 @@ float pnt::distance(const Point& p1, const Point& p2)
 
 float pnt::length(const Point& p)
 {
-	return std::sqrtf(dot(p,p));
+	return std::sqrtf(dot(p, p));
 }
 
 Point pnt::Normalize(const Point& p)

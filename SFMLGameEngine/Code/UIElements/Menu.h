@@ -60,7 +60,7 @@ public:
 
 	void SetPassiveColour(const sf::Color& colour) { m_passiveColour = colour; }
 
-	MenuItem* GetCell(const std::pair<int,int>& colRow);
+	MenuItem* GetCell(const std::pair<int, int>& colRow);
 	MenuItem* GetCellByCellNumber(unsigned int cellNumber);
 
 private:

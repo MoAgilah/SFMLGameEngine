@@ -1,15 +1,13 @@
 #pragma once
 
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <map>
 #include <memory>
 #include<optional>
 #include <filesystem>
 namespace fs = std::filesystem;
-
-
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
 
 template<typename T>
 class ResourceLoader

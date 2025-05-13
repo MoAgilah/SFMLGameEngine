@@ -4,7 +4,8 @@
 
 MenuNav::MenuNav(sf::Keyboard::Key ascKey, sf::Keyboard::Key desKey)
 	: m_ascKey(ascKey), m_desKey(desKey)
-{}
+{
+}
 
 void MenuNav::HandleNavigation()
 {

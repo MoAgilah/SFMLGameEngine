@@ -1,7 +1,8 @@
 #include "Utilities.h"
+
+#include "../Collisions/BoundingVolume.h"
 #include <array>
 #include <numbers>
-#include "../Collisions/BoundingVolume.h"
 
 namespace obj
 {
@@ -33,7 +34,8 @@ Line::Line(const Point& start, const Point& end)
 
 Line::Line(const sf::ConvexShape& tri, int bgn, int end)
 	: Line(tri.getPoint(bgn), tri.getPoint(end))
-{}
+{
+}
 
 Point Line::GetMidPoint() const
 {
@@ -93,7 +95,7 @@ Point Line::ClosestPointOnLineSegment(const Point& pnt) const
 }
 
 
-bool Line::IsPointAboveLine(const Point & pnt) const
+bool Line::IsPointAboveLine(const Point& pnt) const
 {
 	float s = (end.x - start.x) * (pnt.y - start.y) - (end.y - start.y) * (pnt.x - start.x);
 	return s > 0;

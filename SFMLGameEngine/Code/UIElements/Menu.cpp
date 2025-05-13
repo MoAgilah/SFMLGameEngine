@@ -154,7 +154,7 @@ void Menu::BuildColumns()
 
 	for (auto& column : m_columns)
 	{
-		column.setOrigin(m_columnsSize/ 2.f);
+		column.setOrigin(m_columnsSize / 2.f);
 		column.setOutlineColor(sf::Color::Yellow);
 		column.setOutlineThickness(m_outlineThickness);
 	}
@@ -193,7 +193,7 @@ void Menu::BuildRows()
 	row[0].SetPosition(m_menuSpaceTopLeft + row[0].GetOrigin());
 
 	for (size_t i = 1; i < row.size(); i++)
-		row[i].SetPosition(row[i-1].GetPosition() + sf::Vector2f(row[i-1].GetSize().x, 0));
+		row[i].SetPosition(row[i - 1].GetPosition() + sf::Vector2f(row[i - 1].GetSize().x, 0));
 
 	// remaining rows
 	for (size_t i = 1; i < m_rows.size(); i++)
