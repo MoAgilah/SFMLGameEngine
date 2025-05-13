@@ -1,6 +1,5 @@
 #include "CollisionManager.h"
-#include <format>
-#include <algorithm>
+
 #include "../Game/Constants.h"
 #include "../Game/GameManager.h"
 #include "../GameObjects/Box.h"
@@ -8,6 +7,8 @@
 #include "../GameObjects/Object.h"
 #include "../GameObjects/Collectables.h"
 #include "../Utilities/Utilities.h"
+#include <format>
+#include <algorithm>
 
 using namespace obj;
 

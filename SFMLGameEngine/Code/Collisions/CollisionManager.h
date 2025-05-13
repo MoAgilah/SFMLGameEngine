@@ -1,9 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "../Collisions/BoundingVolume.h"
 #include "../Collisions/Grid.h"
 #include "../Collisions/Tile.h"
+#include <SFML/Graphics.hpp>
 
 class Box;
 class Enemy;

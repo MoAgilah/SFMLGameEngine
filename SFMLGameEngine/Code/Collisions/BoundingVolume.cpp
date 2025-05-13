@@ -1,14 +1,14 @@
 #include "BoundingVolume.h"
-#include <numbers>
+
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
+#include <numbers>
 
 // Epsilon value to handle floating-point precision issues
 constexpr float EPSILON = std::numeric_limits<float>::epsilon() * 100;
 
 BoundingVolume::BoundingVolume(VolumeType type)
-	: m_type(type)
-{
+	: m_type(type) {
 }
 
 void BoundingVolume::Render(sf::RenderWindow& window)
@@ -413,7 +413,6 @@ Point BoundingBox::GetSeparationVector(BoundingCapsule* other)
 	float penetrationDepth = other->GetRadius() - distance;
 	return pnt::Normalize(displacement) * penetrationDepth;
 }
-
 
 BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
 {
@@ -920,7 +919,7 @@ bool BoundingCapsule::Intersects(BoundingCapsule* capsule)
 		capsule->m_segment.SqDistPointSegment(m_segment.end),
 		m_segment.SqDistPointSegment(capsule->m_segment.start),
 		m_segment.SqDistPointSegment(capsule->m_segment.end)
-	});
+		});
 
 	// Check if the distance is within the combined radii
 	return distanceSquared <= combinedRadiusSquared;

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <SFML/Graphics.hpp>
 #include "../Collisions/BoundingVolume.h"
 #include "../Utilities/Utilities.h"
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <vector>
 
 enum Types
 {
@@ -36,6 +36,7 @@ public:
 
 	void SetPosition(const Point& pos);
 	Point GetPosition() { return m_aabb.GetPosition(); }
+
 	Point GetOrigin() { return m_aabb.GetOrigin(); }
 
 	BoundingBox* GetBoundingBox() { return &m_aabb; }
@@ -69,9 +70,9 @@ private:
 	int m_rowNum = -1;
 	int m_type = EMPTY;
 
-	BoundingBox m_aabb;
+	Line m_edge;
 	sf::Text m_text;
 	std::string m_id;
-	Line m_edge;
+	BoundingBox m_aabb;
 	sf::ConvexShape m_slope;
 };

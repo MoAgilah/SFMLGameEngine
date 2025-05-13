@@ -1,11 +1,12 @@
 #include "../Collisions/Grid.h"
+
+#include "../Game/Constants.h"
+#include "../Game/GameManager.h"
+#include "../Collisions/Tile.h"
 #include <format>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include "../Game/Constants.h"
-#include "../Game/GameManager.h"
-#include "../Collisions/Tile.h"
 
 Grid::Grid(int rows, int columns, const std::string& tileFilePaths)
 	: m_rows(rows), m_columns(columns)
@@ -58,7 +59,7 @@ void Grid::SetTilePosition()
 	}
 }
 
-void Grid::Render(sf::RenderWindow & window)
+void Grid::Render(sf::RenderWindow& window)
 {
 	for (auto& tile : m_grid)
 	{

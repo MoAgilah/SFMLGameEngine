@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
-#include <SFML/Graphics.hpp>
 #include "../Utilities/Utilities.h"
+#include <SFML/Graphics.hpp>
+#include <memory>
 
 enum class VolumeType
 {
@@ -81,8 +81,8 @@ private:
 	virtual Point GetSeparationVector(BoundingCircle* other) = 0;
 	virtual Point GetSeparationVector(BoundingCapsule* other) = 0;
 
-	VolumeType m_type = VolumeType::None;
 	std::unique_ptr<sf::Shape> m_shape;
+	VolumeType m_type = VolumeType::None;
 };
 
 class BoundingBox : public BoundingVolume
@@ -134,13 +134,13 @@ private:
 	Point GetSeparationVector(BoundingCircle* other) override;
 	Point GetSeparationVector(BoundingCapsule* other) override;
 
-	int m_boxNumber;
-	static int s_count;
 	Point m_size;
 	Point m_min;
 	Point m_max;
 	Point m_extents;
 	Point m_overlap;
+	int m_boxNumber;
+	static int s_count;
 };
 
 BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box);
@@ -186,9 +186,9 @@ private:
 	Point GetSeparationVector(BoundingCircle* other) override;
 	Point GetSeparationVector(BoundingCapsule* other) override;
 
+	float m_radius;
 	int m_circleNumber;
 	static int s_count;
-	float m_radius;
 };
 
 class BoundingCapsule : public BoundingVolume
@@ -240,12 +240,12 @@ private:
 	Point GetSeparationVector(BoundingCircle* other) override;
 	Point GetSeparationVector(BoundingCapsule* other) override;
 
-	int m_capsuleNumber;
-	static int s_count;
-	float m_radius;
 	float m_angle;
+	float m_radius;
 	float m_length;
 	Line m_segment;
+	static int s_count;
+	int m_capsuleNumber;
 	sf::CircleShape m_circle1;
 	sf::CircleShape m_circle2;
 };

@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../Code/Game/Constants.h"
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
 #include <memory>
-#include <SFML/Graphics.hpp>
-#include "../Code/Game/Constants.h"
 
 class Tile;
 
@@ -14,7 +14,7 @@ public:
 	Grid(int rows, int columns, const std::string& tileFilePaths = GameConstants::TileFilePaths);
 	~Grid() = default;
 
-	void Render(sf::RenderWindow & window);
+	void Render(sf::RenderWindow& window);
 
 	Tile* GetTile(int x, int y);
 	std::vector<std::shared_ptr<Tile>> GetGrid() { return m_grid; }
