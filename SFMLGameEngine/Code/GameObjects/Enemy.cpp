@@ -1,4 +1,5 @@
 #include "Enemy.h"
+
 #include "../Game/GameManager.h"
 
 Enemy::Enemy(const std::string& texID, const Point& boxSize, int maxLives)

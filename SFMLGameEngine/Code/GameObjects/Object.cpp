@@ -1,7 +1,8 @@
 #include "Object.h"
+
+#include "../Game/GameManager.h"
 #include <format>
 #include <iostream>
-#include "../Game/GameManager.h"
 
 int Object::s_objectNum = 0;
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
-#include <vector>
 #include "GameState.h"
 #include <SFML/Graphics.hpp>
+#include <string>
+#include <vector>
 
 class GameStateMgr
 {
@@ -25,5 +25,6 @@ public:
 	void Render();
 
 private:
+
 	std::vector<GameState*> m_vGameStates;
 };

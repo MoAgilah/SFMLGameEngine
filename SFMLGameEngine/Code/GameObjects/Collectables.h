@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../GameObjects/Object.h"
+#include "Object.h"
 #include "../Game/Timer.h"
 
 class Player;

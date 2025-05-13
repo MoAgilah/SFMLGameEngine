@@ -1,4 +1,5 @@
 #include "Collectables.h"
+
 #include "../Game/GameManager.h"
 
 StaticCollectable::StaticCollectable(const std::string& texId, const Point& boxSize, const Point& initPos)

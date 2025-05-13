@@ -1,4 +1,5 @@
 #include "Box.h"
+
 #include "../Game/GameManager.h"
 
 Box::Box(const std::string& texID, const Point& boxSize, const Point& initPos)

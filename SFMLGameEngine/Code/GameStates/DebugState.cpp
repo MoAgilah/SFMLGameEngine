@@ -1,4 +1,5 @@
 #include "DebugState.h"
+
 #include "../Game/Constants.h"
 
 DebugState::DebugState(GameManager* gameMgr)

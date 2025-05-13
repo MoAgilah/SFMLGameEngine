@@ -1,13 +1,14 @@
 #pragma once
 
-#include <string>
 #include <SFML/Graphics.hpp>
+#include <string>
 
 class GameState
 {
 public:
 	explicit GameState(std::string_view name)
-		: m_StateName(name) {}
+		: m_StateName(name) {
+	}
 
 	std::string_view GetStateName() const { return m_StateName; }
 	virtual ~GameState() = default;

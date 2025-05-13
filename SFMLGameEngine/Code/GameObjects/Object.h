@@ -1,13 +1,12 @@
 #pragma once
 
-#include <memory>
-#include <string>
-#include <SFML/Graphics.hpp>
-
 #include "../Collisions/BoundingVolume.h"
 #include "../Drawables/Sprite.h"
 #include "../Game/Constants.h"
 #include "../Game/PhysicsController.h"
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include <string>
 
 struct SpawnData
 {
@@ -81,15 +80,15 @@ public:
 
 private:
 
+	int m_objectID = 0;
+	static int s_objectNum;
 	std::string m_texID;
 	bool m_active = false;
 	bool m_direction = true;
-	int m_objectID = 0;
-	static int s_objectNum;
 	float m_restitution = 1;
 	SpawnData m_spawnData;
-	std::unique_ptr<BoundingVolume> m_colVolume;
 	std::unique_ptr<Sprite> m_sprite;
+	std::unique_ptr<BoundingVolume> m_colVolume;
 };
 
 class DynamicObject : public Object

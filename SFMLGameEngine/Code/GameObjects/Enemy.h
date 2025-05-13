@@ -1,8 +1,8 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "../Game/Timer.h"
 #include "../GameObjects/Object.h"
+#include <SFML/Graphics.hpp>
 
 class Player;
 
@@ -38,12 +38,12 @@ private:
 
 	virtual void Animate(float deltaTime) = 0;
 
+	int m_maxLives;
+	int m_numLives = 1;
 	bool m_isAlive = true;
 	bool m_airbourne = false;
 	bool m_invulnerable = false;
 	bool m_resetAllowed = false;
-	int m_numLives = 1;
-	int m_maxLives;
 	Timer m_airTimer;
 	Timer m_resetTimer;
 	Timer m_activationTimer;
