@@ -78,6 +78,9 @@ public:
 
 	virtual float GetRestitution() { return m_restitution; }
 
+	void SetScale(const Point& scale);
+	Point GetScale() const { return m_scale; }
+
 private:
 
 	int m_objectID = 0;
@@ -86,6 +89,7 @@ private:
 	bool m_active = false;
 	bool m_direction = true;
 	float m_restitution = 1;
+	Point m_scale = GameConstants::Scale;
 	SpawnData m_spawnData;
 	std::unique_ptr<Sprite> m_sprite;
 	std::unique_ptr<BoundingVolume> m_colVolume;

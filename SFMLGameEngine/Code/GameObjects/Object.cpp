@@ -11,6 +11,7 @@ Object::Object(const std::string& texID, float radius)
 {
 	m_sprite = std::make_unique<Sprite>(m_texID);
 	m_colVolume = std::make_unique<BoundingCircle>(radius);
+	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -20,6 +21,7 @@ Object::Object(const std::string& texID, const Point& boxSize)
 {
 	m_sprite = std::make_unique<Sprite>(m_texID);
 	m_colVolume = std::make_unique<BoundingBox>(boxSize);
+	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -29,6 +31,7 @@ Object::Object(const std::string& texID, float radius, float length, float angle
 {
 	m_sprite = std::make_unique<Sprite>(m_texID);
 	m_colVolume = std::make_unique<BoundingCapsule>(radius, length, angle);
+	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -38,6 +41,7 @@ Object::Object(const std::string& texID, const AnimationData& animData, float ra
 {
 	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingCircle>(radius);
+	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -47,6 +51,7 @@ Object::Object(const std::string& texID, const AnimationData& animData, const Po
 {
 	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingBox>(boxSize);
+	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -56,6 +61,7 @@ Object::Object(const std::string& texID, const AnimationData& animData, float ra
 {
 	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
 	m_colVolume = std::make_unique<BoundingCapsule>(radius, length, angle);
+	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -92,13 +98,19 @@ void Object::SetDirection(bool dir)
 	if (m_direction)
 	{
 		// flip X
-		m_sprite->SetScale(GameConstants::Scale);
+		m_sprite->SetScale(m_scale);
 	}
 	else
 	{
 		//unflip x
-		m_sprite->SetScale({ -GameConstants::Scale.x, GameConstants::Scale.y });
+		m_sprite->SetScale({ -m_scale.x, m_scale.y });
 	}
+}
+
+void Object::SetScale(const Point& scale)
+{
+	m_scale = scale;
+	m_sprite->SetScale(scale);
 }
 
 DynamicObject::DynamicObject(const std::string& texID, float radius)
