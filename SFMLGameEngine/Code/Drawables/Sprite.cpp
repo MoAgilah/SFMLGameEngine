@@ -23,6 +23,7 @@ void Sprite::SetTexture(const std::string& texId)
 		std::cout << e.what() << std::endl;
 	}
 
+	SetScale(GameConstants::Scale);
 	SetOrigin({ (float)m_sprite.getTexture()->getSize().x * 0.5f, (float)m_sprite.getTexture()->getSize().y * 0.5f });
 }
 
@@ -37,13 +38,18 @@ Point Sprite::GetSize() const
 	return Point(bounds.width, bounds.height);
 }
 
+void Sprite::SetScale(const Point& scale)
+{
+	m_scale = scale;
+	m_sprite.setScale(scale);
+}
+
 void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int currentAnim)
 {
 	m_frameSize = size;
 
 	//set first frame to display
 	SetTextureRect(sf::IntRect(currentFrame * m_frameSize.x, currentAnim * m_frameSize.y, m_frameSize.x, m_frameSize.y));
-	SetScale(GameConstants::Scale);
 	SetOrigin({ (float)m_frameSize.x / 2.f, (float)m_frameSize.y / 2.f });
 }
 

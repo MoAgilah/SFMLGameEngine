@@ -36,13 +36,15 @@ public:
 	sf::Vector2u GetTextureSize() const { return m_sprite.getTexture()->getSize(); }
 	void SetTextureRect(const sf::IntRect& rect) { m_sprite.setTextureRect(rect); }
 
-	void SetScale(const Point& factors) { m_sprite.setScale(factors); }
+	Point GetScale() const { return m_scale; }
+	void SetScale(const Point& factors);
 
 	sf::Vector2u GetFrameSize() const { return m_frameSize; }
 	void SetFrameSize(const sf::Vector2u& size, int currentFrame = 1, int currentAnim = 1);
 
 private:
 
+	Point m_scale;
 	std::string m_texID;
 	sf::Sprite m_sprite;
 	sf::Vector2u m_frameSize;
