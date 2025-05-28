@@ -8,7 +8,8 @@
 constexpr float EPSILON = std::numeric_limits<float>::epsilon() * 100;
 
 BoundingVolume::BoundingVolume(VolumeType type)
-	: m_type(type) {
+	: m_type(type), m_scale(GameConstants::Scale)
+{
 }
 
 void BoundingVolume::Render(sf::RenderWindow& window)
@@ -31,7 +32,7 @@ void BoundingVolume::Move(const Point& pos)
 void BoundingVolume::MakeCircleShape()
 {
 	m_shape = std::make_unique<sf::CircleShape>();
-	m_shape->setScale(GameConstants::Scale);
+	m_shape->setScale(m_scale);
 	m_shape->setFillColor(sf::Color::Transparent);
 	m_shape->setOutlineColor(sf::Color::Red);
 	m_shape->setOutlineThickness(2);
@@ -40,7 +41,7 @@ void BoundingVolume::MakeCircleShape()
 void BoundingVolume::MakeRectangleShape()
 {
 	m_shape = std::make_unique<sf::RectangleShape>();
-	m_shape->setScale(GameConstants::Scale);
+	m_shape->setScale(m_scale);
 	m_shape->setFillColor(sf::Color::Transparent);
 	m_shape->setOutlineColor(sf::Color::Red);
 	m_shape->setOutlineThickness(2);
@@ -96,8 +97,9 @@ BoundingBox::BoundingBox(BoundingCapsule* capsule)
 void BoundingBox::Reset(const Point& size)
 {
 	GetRect()->setSize(size);
-	m_extents[0] = (size.x * GameConstants::Scale.x) * 0.5f;
-	m_extents[1] = (size.y * GameConstants::Scale.y) * 0.5f;
+	auto scale = GetScale();
+	m_extents[0] = (size.x * scale.x) * 0.5f;
+	m_extents[1] = (size.y * scale.y) * 0.5f;
 	SetOrigin(size * 0.5f);
 }
 
@@ -211,6 +213,12 @@ Point BoundingBox::GetPoint(Side side)
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
 	}
+}
+
+void BoundingBox::SetScale(const Point& scale)
+{
+	BoundingVolume::SetScale(scale);
+	Reset(GetRect()->getSize());
 }
 
 bool BoundingBox::Intersects(BoundingBox* box)
@@ -485,12 +493,13 @@ BoundingCircle::BoundingCircle(float radius, const Point& pos)
 {
 	m_circleNumber = s_count++;
 	MakeCircleShape();
-	Reset(m_radius);
+	Reset(radius);
 	Update(pos);
 }
 
 void BoundingCircle::Reset(float radius)
 {
+	m_radius = radius * GetScale().x;
 	GetCircle()->setRadius(radius);
 	SetOrigin(Point(radius, radius));
 }
@@ -574,6 +583,12 @@ Point BoundingCircle::GetPoint(Side side)
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
 	}
+}
+
+void BoundingCircle::SetScale(const Point& scale)
+{
+	BoundingVolume::SetScale(scale);
+	Reset(GetCircle()->getRadius());
 }
 
 bool BoundingCircle::Intersects(BoundingBox* box)
@@ -728,25 +743,13 @@ BoundingCapsule::BoundingCapsule(float radius, const Line& segment)
 
 void BoundingCapsule::Reset(float radius, float length, float angle)
 {
-	m_length = length;
+	auto scale = GetScale();
+	m_length = length * scale.y;
+	m_radius = radius * scale.x;
 
 	auto rect = GetRect();
-	rect->setSize(Point(radius * 2.f, m_length));
-	rect->setOrigin(radius, m_length / 2.f);
-	rect->setRotation(angle);
-
-	m_circle1.setRadius(radius);
-	m_circle1.setOrigin(radius, radius);
-
-	m_circle2.setRadius(radius);
-	m_circle2.setOrigin(radius, radius);
-}
-
-void BoundingCapsule::Reset(float radius, float angle)
-{
-	auto rect = GetRect();
-	rect->setSize(Point(radius * 2.f, 150));
-	rect->setOrigin(radius, 75);
+	rect->setSize(Point(radius * 2.f, length));
+	rect->setOrigin(radius, length / 2.f);
 	rect->setRotation(angle);
 
 	m_circle1.setRadius(radius);
@@ -802,8 +805,9 @@ void BoundingCapsule::Update(const Point& pos)
 
 	Point corners[4];
 	auto size = GetRect()->getSize();
-	size.x *= GameConstants::Scale.x;
-	size.y *= GameConstants::Scale.y;
+	auto scale = GetScale();
+	size.x *= scale.x;
+	size.y *= scale.y;
 
 	CalculateRotatedRectangleCorners(corners, GetCenter(), size, m_angle);
 
@@ -1019,17 +1023,29 @@ Point BoundingCapsule::GetSeparationVector(BoundingCapsule* other)
 	return pnt::Normalize(displacement) * penetrationDepth;
 }
 
+void BoundingCapsule::SetScale(const Point& scale)
+{
+	BoundingVolume::SetScale(scale);
+	m_circle1.setScale(scale);
+	m_circle2.setScale(scale);
+	Reset(m_circle1.getRadius(), GetRect()->getSize().y, m_angle);
+}
+
 void BoundingCapsule::MakeCapsuleShape()
 {
 	MakeRectangleShape();
-	m_circle1.setScale(GameConstants::Scale);
 
 	m_circle1.setFillColor(sf::Color::Transparent);
 	m_circle1.setOutlineColor(sf::Color::Red);
 	m_circle1.setOutlineThickness(2);
 
-	m_circle2.setScale(GameConstants::Scale);
 	m_circle2.setFillColor(sf::Color::Transparent);
 	m_circle2.setOutlineColor(sf::Color::Red);
 	m_circle2.setOutlineThickness(2);
+}
+
+void BoundingVolume::SetScale(const Point& scale)
+{
+	m_scale = scale;
+	m_shape->setScale(scale);
 }

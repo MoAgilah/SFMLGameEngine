@@ -61,6 +61,9 @@ public:
 	sf::CircleShape* GetCircle() { return static_cast<sf::CircleShape*>(m_shape.get()); }
 	sf::RectangleShape* GetRect() { return static_cast<sf::RectangleShape*>(m_shape.get()); }
 
+	Point GetScale() const { return m_scale; }
+	virtual void SetScale(const Point& scale);
+
 protected:
 
 	void MakeCircleShape();
@@ -81,6 +84,7 @@ private:
 	virtual Point GetSeparationVector(BoundingCircle* other) = 0;
 	virtual Point GetSeparationVector(BoundingCapsule* other) = 0;
 
+	Point m_scale;
 	std::unique_ptr<sf::Shape> m_shape;
 	VolumeType m_type = VolumeType::None;
 };
@@ -115,6 +119,8 @@ public:
 
 	BoundingBox* Get() { return this; }
 	sf::CircleShape* GetCircle() = delete;
+
+	void SetScale(const Point& scale) override;
 
 protected:
 
@@ -169,6 +175,8 @@ public:
 	BoundingCircle* Get() { return this; }
 	sf::RectangleShape* GetRect() = delete;
 
+	void SetScale(const Point& scale) override;
+
 protected:
 
 	void MakeRectangleShape() = delete;
@@ -200,7 +208,6 @@ public:
 	BoundingCapsule(float radius, const Line& segment);
 	~BoundingCapsule() = default;
 
-	void Reset(float radius, float angle);
 	void Reset(float radius, float length, float angle);
 	void Render(sf::RenderWindow& window) override;
 
@@ -220,6 +227,8 @@ public:
 
 	BoundingCapsule* Get() { return this; }
 	sf::CircleShape* GetCircle() = delete;
+
+	void SetScale(const Point& scale) override;
 
 protected:
 

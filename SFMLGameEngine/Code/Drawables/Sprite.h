@@ -37,7 +37,7 @@ public:
 	void SetTextureRect(const sf::IntRect& rect) { m_sprite.setTextureRect(rect); }
 
 	Point GetScale() const { return m_scale; }
-	void SetScale(const Point& factors);
+	void SetScale(const Point& scale);
 
 	sf::Vector2u GetFrameSize() const { return m_frameSize; }
 	void SetFrameSize(const sf::Vector2u& size, int currentFrame = 1, int currentAnim = 1);

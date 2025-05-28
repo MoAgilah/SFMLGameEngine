@@ -111,6 +111,7 @@ void Object::SetScale(const Point& scale)
 {
 	m_scale = scale;
 	m_sprite->SetScale(scale);
+	m_colVolume->SetScale(scale);
 }
 
 DynamicObject::DynamicObject(const std::string& texID, float radius)
