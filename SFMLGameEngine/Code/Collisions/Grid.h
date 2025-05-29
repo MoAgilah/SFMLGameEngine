@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Code/Game/Constants.h"
+#include "../Game/Constants.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>

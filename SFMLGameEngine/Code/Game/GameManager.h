@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Timer.h"
 #include "Camera.h"
 #include "InputManager.h"
 #include "FontManager.h"
-#include "TextureManager.h"
 #include "ShaderManager.h"
 #include "SoundManager.h"
+#include "Timer.h"
+#include "TextureManager.h"
 #include "World.h"
 #include "../Collisions/CollisionManager.h"
 #include "../GameStates/GameStateMgr.h"

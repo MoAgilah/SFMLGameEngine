@@ -1,11 +1,9 @@
 ﻿#include "BoundingVolume.h"
 
+#include "CollisionManager.h"
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
 #include <numbers>
-
-// Epsilon value to handle floating-point precision issues
-constexpr float EPSILON = std::numeric_limits<float>::epsilon() * 100;
 
 constexpr float BUFFER = 0.01f;
 
@@ -283,7 +281,7 @@ bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Poin
 	}
 
 	Point v = vb - va;
-	if (std::abs(v.x) < EPSILON && std::abs(v.y) < EPSILON)
+	if (std::abs(v.x) < CollisionManager::EPSILON && std::abs(v.y) < CollisionManager::EPSILON)
 		return false;
 
 	tfirst = 0.0f;
@@ -291,7 +289,7 @@ bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Poin
 
 	for (int i = 0; i < 2; i++)
 	{
-		if (std::abs(v[i]) < EPSILON)
+		if (std::abs(v[i]) < CollisionManager::EPSILON)
 		{
 			if (box->m_max[i] < m_min[i] || box->m_min[i] > m_max[i])
 				return false;
@@ -323,7 +321,7 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 	Point relativeVelocity = vb - va;
 
 	// No movement → fall back to static check
-	if (pnt::lengthSquared(relativeVelocity) < EPSILON * EPSILON)
+	if (pnt::lengthSquared(relativeVelocity) < CollisionManager::EPSILON * CollisionManager::EPSILON)
 		return Intersects(circle);
 
 	// Treat the circle as a moving point by expanding the box by the radius
@@ -333,8 +331,8 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 	Point boxMax = GetMax() + Point(r, r);
 
 	Point invVelocity = {
-		std::abs(relativeVelocity.x) > EPSILON ? 1.f / relativeVelocity.x : 0.f,
-		std::abs(relativeVelocity.y) > EPSILON ? 1.f / relativeVelocity.y : 0.f
+		std::abs(relativeVelocity.x) > CollisionManager::EPSILON ? 1.f / relativeVelocity.x : 0.f,
+		std::abs(relativeVelocity.y) > CollisionManager::EPSILON ? 1.f / relativeVelocity.y : 0.f
 	};
 
 	float tEnterX = (boxMin.x - circle->GetPosition().x) * invVelocity.x;
@@ -353,7 +351,7 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 		return false;
 
 	// NEW: Don't allow overlaps starting right at t=0 (frame start)
-	if (entryTime <= EPSILON)
+	if (entryTime <= CollisionManager::EPSILON)
 		return false;
 
 	tfirst = std::max(0.f, entryTime);
@@ -649,13 +647,13 @@ bool BoundingCircle::IntersectsMoving(BoundingCircle* circle, const Point& va, c
 	Point v = vb - va; // Relative motion
 	float a = pnt::dot(v, v);
 
-	if (a < EPSILON) return false; // No relative motion
+	if (a < CollisionManager::EPSILON) return false; // No relative motion
 
 	float b = pnt::dot(v, s);
 	if (b >= 0.0f) return false; // Moving away
 
 	float c = pnt::dot(s, s) - r * r;
-	if (c < -EPSILON) // Initial overlap case
+	if (c < -CollisionManager::EPSILON) // Initial overlap case
 	{
 		tfirst = tlast = 0.0f;
 		return true;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Game/Timer.h"
-#include "../GameObjects/Object.h"
+#include "Object.h"
 #include <SFML/Graphics.hpp>
 
 class Player;

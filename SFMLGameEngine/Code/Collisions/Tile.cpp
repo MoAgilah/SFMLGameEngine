@@ -1,4 +1,4 @@
-#include "../Collisions/Tile.h"
+#include "Tile.h"
 
 #include "../Game/Constants.h"
 #include "../GameObjects/Object.h"

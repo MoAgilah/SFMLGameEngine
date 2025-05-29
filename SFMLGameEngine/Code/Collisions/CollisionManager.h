@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Collisions/BoundingVolume.h"
-#include "../Collisions/Grid.h"
-#include "../Collisions/Tile.h"
+#include "BoundingVolume.h"
+#include "Grid.h"
+#include "Tile.h"
 #include <SFML/Graphics.hpp>
 
 class Box;
@@ -31,6 +31,7 @@ public:
 	static std::vector<std::string> s_canCollideWithTile;
 	static std::vector<std::string> s_dynamicCollectables;
 	static std::vector<std::string> s_dynamicObject;
+	inline static const float EPSILON = std::numeric_limits<float>::epsilon() * 100;
 
 private:
 
