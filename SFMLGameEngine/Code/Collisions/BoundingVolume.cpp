@@ -326,7 +326,6 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 
 	// Treat the circle as a moving point by expanding the box by the radius
 	float r = circle->GetRadius();
-	// Treat circle as a moving point → expand the box by radius
 	Point boxMin = GetMin() - Point(r, r);
 	Point boxMax = GetMax() + Point(r, r);
 
@@ -346,19 +345,16 @@ bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, cons
 	float entryTime = std::max(tEnterX, tEnterY);
 	float exitTime = std::min(tExitX, tExitY);
 
-	// Reject early collisions and zero-time contacts
-	if (entryTime > exitTime || exitTime <= 0.f || entryTime >= 1.0f)
+	// Reject if exit before entry, or exit is in the past, or entry is too far in future
+	if (entryTime > exitTime || exitTime < -CollisionManager::EPSILON || entryTime > 1.0f)
 		return false;
 
-	// NEW: Don't allow overlaps starting right at t=0 (frame start)
-	if (entryTime <= CollisionManager::EPSILON)
-		return false;
-
+	// ✅ Allow t=0 contact as a valid collision
 	tfirst = std::max(0.f, entryTime);
 	tlast = std::min(1.f, exitTime);
 	return true;
-
 }
+
 
 bool BoundingBox::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
