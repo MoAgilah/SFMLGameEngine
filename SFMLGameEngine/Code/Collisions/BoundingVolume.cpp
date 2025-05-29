@@ -1,4 +1,4 @@
-#include "BoundingVolume.h"
+ï»¿#include "BoundingVolume.h"
 
 #include "../Game/Constants.h"
 #include "../Utilities/Utilities.h"
@@ -6,6 +6,8 @@
 
 // Epsilon value to handle floating-point precision issues
 constexpr float EPSILON = std::numeric_limits<float>::epsilon() * 100;
+
+constexpr float BUFFER = 0.01f;
 
 BoundingVolume::BoundingVolume(VolumeType type)
 	: m_type(type), m_scale(GameConstants::Scale)
@@ -274,83 +276,90 @@ bool BoundingBox::Intersects(BoundingCapsule* capsule)
 
 bool BoundingBox::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	// Exit early if ‘a’ and ‘b’ initially overlapping
 	if (Intersects(box))
 	{
 		tfirst = tlast = 0.0f;
 		return true;
 	}
 
-	// Use relative velocity; effectively treating ’a’ as stationary
 	Point v = vb - va;
+	if (std::abs(v.x) < EPSILON && std::abs(v.y) < EPSILON)
+		return false;
 
-	// Initialize times of first and last contact
 	tfirst = 0.0f;
 	tlast = 1.0f;
 
 	for (int i = 0; i < 2; i++)
 	{
+		if (std::abs(v[i]) < EPSILON)
+		{
+			if (box->m_max[i] < m_min[i] || box->m_min[i] > m_max[i])
+				return false;
+
+			continue;
+		}
+
 		if (v[i] < 0.0f)
 		{
-			if (box->m_max[i] < m_min[i]) return false; // Non intersecting and moving apart
-			if (m_max[i] < box->m_min[i]) tfirst = std::max((m_max[i] - box->m_min[i]) / v[i], tfirst);
-			if (box->m_max[i] > m_min[i]) tlast = std::min((m_min[i] - box->m_max[i]) / v[i], tlast);
+			if (box->m_max[i] < m_min[i] && v[i] <= 0.0f) return false;
+			if (m_max[i] <= box->m_min[i]) tfirst = std::max((m_max[i] - box->m_min[i]) / v[i], tfirst);
+			if (box->m_max[i] >= m_min[i]) tlast = std::min((m_min[i] - box->m_max[i]) / v[i], tlast);
 		}
-
-		if (v[i] > 0.0f)
+		else if (v[i] > 0.0f)
 		{
-			if (box->m_min[i] > m_max[i]) return false; // Non intersecting and moving apart
-			if (box->m_max[i] < m_min[i]) tfirst = std::max((m_min[i] - box->m_max[i]) / v[i], tfirst);
-			if (m_max[i] > box->m_min[i]) tlast = std::min((m_max[i] - box->m_min[i]) / v[i], tlast);
+			if (box->m_min[i] > m_max[i] && v[i] >= 0.0f) return false;
+			if (box->m_max[i] <= m_min[i]) tfirst = std::max((m_min[i] - box->m_max[i]) / v[i], tfirst);
+			if (m_max[i] >= box->m_min[i]) tlast = std::min((m_max[i] - box->m_min[i]) / v[i], tlast);
 		}
-
-		// No overlap possible if time of first contact occurs after time of last contact
-		if (tfirst > tlast) return false;
 	}
 
+	if (tfirst > tlast) return false;
 	return true;
 }
 
 bool BoundingBox::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	// Relative velocity (treat box as stationary)
-	Point v = vb - va;
+	// Calculate relative velocity: circle's motion relative to the box
+	Point relativeVelocity = vb - va;
 
-	BoundingBox expandedBox = { GetPosition() - Point(circle->GetRadius(), circle->GetRadius()),
-								(m_extents * 2) + Point(circle->GetRadius() * 2, circle->GetRadius() * 2) };
+	// No movement â†’ fall back to static check
+	if (pnt::lengthSquared(relativeVelocity) < EPSILON * EPSILON)
+		return Intersects(circle);
 
-	// Compute the time of collision using swept AABB test
+	// Treat the circle as a moving point by expanding the box by the radius
+	float r = circle->GetRadius();
+	// Treat circle as a moving point â†’ expand the box by radius
+	Point boxMin = GetMin() - Point(r, r);
+	Point boxMax = GetMax() + Point(r, r);
+
 	Point invVelocity = {
-		(v.x != 0) ? 1.0f / v.x : 0.0f,
-		(v.y != 0) ? 1.0f / v.y : 0.0f
+		std::abs(relativeVelocity.x) > EPSILON ? 1.f / relativeVelocity.x : 0.f,
+		std::abs(relativeVelocity.y) > EPSILON ? 1.f / relativeVelocity.y : 0.f
 	};
 
-	Point boxMin = expandedBox.GetMin();
-	Point boxMax = expandedBox.GetMax();
+	float tEnterX = (boxMin.x - circle->GetPosition().x) * invVelocity.x;
+	float tExitX = (boxMax.x - circle->GetPosition().x) * invVelocity.x;
+	if (invVelocity.x < 0.f) std::swap(tEnterX, tExitX);
 
-	Point tEnter = (boxMin - circle->GetPosition()) * invVelocity.x;
-	Point tExit = (boxMax - circle->GetPosition()) * invVelocity.y;
+	float tEnterY = (boxMin.y - circle->GetPosition().y) * invVelocity.y;
+	float tExitY = (boxMax.y - circle->GetPosition().y) * invVelocity.y;
+	if (invVelocity.y < 0.f) std::swap(tEnterY, tExitY);
 
-	if (invVelocity.x < 0) std::swap(tEnter.x, tExit.x);
-	if (invVelocity.y < 0) std::swap(tEnter.y, tExit.y);
+	float entryTime = std::max(tEnterX, tEnterY);
+	float exitTime = std::min(tExitX, tExitY);
 
-	// Find the latest entry time and the earliest exit time
-	float entryTime = std::max(tEnter.x, tEnter.y);
-	float exitTime = std::min(tExit.x, tExit.y);
-
-	// If the entry time is greater than the exit time, or the exit time is less than zero, no collision
-	if (entryTime > exitTime || exitTime < 0)
+	// Reject early collisions and zero-time contacts
+	if (entryTime > exitTime || exitTime <= 0.f || entryTime >= 1.0f)
 		return false;
 
-	// If entry time is between 0 and 1, there's a collision
-	if (entryTime >= 0 && entryTime <= 1)
-	{
-		tfirst = entryTime;
-		tlast = exitTime;
-		return true;
-	}
+	// NEW: Don't allow overlaps starting right at t=0 (frame start)
+	if (entryTime <= EPSILON)
+		return false;
 
-	return false;
+	tfirst = std::max(0.f, entryTime);
+	tlast = std::min(1.f, exitTime);
+	return true;
+
 }
 
 bool BoundingBox::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
@@ -360,56 +369,55 @@ bool BoundingBox::IntersectsMoving(BoundingCapsule* capsule, const Point& va, co
 
 Point BoundingBox::GetSeparationVector(BoundingBox* other)
 {
-	// Calculate delta (absolute difference in positions)
 	Point delta = other->GetPosition() - GetPosition();
-	delta = { std::abs(delta.x), std::abs(delta.y) };  // Make delta absolute
+	delta = { std::abs(delta.x), std::abs(delta.y) };
+	Point overlap = (other->GetExtents() + m_extents) - delta;
 
-	// Calculate overlap using provided formula
-	Point overlap = (other->m_extents + m_extents) - delta;
-
-	// Find the minimum translation direction
 	if (overlap.x < overlap.y)
 	{
-		// Push along X axis
 		float direction = (other->GetPosition().x < GetPosition().x) ? -1.0f : 1.0f;
-		return { overlap.x * direction, 0 };
+		return { (overlap.x + BUFFER) * direction, 0 };
 	}
 	else
 	{
-		// Push along Y axis
 		float direction = (other->GetPosition().y < GetPosition().y) ? -1.0f : 1.0f;
-		return { 0, overlap.y * direction };
+		return { 0, (overlap.y + BUFFER) * direction };
 	}
 }
 
 Point BoundingBox::GetSeparationVector(BoundingCircle* other)
 {
 	Point circlePos = other->GetPosition();
-
-	// Find the closest point on the AABB to the circle's center
 	Point closestPoint = {
 		std::max(m_min.x, std::min(circlePos.x, m_max.x)),
 		std::max(m_min.y, std::min(circlePos.y, m_max.y))
 	};
 
-	// Compute the vector from the closest point to the circle's center
 	Point displacement = circlePos - closestPoint;
 	float distance = pnt::length(displacement);
-
-	// Calculate the penetration depth
 	float penetrationDepth = other->GetRadius() - distance;
 
-	pnt::Normalize(displacement)* penetrationDepth;
+	// If overlapping and distance is meaningful
+	if (penetrationDepth > 0.f && distance > std::numeric_limits<float>::epsilon())
+	{
+		return pnt::Normalize(displacement) * (penetrationDepth + BUFFER);
+	}
 
-	// Get the separation vector by normalizing the displacement and scaling by penetration depth
-	return pnt::Normalize(displacement) * penetrationDepth;
+	// If the circle's center is inside the box (distance â‰ˆ 0), pick an arbitrary direction
+	if (distance <= std::numeric_limits<float>::epsilon())
+	{
+		// Choose vertical push direction based on position relative to box center
+		float pushDir = (circlePos.y < m_center.y) ? -1.f : 1.f;
+		return Point(0.f, pushDir * (other->GetRadius() + BUFFER));
+	}
+
+	// No collision
+	return Point(0.f, 0.f);
 }
 
 Point BoundingBox::GetSeparationVector(BoundingCapsule* other)
 {
-	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
-
-	// Use AABB vs Circle logic with closest point as the "circle center"
+	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetCenter());
 	Point clampedPoint = {
 		std::max(m_min.x, std::min(closestPoint.x, m_max.x)),
 		std::max(m_min.y, std::min(closestPoint.y, m_max.y))
@@ -417,9 +425,21 @@ Point BoundingBox::GetSeparationVector(BoundingCapsule* other)
 
 	Point displacement = closestPoint - clampedPoint;
 	float distance = pnt::length(displacement);
-
 	float penetrationDepth = other->GetRadius() - distance;
-	return pnt::Normalize(displacement) * penetrationDepth;
+
+	if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
+		return pnt::Normalize(displacement) * (penetrationDepth + BUFFER);
+
+	if (distance <= std::numeric_limits<float>::epsilon())
+	{
+		Point centerDelta = other->GetPosition() - GetCenter();
+		if (std::abs(centerDelta.y) > std::abs(centerDelta.x))
+			return { 0.f, (centerDelta.y > 0.f ? 1.f : -1.f) * (other->GetRadius() + BUFFER) };
+		else
+			return { (centerDelta.x > 0.f ? 1.f : -1.f) * (other->GetRadius() + BUFFER), 0.f };
+	}
+
+	return { 0.f, 0.f };
 }
 
 BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
@@ -673,29 +693,32 @@ Point BoundingCircle::GetSeparationVector(BoundingCircle* other)
 	Point displacement = other->GetPosition() - GetPosition();
 	float distance = pnt::length(displacement);
 	float radiusSum = other->GetRadius() + GetRadius();
-
-	// Compute the penetration depth
 	float penetrationDepth = radiusSum - distance;
 
-	// Compute the separation vector (normalize displacement and scale by penetration)
-	return pnt::Normalize(displacement) * penetrationDepth;
+	if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
+		return pnt::Normalize(displacement) * (penetrationDepth + BUFFER);
+
+	if (distance <= std::numeric_limits<float>::epsilon())
+		return { 0.f, (other->GetPosition().y > GetPosition().y ? 1.f : -1.f) * (radiusSum + BUFFER) };
+
+	return { 0.f, 0.f };
 }
 
 Point BoundingCircle::GetSeparationVector(BoundingCapsule* other)
 {
-	// Find the closest point on the capsule's segment to the circle
 	Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
-
-	// Use Circle vs Circle logic with the closest point as the "capsule circle centre"
 	Point displacement = GetPosition() - closestPoint;
 	float distance = pnt::length(displacement);
 	float radiusSum = GetRadius() + other->GetRadius();
-
-	// Compute the penetration depth
 	float penetrationDepth = radiusSum - distance;
 
-	// Compute the separation vector (normalize displacement and scale by penetration)
-	return pnt::Normalize(displacement) * penetrationDepth;
+	if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
+		return pnt::Normalize(displacement) * (penetrationDepth + BUFFER);
+
+	if (distance <= std::numeric_limits<float>::epsilon())
+		return { 0.f, (GetPosition().y > other->GetPosition().y ? 1.f : -1.f) * (radiusSum + BUFFER) };
+
+	return { 0.f, 0.f };
 }
 
 int BoundingCapsule::s_count = 0;
@@ -1001,26 +1024,22 @@ Point BoundingCapsule::GetSeparationVector(BoundingCircle* other)
 
 Point BoundingCapsule::GetSeparationVector(BoundingCapsule* other)
 {
-	// Start with the naive approach: project each capsule's spine onto the other.
-	Point closest1 = m_segment.ClosestPointOnLineSegment(other->m_segment.start);
-	Point closest2 = other->m_segment.ClosestPointOnLineSegment(m_segment.start);
-
-	// Get the closest point on cap1 for the closest point found on cap2
+	Point closest1 = m_segment.ClosestPointOnLineSegment(other->GetSegment().start);
+	Point closest2 = other->GetSegment().ClosestPointOnLineSegment(closest1);
 	closest1 = m_segment.ClosestPointOnLineSegment(closest2);
 
-	// Get the closest point on cap2 for the closest point found on cap1
-	closest2 = other->m_segment.ClosestPointOnLineSegment(closest1);
-
-	// Use Circle vs Circle logic with the closest points as "capsule centres"
 	Point displacement = closest2 - closest1;
 	float distance = pnt::length(displacement);
 	float radiusSum = GetRadius() + other->GetRadius();
-
-	// Compute the penetration depth
 	float penetrationDepth = radiusSum - distance;
 
-	// Compute the separation vector (normalize displacement and scale by penetration)
-	return pnt::Normalize(displacement) * penetrationDepth;
+	if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
+		return pnt::Normalize(displacement) * (penetrationDepth + BUFFER);
+
+	if (distance <= std::numeric_limits<float>::epsilon())
+		return { 0.f, (other->GetPosition().y > GetPosition().y ? 1.f : -1.f) * (radiusSum + BUFFER) };
+
+	return { 0.f, 0.f };
 }
 
 void BoundingCapsule::SetScale(const Point& scale)

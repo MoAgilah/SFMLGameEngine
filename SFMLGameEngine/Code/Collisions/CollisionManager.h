@@ -46,11 +46,17 @@ private:
 
 	void PlayerToObjectCollisions(DynamicObject* ply, Object* obj);
 
+	void DynamicObjectToObjectCollisions(DynamicObject* obj1, Object* obj2);
+
 	void DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2);
 
 	virtual void PlayerToEnemyResolutions(DynamicObject* ply, Enemy* enmy);
 
 	virtual void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
+
+	virtual void ObjectToObjectResolution(Object* obj1, Object* obj2);
+
+	virtual void DynamicObjectToObjectResolution(DynamicObject* obj1, Object* obj2, float time);
 
 	virtual void DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2, float time);
 

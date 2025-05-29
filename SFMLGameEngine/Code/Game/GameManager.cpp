@@ -13,7 +13,7 @@ GameManager::GameManager()
 
 	m_world = std::make_unique<World>();
 
-	m_stateManager.ChangeState(new DebugState(this));
+	//m_stateManager.ChangeState(new DebugState(this));
 }
 
 GameManager::~GameManager()
