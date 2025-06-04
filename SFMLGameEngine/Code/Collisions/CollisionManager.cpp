@@ -144,29 +144,21 @@ void CollisionManager::ObjectToObjectCollisions(Object* obj1, Object* obj2)
 	else if (IsBoxObject(obj1->GetID()))
 	{
 		if (obj1->Intersects(obj2))
-		{
 			DynamicObjectToBoxResolutions((DynamicObject*)obj2, (Box*)obj1);
-		}
 	}
 	else if (IsBoxObject(obj2->GetID()))
 	{
 		if (obj2->Intersects(obj1))
-		{
 			DynamicObjectToBoxResolutions((DynamicObject*)obj1, (Box*)obj2);
-		}
 	}
 	else
 	{
 		if (IsDynamicObject(obj1->GetID()))
 		{
 			if (IsDynamicObject(obj2->GetID()))
-			{
 				DynamicObjectToDynamicObjectCollisions((DynamicObject*)obj1, (DynamicObject*)obj2);
-			}
 			else
-			{
 				DynamicObjectToObjectCollisions((DynamicObject*)obj1, obj2);
-			}
 		}
 		else
 		{
@@ -175,9 +167,7 @@ void CollisionManager::ObjectToObjectCollisions(Object* obj1, Object* obj2)
 			else
 			{
 				if (obj1->Intersects(obj2))
-				{
 					ObjectToObjectResolution(obj1, obj2);
-				}
 			}
 		}
 	}
@@ -188,9 +178,7 @@ void CollisionManager::PlayerToObjectCollisions(DynamicObject* ply, Object* obj)
 	if (IsBoxObject(obj->GetID()))
 	{
 		if (obj->Intersects(ply))
-		{
 			DynamicObjectToBoxResolutions(ply, (Box*)obj);
-		}
 	}
 	else if (IsCollectableObject(obj->GetID()))
 	{
@@ -214,13 +202,9 @@ void CollisionManager::PlayerToObjectCollisions(DynamicObject* ply, Object* obj)
 	else
 	{
 		if (IsDynamicObject(obj->GetID()))
-		{
 			DynamicObjectToDynamicObjectCollisions(ply, (DynamicObject*)obj);
-		}
 		else
-		{
 			DynamicObjectToObjectCollisions(ply, obj);
-		}
 	}
 }
 
@@ -256,44 +240,10 @@ void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj
 	// add special instruction for dynamic object to dynamic object resolution
 }
 
-//void CollisionManager::DynamicObjectToBoxResolutions(Direction dirOfTravel, const Point& prevOverlap, DynamicObject* obj, BoundingBox* box, bool resolveUpDir)
-//{
-//	// the collision came from a horizontal direction
-//	if (prevOverlap.y > 0)
-//	{
-//		// there is no collision vertically
-//		if (prevOverlap.x <= 0)
-//		{
-//			ResolveObjectToBoxHorizontally(obj, box);
-//			return;
-//		}
-//	}
-//
-//	// the collision came from a vertical direction
-//	if (prevOverlap.x > 0)
-//	{
-//		if (dirOfTravel == Direction::UDIR)
-//		{
-//			if (resolveUpDir)
-//			{
-//				// collision came from the bottom
-//				if (prevOverlap.x > prevOverlap.y)
-//				{
-//					ResolveObjectToBoxBottom(obj, box);
-//					return;
-//				}
-//			}
-//		}
-//		else
-//		{
-//			ResolveObjectToBoxTop(obj, box);
-//		}
-//	}
-//}
-
 void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2)
 {
 	float tFirst, tLast = 0;
+
 	if (obj1->GetColVolume()->IntersectsMoving(obj2->GetColVolume(), obj1->GetVelocity(), obj2->GetVelocity(), tFirst, tLast))
 		DynamicObjectToDynamicObjectResolution(obj1, obj2, tFirst);
 }
