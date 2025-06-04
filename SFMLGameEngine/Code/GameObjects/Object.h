@@ -39,8 +39,9 @@ public:
 	virtual void Update(float deltaTime) = 0;
 	virtual void Render(sf::RenderWindow& window);
 
+	virtual bool IsDynamicObject() { return false; }
 	virtual bool Intersects(Object* obj);
-	virtual bool Intersects(DynamicObject* obj);
+	virtual bool Intersects(DynamicObject* obj, float& tFirst, float& tLast);
 
 	virtual void Reset();
 
@@ -106,7 +107,9 @@ public:
 	DynamicObject(const std::string& texID, const AnimationData& animData, float radius, float length, float angle);
 	~DynamicObject() override = default;
 
-	bool Intersects(DynamicObject* obj) override;
+	bool IsDynamicObject() final { return true; }
+	bool Intersects(Object* obj) override;
+	bool Intersects(DynamicObject* obj, float& tFirst, float& tLast) override;
 
 	void Reset() override;
 

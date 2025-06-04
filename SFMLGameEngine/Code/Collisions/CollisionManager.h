@@ -29,8 +29,6 @@ public:
 	std::vector<Object*> GetCollidables();
 
 	static std::vector<std::string> s_canCollideWithTile;
-	static std::vector<std::string> s_dynamicCollectables;
-	static std::vector<std::string> s_dynamicObject;
 	inline static const float EPSILON = std::numeric_limits<float>::epsilon() * 100;
 
 private:
@@ -38,22 +36,13 @@ private:
 	bool CanCollideWithTile(const std::string& texID);
 	void SortCollidedTiles(std::vector<std::shared_ptr<Tile>> collidedWith);
 
-	bool IsDynamicCollectable(const std::string& texID);
-	bool IsDynamicObject(const std::string& texId);
-
 	void DynamicObjectToTileCollisions(DynamicObject* obj);
 
 	void ObjectToObjectCollisions(Object* obj1, Object* obj2);
 
-	void PlayerToObjectCollisions(DynamicObject* ply, Object* obj);
-
 	void DynamicObjectToObjectCollisions(DynamicObject* obj1, Object* obj2);
 
 	void DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2);
-
-	virtual void PlayerToEnemyResolutions(DynamicObject* ply, Enemy* enmy);
-
-	virtual void DynamicObjectToBoxResolutions(DynamicObject* ply, Box* box, bool resolveUpDir = true);
 
 	virtual void ObjectToObjectResolution(Object* obj1, Object* obj2);
 

@@ -79,9 +79,9 @@ bool Object::Intersects(Object* obj)
 	return m_colVolume->Intersects(obj->GetColVolume());
 }
 
-bool Object::Intersects(DynamicObject* obj)
+bool Object::Intersects(DynamicObject* obj, float& tFirst, float& tLast)
 {
-	return m_colVolume->Intersects(obj->GetColVolume());
+	return m_colVolume->IntersectsMoving(obj->GetColVolume(), Point(0, 0), obj->GetVelocity(), tFirst, tLast);
 }
 
 void Object::Reset()
@@ -150,9 +150,14 @@ DynamicObject::DynamicObject(const std::string& texID, const AnimationData& anim
 	m_physicsCtrl = std::make_unique<PhysicsController>();
 }
 
-bool DynamicObject::Intersects(DynamicObject* obj)
+bool DynamicObject::Intersects(Object* obj)
 {
-	float tFirst, tLast = 0;
+	float tFirst, tLast;
+	return obj->Intersects(this, tFirst, tLast);
+}
+
+bool DynamicObject::Intersects(DynamicObject* obj, float& tFirst, float& tLast)
+{
 	return GetColVolume()->IntersectsMoving(obj->GetColVolume(), GetVelocity(), obj->GetVelocity(), tFirst, tLast);
 }
 
