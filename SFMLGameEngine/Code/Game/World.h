@@ -19,7 +19,7 @@ public:
 
 	virtual void Update(float deltaTime);
 	void Render(sf::RenderWindow& window);
-	void ResetLevel();
+	virtual void ResetLevel();
 
 	void CheckIsInView();
 

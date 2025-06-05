@@ -39,6 +39,9 @@ sf::Keyboard::Key InputManager::GetFirstPressedKey(const std::vector<sf::Keyboar
 
 void InputManager::SetKeyPressed(sf::Keyboard::Key key)
 {
+	if (key == sf::Keyboard::Unknown)
+		return;
+
 	if (!m_keyStates[key]) // Only record the timestamp on first press
 		m_keyPressTimestamps[key] = std::chrono::steady_clock::now();
 
@@ -47,6 +50,9 @@ void InputManager::SetKeyPressed(sf::Keyboard::Key key)
 
 void InputManager::SetKeyReleased(sf::Keyboard::Key key)
 {
+	if (key == sf::Keyboard::Unknown)
+		return;
+
 	SetKeyState(key, false);
 	m_keyPressTimestamps[key] = std::chrono::steady_clock::time_point::min(); // Reset timestamp on release
 }
