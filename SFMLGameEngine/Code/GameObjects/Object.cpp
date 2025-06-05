@@ -84,6 +84,21 @@ bool Object::Intersects(DynamicObject* obj, float& tFirst, float& tLast)
 	return m_colVolume->IntersectsMoving(obj->GetColVolume(), Point(0, 0), obj->GetVelocity(), tFirst, tLast);
 }
 
+void Object::OnCollisionEnter(Object* obj)
+{
+	// actions to commit on collision enter
+}
+
+void Object::OnCollisionStay(Object* obj)
+{
+	// actions to commit whilst collision continues
+}
+
+void Object::OnCollisionExit(Object* obj)
+{
+	// actions to commit on collision exit
+}
+
 void Object::Reset()
 {
 	m_active = false;

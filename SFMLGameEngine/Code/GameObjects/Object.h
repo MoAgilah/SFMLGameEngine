@@ -43,6 +43,10 @@ public:
 	virtual bool Intersects(Object* obj);
 	virtual bool Intersects(DynamicObject* obj, float& tFirst, float& tLast);
 
+	virtual void OnCollisionEnter(Object* obj);
+	virtual void OnCollisionStay(Object* obj);
+	virtual void OnCollisionExit(Object* obj);
+
 	virtual void Reset();
 
 	int GetObjectNum() const { return m_objectID; }
