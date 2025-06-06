@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include <memory>
 
 enum Types
 {
@@ -71,7 +72,7 @@ private:
 	int m_type = EMPTY;
 
 	Line m_edge;
-	sf::Text m_text;
+	std::unique_ptr<sf::Text> m_text;
 	std::string m_id;
 	BoundingBox m_aabb;
 	sf::ConvexShape m_slope;

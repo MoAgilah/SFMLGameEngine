@@ -766,14 +766,14 @@ void BoundingCapsule::Reset(float radius, float length, float angle)
 
 	auto rect = GetRect();
 	rect->setSize(Point(radius * 2.f, length));
-	rect->setOrigin(radius, length / 2.f);
-	rect->setRotation(angle);
+	rect->setOrigin({ radius, length / 2.f });
+	rect->setRotation(sf::degrees(angle));
 
 	m_circle1.setRadius(radius);
-	m_circle1.setOrigin(radius, radius);
+	m_circle1.setOrigin({ radius, radius });
 
 	m_circle2.setRadius(radius);
-	m_circle2.setOrigin(radius, radius);
+	m_circle2.setOrigin({ radius, radius });
 }
 
 void BoundingCapsule::Render(sf::RenderWindow& window)

@@ -14,6 +14,8 @@ Tile::Tile()
 Tile::Tile(int x, int y, sf::Font* font)
 	: m_hasFont(true)
 {
+	m_text = std::make_unique<sf::Text>(*font, std::format("{}\n{}", m_colNum, m_rowNum), 12);
+
 	m_colNum = x;
 	m_rowNum = y;
 
@@ -21,11 +23,8 @@ Tile::Tile(int x, int y, sf::Font* font)
 
 	m_aabb.SetOutlineColour(sf::Color::Black);
 
-	m_text.setFont(*font);
-	m_text.setCharacterSize(12);
-	m_text.setOrigin(6, 6);
-	m_text.setStyle(sf::Text::Bold);
-	m_text.setString(std::format("{}\n{}", m_colNum, m_rowNum));
+	m_text->setOrigin({ 6, 6 });
+	m_text->setStyle(sf::Text::Bold);
 }
 
 bool Tile::Intersects(DynamicObject* obj)
@@ -196,7 +195,7 @@ void Tile::SetPosition(const Point& pos)
 		m_edge.end = m_edge.start - Point(0, GetTileHeight());
 	}
 
-	m_text.setPosition(m_aabb.GetPosition().x - 10.f, m_aabb.GetPosition().y - 7.5f);
+	m_text->setPosition({ m_aabb.GetPosition().x - 10.f, m_aabb.GetPosition().y - 7.5f });
 }
 
 void Tile::Render(sf::RenderWindow& window)
@@ -212,13 +211,19 @@ void Tile::Render(sf::RenderWindow& window)
 		line[1].position = m_edge.end;
 		line[1].color = sf::Color::Red;
 
-		window.draw(line, 2, sf::Lines);
+		window.draw(line, 2, sf::PrimitiveType::Lines);
 	}
 
 	m_aabb.Render(window);
 
 	if (m_hasFont)
-		window.draw(m_text);
+	{
+		const sf::Text* text = m_text.get();
+		if (text)
+		{
+			window.draw(*text);
+		}
+	}
 }
 
 Point Tile::GetSeperationVector(DynamicObject* obj)

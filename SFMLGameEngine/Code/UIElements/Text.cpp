@@ -4,7 +4,7 @@
 
 Point CalculateTextOrigin(const sf::FloatRect& bounds)
 {
-	return { bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f };
+	return { bounds.position.x + bounds.size.x / 2.f, bounds.position.x + bounds.size.y / 2.f };
 }
 
 Point SetTextPosition(TextAlignment alignment, const Point& pos, const sf::FloatRect& bounds)
@@ -12,13 +12,13 @@ Point SetTextPosition(TextAlignment alignment, const Point& pos, const sf::Float
 	switch (alignment)
 	{
 	case LeftHand:
-		return { pos.x, pos.y - bounds.height / 2.f };
+		return { pos.x, pos.y - bounds.size.y / 2.f };
 	case Center:
-		return { pos.x - bounds.width / 2.f - bounds.left,
-			pos.y - bounds.height / 2.f };
+		return { pos.x - bounds.size.x / 2.f - bounds.position.x,
+			pos.y - bounds.size.y / 2.f };
 	case RightHand:
-		return { pos.x - bounds.width - bounds.left,
-			pos.y - bounds.height / 2.f };
+		return { pos.x - bounds.size.x - bounds.position.x,
+			pos.y - bounds.size.y / 2.f };
 		break;
 	default:
 		CalculateTextOrigin(bounds);
@@ -27,9 +27,8 @@ Point SetTextPosition(TextAlignment alignment, const Point& pos, const sf::Float
 }
 
 Text::Text(const TextConfig& config)
-	: m_config(config)
+	: m_config(config), m_text(*GameManager::Get()->GetFontMgr().GetFont(config.m_fontName))
 {
-	m_text.setFont(*GameManager::Get()->GetFontMgr().GetFont(config.m_fontName));
 }
 
 void Text::Update(float deltaTime)
@@ -74,7 +73,7 @@ Point Text::GetPosition()
 Point Text::GetSize()
 {
 	sf::FloatRect bounds = m_text.getLocalBounds();
-	return Point(bounds.width, bounds.height);
+	return Point(bounds.size.x, bounds.size.y);
 }
 
 void Text::SetCharSize(unsigned int charSize)

@@ -46,6 +46,20 @@ inline void ResourceLoader<T>::LoadResources(fs::path path)
 	}
 }
 
+template<>
+inline void ResourceLoader<sf::Font>::LoadResources(fs::path path)
+{
+	if (!fs::exists(path))
+		fs::create_directory(path);
+
+	for (const auto& entry : fs::directory_iterator(path))
+	{
+		auto filename = entry.path().filename().replace_extension().string();
+		m_resources.emplace(filename, std::make_unique<sf::Font>());
+		m_resources.find(filename)->second->openFromFile(entry.path().string());
+	}
+}
+
 namespace
 {
 	std::optional<sf::Shader::Type> ShaderTypeFromFileExtension(const std::string& fileExt)

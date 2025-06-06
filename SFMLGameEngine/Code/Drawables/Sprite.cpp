@@ -16,7 +16,7 @@ void Sprite::SetTexture(const std::string& texId)
 
 	try
 	{
-		m_sprite.setTexture(*GameManager::Get()->GetTextureMgr().GetTexture(m_texID), true);
+		m_sprite = std::make_unique<sf::Sprite>(*GameManager::Get()->GetTextureMgr().GetTexture(m_texID));
 	}
 	catch (const std::invalid_argument& e)
 	{
@@ -24,7 +24,7 @@ void Sprite::SetTexture(const std::string& texId)
 	}
 
 	SetScale(GameConstants::Scale);
-	SetOrigin({ (float)m_sprite.getTexture()->getSize().x * 0.5f, (float)m_sprite.getTexture()->getSize().y * 0.5f });
+	SetOrigin(Point(m_sprite->getTexture().getSize()) * 0.5f);
 }
 
 void Sprite::Update(float dt)
@@ -32,16 +32,24 @@ void Sprite::Update(float dt)
 	// does nothing
 }
 
+void Sprite::Render(sf::RenderWindow& window) const
+{
+	const sf::Sprite* sprite = m_sprite.get();
+	if (sprite) {
+		window.draw(*sprite);
+	}
+}
+
 Point Sprite::GetSize() const
 {
-	auto bounds = m_sprite.getGlobalBounds();
-	return Point(bounds.width, bounds.height);
+	auto bounds = m_sprite->getGlobalBounds();
+	return Point(bounds.size);
 }
 
 void Sprite::SetScale(const Point& scale)
 {
 	m_scale = scale;
-	m_sprite.setScale(scale);
+	m_sprite->setScale(scale);
 }
 
 void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int currentAnim)
@@ -49,7 +57,13 @@ void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int curren
 	m_frameSize = size;
 
 	//set first frame to display
-	SetTextureRect(sf::IntRect(currentFrame * m_frameSize.x, currentAnim * m_frameSize.y, m_frameSize.x, m_frameSize.y));
+	int left = static_cast<int>(currentFrame * m_frameSize.x);
+	int top = static_cast<int>(currentAnim * m_frameSize.y);
+	int width = static_cast<int>(m_frameSize.x);
+	int height = static_cast<int>(m_frameSize.y);
+
+	SetTextureRect(sf::IntRect(sf::Vector2i(left, top),
+		sf::Vector2i(width, height)));
 	SetOrigin({ (float)m_frameSize.x / 2.f, (float)m_frameSize.y / 2.f });
 }
 
@@ -100,8 +114,13 @@ void AnimatedSprite::Update(float dt)
 			}
 		}
 
-		//set new frame
-		SetTextureRect(sf::IntRect(m_frame.m_current * GetFrameSize().x, m_animation.m_current * GetFrameSize().y, GetFrameSize().x, GetFrameSize().y));
+		int left = static_cast<int>(m_frame.m_current * GetFrameSize().x);
+		int top = static_cast<int>(m_animation.m_current * GetFrameSize().y);
+		int width = static_cast<int>(GetFrameSize().x);
+		int height = static_cast<int>(GetFrameSize().y);
+
+		SetTextureRect(sf::IntRect(sf::Vector2i(left, top),
+			sf::Vector2i(width, height)));
 	}
 }
 

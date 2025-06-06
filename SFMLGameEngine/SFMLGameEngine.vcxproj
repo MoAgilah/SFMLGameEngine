@@ -97,18 +97,16 @@
     <ClInclude Include="Code\Utilities\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\openal32.dll" />
-    <None Include="bin\Debug\sfml-audio-d-2.dll" />
-    <None Include="bin\Debug\sfml-graphics-d-2.dll" />
-    <None Include="bin\Debug\sfml-network-d-2.dll" />
-    <None Include="bin\Debug\sfml-system-d-2.dll" />
-    <None Include="bin\Debug\sfml-window-d-2.dll" />
-    <None Include="bin\Release\openal32.dll" />
-    <None Include="bin\Release\sfml-audio-2.dll" />
-    <None Include="bin\Release\sfml-graphics-2.dll" />
-    <None Include="bin\Release\sfml-network-2.dll" />
-    <None Include="bin\Release\sfml-system-2.dll" />
-    <None Include="bin\Release\sfml-window-2.dll" />
+    <None Include="bin\Debug\sfml-audio-d-3.dll" />
+    <None Include="bin\Debug\sfml-graphics-d-3.dll" />
+    <None Include="bin\Debug\sfml-network-d-3.dll" />
+    <None Include="bin\Debug\sfml-system-d-3.dll" />
+    <None Include="bin\Debug\sfml-window-d-3.dll" />
+    <None Include="bin\Release\sfml-audio-3.dll" />
+    <None Include="bin\Release\sfml-graphics-3.dll" />
+    <None Include="bin\Release\sfml-network-3.dll" />
+    <None Include="bin\Release\sfml-system-3.dll" />
+    <None Include="bin\Release\sfml-window-3.dll" />
     <None Include="Resources\Shaders\FadeInOutShader.frag" />
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +231,7 @@ $(VC_ReferencesPath_x64);</ReferencePath>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/VERBOSE:LIB %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"\bin\Debug\*.DLL "$(TargetDir)" /D /K /Y</Command>

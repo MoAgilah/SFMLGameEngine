@@ -11,6 +11,7 @@ public:
 	Point();
 	Point(float x, float y);
 	Point(const sf::Vector2f& vec);
+	Point(const sf::Vector2u& vec);
 	~Point() = default;
 
 	float& operator[] (std::size_t index);

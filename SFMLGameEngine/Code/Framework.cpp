@@ -19,8 +19,10 @@ int FrameWork::Run()
 	const float subStepDt = dt / static_cast<float>(subSteps);
 
 	auto& window = m_gameMgr.GetRenderWindow();
-	window.create(sf::VideoMode(static_cast<int>(GameConstants::ScreenDim.x),
-		static_cast<int>(GameConstants::ScreenDim.y)),
+	window.create(sf::VideoMode(sf::Vector2u{
+        static_cast<unsigned>(GameConstants::ScreenDim.x),
+        static_cast<unsigned>(GameConstants::ScreenDim.y)
+    }),
 		GameConstants::WindowTitle);
 
 	window.setFramerateLimit(static_cast<int>(GameConstants::FPS));
@@ -31,23 +33,26 @@ int FrameWork::Run()
 	while (window.isOpen())
 	{
 		// Process events
-		sf::Event event;
-		while (window.pollEvent(event))
+		while (auto event = window.pollEvent())
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.has_value())
 			{
-				window.close();
-			}
-			else if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.key.code == sf::Keyboard::Escape)
-					window.close();
 
-				m_gameMgr.GetInputManager().ProcessKeyPressedEvent(event);
-			}
-			else if (event.type == sf::Event::KeyReleased)
-			{
-				m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(event);
+				if (event->is<sf::Event::Closed>())
+				{
+					window.close();
+				}
+				else if (auto keyPressed = event->getIf<sf::Event::KeyPressed>())
+				{
+					if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+						window.close();
+
+					m_gameMgr.GetInputManager().ProcessKeyPressedEvent(keyPressed);
+				}
+				else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+				{
+					m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(keyReleased);
+				}
 			}
 		}
 

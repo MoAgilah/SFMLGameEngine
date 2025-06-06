@@ -11,8 +11,8 @@ void MenuNav::HandleNavigation()
 {
 	auto& inputManager = GameManager::Get()->GetInputManager();
 
-	HandleDirection(inputManager.GetKeyState(m_ascKey), m_canAsc, -1);
-	HandleDirection(inputManager.GetKeyState(m_desKey), m_canDes, 1);
+	HandleDirection(inputManager.GetKeyState((int)m_ascKey), m_canAsc, -1);
+	HandleDirection(inputManager.GetKeyState((int)m_desKey), m_canDes, 1);
 }
 
 void MenuNav::ChangeNavKeys(sf::Keyboard::Key ascKey, sf::Keyboard::Key desKey)

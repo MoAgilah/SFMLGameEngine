@@ -18,6 +18,11 @@ Point::Point(const sf::Vector2f& vec)
 {
 }
 
+Point::Point(const sf::Vector2u& vec)
+	: x(vec.x), y(vec.y)
+{
+}
+
 float& Point::operator[](std::size_t index)
 {
 	switch (index)

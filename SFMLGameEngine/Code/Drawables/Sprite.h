@@ -6,6 +6,7 @@
 #include <span>
 #include <string>
 #include <vector>
+#include <memory>
 
 class Sprite
 {
@@ -19,22 +20,22 @@ public:
 	void SetTexture(const std::string& texId);
 
 	virtual void Update(float dt);
-	void Render(sf::RenderWindow& window) const { window.draw(m_sprite); }
+	void Render(sf::RenderWindow& window) const;
 
-	sf::Sprite* GetSprite() { return &m_sprite; }
+	sf::Sprite* GetSprite() { return m_sprite.get(); }
 
-	void Move(float x, float y) { m_sprite.move(x, y); }
+	void Move(float x, float y) { m_sprite->move({ x, y }); }
 
-	Point GetPosition() const { return m_sprite.getPosition(); }
-	void SetPosition(const Point& pos) { m_sprite.setPosition(pos); }
+	Point GetPosition() const { return m_sprite->getPosition(); }
+	void SetPosition(const Point& pos) { m_sprite->setPosition(pos); }
 
 	virtual Point GetSize() const;
 
-	Point GetOrigin() const { return m_sprite.getOrigin(); }
-	void SetOrigin(const Point& pos) { m_sprite.setOrigin(pos); }
+	Point GetOrigin() const { return m_sprite->getOrigin(); }
+	void SetOrigin(const Point& pos) { m_sprite->setOrigin(pos); }
 
-	sf::Vector2u GetTextureSize() const { return m_sprite.getTexture()->getSize(); }
-	void SetTextureRect(const sf::IntRect& rect) { m_sprite.setTextureRect(rect); }
+	sf::Vector2u GetTextureSize() const { return m_sprite->getTexture().getSize(); }
+	void SetTextureRect(const sf::IntRect& rect) { m_sprite->setTextureRect(rect); }
 
 	Point GetScale() const { return m_scale; }
 	void SetScale(const Point& scale);
@@ -46,7 +47,7 @@ private:
 
 	Point m_scale;
 	std::string m_texID;
-	sf::Sprite m_sprite;
+	std::unique_ptr<sf::Sprite> m_sprite;
 	sf::Vector2u m_frameSize;
 };
 
