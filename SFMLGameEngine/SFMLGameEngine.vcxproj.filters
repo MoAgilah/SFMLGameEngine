@@ -330,13 +330,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Resources\ReadMe.txt">
-      <Filter>Resource Files\Fonts</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <Font Include="Resources\Fonts\Arial.ttf">
       <Filter>Resource Files\Fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\ReadMe.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
