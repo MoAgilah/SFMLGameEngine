@@ -5,7 +5,8 @@
 #include <string>
 #include <map>
 #include <memory>
-#include<optional>
+#include <iostream>
+#include <optional>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -41,8 +42,16 @@ inline void ResourceLoader<T>::LoadResources(fs::path path)
 	for (const auto& entry : fs::directory_iterator(path))
 	{
 		auto filename = entry.path().filename().replace_extension().string();
-		m_resources.emplace(filename, std::make_unique<T>());
-		m_resources.find(filename)->second->loadFromFile(entry.path().string());
+		auto resource = std::make_unique<T>();
+
+		if (!resource->loadFromFile(entry.path().string()))
+		{
+			// Handle the error (log it, throw, continue, etc.)
+			std::cerr << "Failed to load resource: " << entry.path() << "\n";
+			continue;
+		}
+
+		m_resources.emplace(filename, std::move(resource));
 	}
 }
 
@@ -55,8 +64,15 @@ inline void ResourceLoader<sf::Font>::LoadResources(fs::path path)
 	for (const auto& entry : fs::directory_iterator(path))
 	{
 		auto filename = entry.path().filename().replace_extension().string();
-		m_resources.emplace(filename, std::make_unique<sf::Font>());
-		m_resources.find(filename)->second->openFromFile(entry.path().string());
+		auto font = std::make_unique<sf::Font>();
+
+		if (!font->openFromFile(entry.path().string()))
+		{
+			std::cerr << "Failed to load font: " << entry.path() << "\n";
+			continue; // or throw, or handle the error
+		}
+
+		m_resources.emplace(filename, std::move(font));
 	}
 }
 
@@ -93,10 +109,18 @@ inline void ResourceLoader<sf::Shader>::LoadResources(fs::path path)
 		if (type)
 		{
 			auto filename = entry.path().filename().replace_extension().string();
-			m_resources.emplace(filename, std::make_unique<sf::Shader>());
-			m_resources.find(filename)->second->loadFromFile(entry.path().string(), *type);
+			auto shader = std::make_unique<sf::Shader>();
+
+			if (!shader->loadFromFile(entry.path().string(), *type))
+			{
+				std::cerr << "Failed to load shader: " << entry.path() << "\n";
+				continue; // or throw, depending on your error policy
+			}
+
+			m_resources.emplace(filename, std::move(shader));
 		}
 	}
+
 }
 
 template<>
@@ -108,9 +132,17 @@ inline void ResourceLoader<sf::Music>::LoadResources(fs::path path)
 	for (const auto& entry : fs::directory_iterator(path))
 	{
 		auto filename = entry.path().filename().replace_extension().string();
-		m_resources.emplace(filename, std::make_unique<sf::Music>());
-		m_resources.find(filename)->second->openFromFile(entry.path().string());
+		auto music = std::make_unique<sf::Music>();
+
+		if (!music->openFromFile(entry.path().string()))
+		{
+			std::cerr << "Failed to load music: " << entry.path() << "\n";
+			continue; // or throw an exception, depending on your needs
+		}
+
+		m_resources.emplace(filename, std::move(music));
 	}
+
 }
 
 template<typename T>
