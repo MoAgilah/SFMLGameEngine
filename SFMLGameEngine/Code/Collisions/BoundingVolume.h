@@ -13,12 +13,12 @@ class BoundingBox;
 class BoundingCircle;
 class BoundingCapsule;
 
-enum Side
+enum class Side
 {
 	Left, Right, Top, Bottom
 };
 
-enum Direction
+enum class Direction
 {
 	LDIR, RDIR, UDIR, DDIR
 };

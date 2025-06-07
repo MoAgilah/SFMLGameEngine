@@ -23,17 +23,15 @@ void MenuItem::Update(float deltaTime)
 
 void MenuItem::Render(sf::RenderWindow& window)
 {
+#if defined _DEBUG
 	DebugRender(window);
+#endif
 
 	if (m_textElement)
-	{
 		m_textElement->Render(window);
-	}
 
 	if (m_spriteElement)
-	{
 		m_spriteElement->Render(window);
-	}
 }
 
 Text* MenuItem::AddTextElement(Text* text)

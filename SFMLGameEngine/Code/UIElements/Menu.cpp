@@ -51,7 +51,9 @@ void Menu::Update(float deltaTime)
 
 void Menu::Render(sf::RenderWindow& window)
 {
+#if defined _DEBUG
 	DebugRender(window);
+#endif
 
 	for (auto& row : m_rows)
 	{

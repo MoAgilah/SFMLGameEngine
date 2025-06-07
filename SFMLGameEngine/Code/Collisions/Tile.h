@@ -7,7 +7,7 @@
 #include <vector>
 #include <memory>
 
-enum Types
+enum class Types
 {
 	EMPTY, GRND, WALL, DIAGU, DIAGD, LCRN, RCRN, OWAY
 };
@@ -29,8 +29,8 @@ public:
 	int GetRowNum() const { return m_rowNum; }
 	int GetColNum() const { return m_colNum; }
 
-	void SetType(int type) { m_type = type; };
-	int GetType() const { return m_type; }
+	void SetType(int type) { m_type = (Types)type; };
+	Types GetType() const { return m_type; }
 
 	bool GetActive() const { return m_visible; }
 	void SetActive(bool vis) { m_visible = vis; }
@@ -69,7 +69,7 @@ private:
 	bool m_hasFont = false;
 	int m_colNum = -1;
 	int m_rowNum = -1;
-	int m_type = EMPTY;
+	Types m_type = Types::EMPTY;
 
 	Line m_edge;
 	std::unique_ptr<sf::Text> m_text;

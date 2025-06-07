@@ -2,10 +2,6 @@
 
 #include "../Game/Constants.h"
 #include "../Game/GameManager.h"
-#include "../GameObjects/Box.h"
-#include "../GameObjects/Enemy.h"
-#include "../GameObjects/Object.h"
-#include "../GameObjects/Collectables.h"
 #include "../Utilities/Utilities.h"
 #include <format>
 #include <algorithm>
@@ -19,10 +15,8 @@ CollisionManager::CollisionManager(int rows, int columns, const std::string& til
 {
 	for (auto& tile : m_grid.GetGrid())
 	{
-		if (tile->GetType() == EMPTY)
-			continue;
-
-		m_tiles.push_back(tile);
+		if (tile->GetType() != Types::EMPTY)
+			m_tiles.push_back(tile);
 	}
 }
 
@@ -33,12 +27,13 @@ void CollisionManager::AddCollidable(Object* go)
 
 void CollisionManager::RemoveLastAdded()
 {
-	m_collidables.pop_back();
+	if (!m_collidables.empty())
+		m_collidables.pop_back();
 }
 
 Object* CollisionManager::GetLastAdded()
 {
-	return m_collidables.back();
+	return m_collidables.empty() ? nullptr : m_collidables.back();
 }
 
 void CollisionManager::Render(sf::RenderWindow& window)
@@ -48,18 +43,24 @@ void CollisionManager::Render(sf::RenderWindow& window)
 
 void CollisionManager::ProcessCollisions(Object* gobj)
 {
+	if (!gobj)
+		return;
+
 	if (CanCollideWithTile(gobj->GetID()))
-		DynamicObjectToTileCollisions(dynamic_cast<DynamicObject*>(gobj));
-
-	for (size_t i = 0; i < m_collidables.size(); i++)
 	{
-		if (!m_collidables[i]->GetActive())
+		if (auto* dynObj = dynamic_cast<DynamicObject*>(gobj))
+			DynamicObjectToTileCollisions(dynObj);
+	}
+
+	for (Object* collidable : m_collidables)
+	{
+		if (!collidable || !collidable->GetActive())
 			continue;
 
-		if (gobj->GetObjectNum() == m_collidables[i]->GetObjectNum())
+		if (gobj->GetObjectNum() == collidable->GetObjectNum())
 			continue;
 
-		ObjectToObjectCollisions(gobj, m_collidables[i]);
+		ObjectToObjectCollisions(gobj, collidable);
 	}
 }
 
@@ -96,10 +97,11 @@ void CollisionManager::SortCollidedTiles(std::vector<std::shared_ptr<Tile>> coll
 
 void CollisionManager::DynamicObjectToTileCollisions(DynamicObject* obj)
 {
-	bool collided = false;
-	std::vector<std::shared_ptr<Tile>> collidedWith;
+	if (!obj)
+		return;
 
-	for (auto& tile : m_tiles)
+	std::vector<std::shared_ptr<Tile>> collidedWith;
+	for (const auto& tile : m_tiles)
 	{
 		if (!tile->GetActive())
 			continue;
@@ -108,46 +110,54 @@ void CollisionManager::DynamicObjectToTileCollisions(DynamicObject* obj)
 			collidedWith.push_back(tile);
 	}
 
-	if (collided = !collidedWith.empty())
+	if (!collidedWith.empty())
 	{
 		if (obj->GetDirection())
 			SortCollidedTiles(collidedWith);
 
-		for (auto& tile : collidedWith)
+		for (const auto& tile : collidedWith)
+		{
 			if (tile->Intersects(obj))
 				tile->ResolveCollision(obj);
+		}
 	}
 }
 
 void CollisionManager::ObjectToObjectCollisions(Object* obj1, Object* obj2)
 {
-	if (obj1->IsDynamicObject())
+	if (!obj1 || !obj2)
+		return;
+
+	const bool isDyn1 = obj1->IsDynamicObject();
+	const bool isDyn2 = obj2->IsDynamicObject();
+
+	if (isDyn1 && isDyn2)
 	{
-		if (obj2->IsDynamicObject())
-			DynamicObjectToDynamicObjectCollisions(dynamic_cast<DynamicObject*>(obj1), dynamic_cast<DynamicObject*>(obj2));
-		else
-			DynamicObjectToObjectCollisions(dynamic_cast<DynamicObject*>(obj1), obj2);
+		DynamicObjectToDynamicObjectCollisions(
+			dynamic_cast<DynamicObject*>(obj1),
+			dynamic_cast<DynamicObject*>(obj2));
+	}
+	else if (isDyn1)
+	{
+		DynamicObjectToObjectCollisions(dynamic_cast<DynamicObject*>(obj1), obj2);
+	}
+	else if (isDyn2)
+	{
+		DynamicObjectToObjectCollisions(dynamic_cast<DynamicObject*>(obj2), obj1);
 	}
 	else
 	{
-		if (obj2->IsDynamicObject())
-		{
-			DynamicObjectToObjectCollisions(dynamic_cast<DynamicObject*>(obj2), obj1);
-		}
-		else
-		{
-			if (obj1->Intersects(obj2))
-				ObjectToObjectResolution(obj1, obj2);
-		}
+		if (obj1->Intersects(obj2))
+			ObjectToObjectResolution(obj1, obj2);
 	}
 }
 
 void CollisionManager::DynamicObjectToObjectCollisions(DynamicObject* obj1, Object* obj2)
 {
-	if (!obj1)
+	if (!obj1 || !obj2)
 		return;
 
-	float tFirst, tLast = 0;
+	float tFirst, tLast;
 	if (obj2->Intersects(obj1, tFirst, tLast))
 		DynamicObjectToObjectResolution(obj1, obj2, tFirst);
 }
@@ -157,22 +167,22 @@ void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj
 	if (!obj1 || !obj2)
 		return;
 
-	float tFirst, tLast = 0;
+	float tFirst, tLast;
 	if (obj1->Intersects(obj2, tFirst, tLast))
 		DynamicObjectToDynamicObjectResolution(obj1, obj2, tFirst);
 }
 
 void CollisionManager::ObjectToObjectResolution(Object* obj1, Object* obj2)
 {
-	// add special instructions for object to object resolution
+	// Custom logic placeholder
 }
 
 void CollisionManager::DynamicObjectToObjectResolution(DynamicObject* obj1, Object* obj2, float time)
 {
-	// add special instruction for dynamic object to object resolution
+	// Custom logic placeholder
 }
 
 void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2, float time)
 {
-	// add special instruction for dynamic object to dynamic object resolution
+	// Custom logic placeholder
 }

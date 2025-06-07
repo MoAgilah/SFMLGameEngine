@@ -8,63 +8,68 @@
 #include <sstream>
 #include <algorithm>
 
-Grid::Grid(int rows, int columns, const std::string& tileFilePaths)
+Grid::Grid(int rows, int columns, const std::string & tileFilePaths)
 	: m_rows(rows), m_columns(columns)
 {
-	auto font = GameManager::Get()->GetFontMgr().GetFont("Standard");
+	const auto font = GameManager::Get()->GetFontMgr().GetFont("Standard");
+	m_grid.reserve(m_rows * m_columns);
 
-	//create grid for entire level
-	for (int y = 0; y < m_rows; y++)
+	for (int y = 0; y < m_rows; ++y)
 	{
-		for (int x = 0; x < m_columns; x++)
-			m_grid.push_back(std::make_shared<Tile>(x, y, font));
+		for (int x = 0; x < m_columns; ++x)
+			m_grid.emplace_back(std::make_shared<Tile>(x, y, font));
 	}
 
 	if (!m_grid.empty())
 	{
-		SetTileTypes(tileFilePaths);
-		SetTilePosition();
+		LoadTileTypes(tileFilePaths);
+		ArrangeTilePositions();
 	}
 }
 
-void Grid::SetTilePosition()
+void Grid::LoadTileTypes(const std::string& tileFilePaths)
 {
-	int x = 0;
-	int begin = x;
+	if (!std::filesystem::exists(tileFilePaths))
+		throw std::runtime_error("Tile file path does not exist: " + tileFilePaths);
 
-	//first row
-	Point pos(m_grid.front()->GetBoundingBox()->GetExtents());
-	m_grid[x]->SetPosition(pos);
+	std::ifstream inFile(tileFilePaths);
+	if (!inFile)
+		throw std::runtime_error("Failed to open tile file: " + tileFilePaths);
 
-	for (x = x + 1; x < m_columns; x++)
+	std::vector<int> types(std::istream_iterator<int>(inFile), {});
+	inFile.close();
+
+	if (types.size() != m_grid.size())
+		throw std::runtime_error("Mismatch between tile data and grid size.");
+
+	for (size_t i = 0; i < types.size(); ++i)
+		m_grid[i]->SetType(types[i]);
+}
+
+void Grid::ArrangeTilePositions()
+{
+	const auto tileSize = m_grid.front()->GetBoundingBox()->GetExtents();
+	Point pos = tileSize;
+
+	for (int y = 0; y < m_rows; ++y)
 	{
-		pos = Point(pos.x + (m_grid.front()->GetBoundingBox()->GetExtents().x * 2), pos.y);
-		m_grid[x]->SetPosition(pos);
-	}
-
-	//remaining rows
-	for (int i = 0; i < m_rows - 1; i++)
-	{
-		pos = Point(m_grid[begin]->GetPosition().x, m_grid[begin]->GetPosition().y + (m_grid.front()->GetBoundingBox()->GetExtents().y * 2));
-		m_grid[x]->SetPosition(pos);
-		begin = x;
-
-		int val = 2 + i;
-
-		for (x = x + 1; x < m_columns * val; x++)
+		for (int x = 0; x < m_columns; ++x)
 		{
-			pos = Point(pos.x + (m_grid.front()->GetBoundingBox()->GetExtents().x * 2), pos.y);
-			m_grid[x]->SetPosition(pos);
+			int index = y * m_columns + x;
+			Point tilePos{
+				tileSize.x + (x * tileSize.x * 2),
+				tileSize.y + (y * tileSize.y * 2)
+			};
+			m_grid[index]->SetPosition(tilePos);
 		}
 	}
 }
 
 void Grid::Render(sf::RenderWindow& window)
 {
-	for (auto& tile : m_grid)
+	for (const auto& tile : m_grid)
 	{
-		if (tile->GetActive())
-		{
+		if (tile->GetActive()) {
 #if _DEBUG
 			if (GameConstants::DRender)
 				tile->Render(window);
@@ -78,29 +83,12 @@ Tile* Grid::GetTile(int x, int y)
 	//create id
 	std::string id = std::format("{},{}", x, y);
 
-	auto it = std::find_if(m_grid.begin(), m_grid.end(), [id](auto n) { return n->GetID() == id; });
+	auto it = std::find_if(m_grid.begin(), m_grid.end(),
+		[id](const auto n) { return n->GetID() == id; });
+
 	if (it != m_grid.end())
 		return it->get();
 
 	//extract tile if tile exists
 	return nullptr;
-}
-
-void Grid::SetTileTypes(const std::string& tileFilePaths)
-{
-	std::ifstream inFile;
-	std::vector<int> types;
-
-	//extract tile types from text file
-	inFile.open(tileFilePaths);
-
-	int type;
-	while (inFile >> type)
-		types.push_back(type);
-
-	inFile.close();
-
-	//assign tile types
-	for (size_t i = 0; i < types.size(); i++)
-		m_grid[i]->SetType(types[i]);
 }

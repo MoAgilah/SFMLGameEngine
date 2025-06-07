@@ -42,5 +42,8 @@ void DebugState::Render()
 
 	m_gameMgr->GetCamera().Reset(window);
 	m_gameMgr->GetWorld()->Render(window);
+
+#if defined _DEBUG
 	m_gameMgr->GetCollisionMgr()->Render(window);
+#endif
 }

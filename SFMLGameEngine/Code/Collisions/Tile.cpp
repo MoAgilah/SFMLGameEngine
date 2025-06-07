@@ -42,7 +42,7 @@ void Tile::ResolveCollision(DynamicObject* obj)
 	{
 	case Types::OWAY:
 	{
-		if (dir == DDIR || dir == LDIR || dir == RDIR)
+		if (dir == Direction::DDIR || dir == Direction::LDIR || dir == Direction::RDIR)
 		{
 			BoundingCapsule capsule(6, tileTopEdge);
 			BoundingCircle circle(4, obj->GetBoundingBox()->GetPoint(Side::Bottom));
@@ -55,7 +55,7 @@ void Tile::ResolveCollision(DynamicObject* obj)
 		return;
 	}
 	case Types::GRND:
-		if (dir == DDIR || dir == LDIR || dir == RDIR)
+		if (dir == Direction::DDIR || dir == Direction::LDIR || dir == Direction::RDIR)
 		{
 			if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 				ResolveObjectToBoxTop(obj);
@@ -68,10 +68,10 @@ void Tile::ResolveCollision(DynamicObject* obj)
 		Point seperationVector = obj->GetColVolume()->GetSeparationVector(static_cast<BoundingVolume*>(&m_aabb));
 		Direction colDir = GetCollisionDirection(seperationVector, obj->GetVelocity(), Point());
 
-		if (dir == DDIR)
+		if (dir == Direction::DDIR)
 		{
 			// the collision came from a vertical direction
-			if (colDir == DDIR)
+			if (colDir == Direction::DDIR)
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 				{
@@ -82,13 +82,13 @@ void Tile::ResolveCollision(DynamicObject* obj)
 		}
 
 		// the collision came from a horizontal direction
-		if (colDir == LDIR || colDir == RDIR)
+		if (colDir == Direction::LDIR || colDir == Direction::RDIR)
 		{
 			ResolveObjectToBoxHorizontally(obj);
 		}
 		else
 		{
-			if (dir == LDIR || dir == RDIR)
+			if (dir == Direction::LDIR || dir == Direction::RDIR)
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 				{
@@ -107,21 +107,21 @@ void Tile::ResolveCollision(DynamicObject* obj)
 	{
 		switch (dir)
 		{
-		case DDIR:
+		case Direction::DDIR:
 			if (ResolveObjectToSlopeTop(obj))
 			{
 				if (!obj->GetShouldSlideLeft())
 					obj->SetShouldSlideLeft(true);
 			}
 			break;
-		case RDIR:
+		case Direction::RDIR:
 			if (ResolveObjectToSlopeIncline(obj, 0, 1))
 			{
 				if (!obj->GetShouldSlideLeft())
 					obj->SetShouldSlideLeft(true);
 			}
 			break;
-		case LDIR:
+		case Direction::LDIR:
 			if (ResolveObjectToSlopeDecline(obj, 1, 0))
 			{
 				if (!obj->GetShouldSlideLeft())
@@ -135,21 +135,21 @@ void Tile::ResolveCollision(DynamicObject* obj)
 	{
 		switch (dir)
 		{
-		case DDIR:
+		case Direction::DDIR:
 			if (ResolveObjectToSlopeTop(obj))
 			{
 				if (!obj->GetShouldSlideRight())
 					obj->SetShouldSlideRight(true);
 			}
 			break;
-		case LDIR:
+		case Direction::LDIR:
 			if (ResolveObjectToSlopeIncline(obj, 1, 0))
 			{
 				if (!obj->GetShouldSlideRight())
 					obj->SetShouldSlideRight(true);
 			}
 			break;
-		case RDIR:
+		case Direction::RDIR:
 			if (ResolveObjectToSlopeDecline(obj, 0, 1))
 			{
 				if (!obj->GetShouldSlideRight())
@@ -165,7 +165,7 @@ void Tile::ResolveCollision(DynamicObject* obj)
 void Tile::SetPosition(const Point& pos)
 {
 	m_aabb.Update(pos);
-	if (m_type == DIAGU)
+	if (m_type == Types::DIAGU)
 	{
 		m_slope.setPointCount(3);
 		m_slope.setPoint(0, m_aabb.GetPosition() + Point(-m_aabb.GetExtents().x, m_aabb.GetExtents().y));
@@ -174,7 +174,7 @@ void Tile::SetPosition(const Point& pos)
 		m_slope.setFillColor(sf::Color::Yellow);
 	}
 
-	if (m_type == DIAGD)
+	if (m_type == Types::DIAGD)
 	{
 		m_slope.setPointCount(3);
 		m_slope.setPoint(0, m_aabb.GetPosition() - Point(m_aabb.GetExtents().x, m_aabb.GetExtents().y));
@@ -183,13 +183,13 @@ void Tile::SetPosition(const Point& pos)
 		m_slope.setFillColor(sf::Color::Yellow);
 	}
 
-	if (m_type == LCRN)
+	if (m_type == Types::LCRN)
 	{
 		m_edge.start = m_aabb.GetMin() + Point(m_aabb.GetExtents().x * 2, 0);
 		m_edge.end = m_edge.start - Point(0, GetTileHeight());
 	}
 
-	if (m_type == RCRN)
+	if (m_type == Types::RCRN)
 	{
 		m_edge.start = m_aabb.GetMin();
 		m_edge.end = m_edge.start - Point(0, GetTileHeight());
@@ -200,10 +200,11 @@ void Tile::SetPosition(const Point& pos)
 
 void Tile::Render(sf::RenderWindow& window)
 {
-	if (m_type == DIAGU || m_type == DIAGD)
+#if defined _DEBUG
+	if (m_type == Types::DIAGU || m_type == Types::DIAGD)
 		window.draw(m_slope);
 
-	if (m_type == LCRN || m_type == RCRN)
+	if (m_type == Types::LCRN || m_type == Types::RCRN)
 	{
 		sf::Vertex line[2];
 		line[0].position = m_edge.start;
@@ -220,10 +221,9 @@ void Tile::Render(sf::RenderWindow& window)
 	{
 		const sf::Text* text = m_text.get();
 		if (text)
-		{
 			window.draw(*text);
-		}
 	}
+#endif
 }
 
 Point Tile::GetSeperationVector(DynamicObject* obj)
@@ -329,7 +329,7 @@ void Tile::ResolveObjectToEdgeBounds(DynamicObject* obj)
 		return;
 
 	Point side;
-	if (m_type == LCRN)
+	if (m_type == Types::LCRN)
 		side = obj->GetBoundingBox()->GetPoint(Side::Right);
 	else
 		side = obj->GetBoundingBox()->GetPoint(Side::Left);

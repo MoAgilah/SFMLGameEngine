@@ -5,7 +5,18 @@
 #include "../Utilities/Utilities.h"
 #include <numbers>
 
-constexpr float BUFFER = 0.01f;
+namespace
+{
+	constexpr float BUFFER = 0.01f;
+
+	void SetupShape(sf::Shape& shape, const Point& scale)
+	{
+		shape.setScale(scale);
+		shape.setFillColor(sf::Color::Transparent);
+		shape.setOutlineColor(sf::Color::Red);
+		shape.setOutlineThickness(2);
+	}
+}
 
 BoundingVolume::BoundingVolume(VolumeType type)
 	: m_type(type), m_scale(GameConstants::Scale)
@@ -19,8 +30,7 @@ void BoundingVolume::Render(sf::RenderWindow& window)
 
 void BoundingVolume::Move(float x, float y)
 {
-	m_shape->move(Point(x, y));
-	Update(GetPosition());
+	Move(Point(x, y));
 }
 
 void BoundingVolume::Move(const Point& pos)
@@ -31,41 +41,27 @@ void BoundingVolume::Move(const Point& pos)
 
 void BoundingVolume::MakeCircleShape()
 {
-	m_shape = std::make_unique<sf::CircleShape>();
-	m_shape->setScale(m_scale);
-	m_shape->setFillColor(sf::Color::Transparent);
-	m_shape->setOutlineColor(sf::Color::Red);
-	m_shape->setOutlineThickness(2);
+	auto circle = std::make_unique<sf::CircleShape>();
+	SetupShape(*circle, m_scale);
+	m_shape = std::move(circle);
 }
 
 void BoundingVolume::MakeRectangleShape()
 {
-	m_shape = std::make_unique<sf::RectangleShape>();
-	m_shape->setScale(m_scale);
-	m_shape->setFillColor(sf::Color::Transparent);
-	m_shape->setOutlineColor(sf::Color::Red);
-	m_shape->setOutlineThickness(2);
+	auto rect = std::make_unique<sf::RectangleShape>();
+	SetupShape(*rect, m_scale);
+	m_shape = std::move(rect);
 }
 
 int BoundingBox::s_count = 0;
 
 BoundingBox::BoundingBox()
-	: BoundingVolume(VolumeType::Box), m_size(16, 16)
-{
-	m_boxNumber = s_count++;
-	MakeRectangleShape();
-	Reset(m_size);
-	Update(Point(10, 10));
-}
+	: BoundingBox(Point(16, 16), Point(10, 10))
+{}
 
 BoundingBox::BoundingBox(const Point& size)
-	: BoundingVolume(VolumeType::Box), m_size(size)
-{
-	m_boxNumber = s_count++;
-	MakeRectangleShape();
-	Reset(m_size);
-	Update(GetPosition());
-}
+	: BoundingBox(size, Point(10, 10))
+{}
 
 BoundingBox::BoundingBox(const Point& size, const Point& pos)
 	: BoundingVolume(VolumeType::Box), m_size(size)
@@ -80,24 +76,22 @@ BoundingBox::BoundingBox(BoundingCapsule* capsule)
 	: BoundingVolume(VolumeType::Box)
 {
 	MakeRectangleShape();
-	float radius = capsule->GetRadius();
-	Line s = capsule->GetSegment();
+	const float radius = capsule->GetRadius();
+	const auto& seg = capsule->GetSegment();
 
-	// Calculate min and max extents of the bounding box
-	float min_x = std::min(s.start.x, s.end.x) - radius;
-	float max_x = std::max(s.start.x, s.end.x) + radius;
-	float min_y = std::min(s.start.y, s.end.y) - radius;
-	float max_y = std::max(s.start.y, s.end.y) + radius;
+	const float minX = std::min(seg.start.x, seg.end.x) - radius;
+	const float maxX = std::max(seg.start.x, seg.end.x) + radius;
+	const float minY = std::min(seg.start.y, seg.end.y) - radius;
+	const float maxY = std::max(seg.start.y, seg.end.y) + radius;
 
-	// Calculate size (width, height)
-	Reset({ max_x - min_x, max_y - min_y });
-	Update(s.GetMidPoint());
+	Reset({ maxX - minX, maxY - minY });
+	Update(seg.GetMidPoint());
 }
 
 void BoundingBox::Reset(const Point& size)
 {
 	GetRect()->setSize(size);
-	auto scale = GetScale();
+	const auto scale = GetScale();
 	m_extents[0] = (size.x * scale.x) * 0.5f;
 	m_extents[1] = (size.y * scale.y) * 0.5f;
 	SetOrigin(size * 0.5f);
@@ -185,13 +179,13 @@ Line BoundingBox::GetSide(Side side)
 {
 	switch (side)
 	{
-	case Left:
+	case Side::Left:
 		return Line(m_min, Point(m_min.x, m_max.y));
-	case Right:
+	case Side::Right:
 		return Line(Point(m_max.x, m_min.y), m_max);
-	case Top:
+	case Side::Top:
 		return Line(m_min, Point(m_max.x, m_min.y));
-	case Bottom:
+	case Side::Bottom:
 		return Line(Point(m_min.x, m_max.y), m_max);
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
@@ -202,13 +196,13 @@ Point BoundingBox::GetPoint(Side side)
 {
 	switch (side)
 	{
-	case Left:
+	case Side::Left:
 		return m_center - Point(m_extents.x, 0);
-	case Right:
+	case Side::Right:
 		return m_center + Point(m_extents.x, 0);
-	case Top:
+	case Side::Top:
 		return m_center - Point(0, m_extents.y);
-	case Bottom:
+	case Side::Bottom:
 		return m_center + Point(0, m_extents.y);
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
@@ -438,69 +432,36 @@ Point BoundingBox::GetSeparationVector(BoundingCapsule* other)
 
 BoundingCircle CalculateMinimumBoundingCircle(BoundingBox* box)
 {
-	// Get the min and max points of the AABB
-	Point minPoint = box->GetMin();
-	Point maxPoint = box->GetMax();
-
-	// Calculate the center of the AABB
-	Point center;
-	center.x = (minPoint.x + maxPoint.x) / 2.0f;
-	center.y = (minPoint.y + maxPoint.y) / 2.0f;
-
-	// Calculate the radius as half the diagonal distance of the AABB
-	float dx = maxPoint.x - minPoint.x;
-	float dy = maxPoint.y - minPoint.y;
-	float radius = std::sqrtf(dx * dx + dy * dy) / 2.0f;
-
-	// Return the bounding circle
+	const Point min = box->GetMin();
+	const Point max = box->GetMax();
+	const Point center = (min + max) * 0.5f;
+	const float radius = std::sqrtf(pnt::lengthSquared(max - min)) * 0.5f;
 	return BoundingCircle(radius, center);
 }
 
 Direction GetCollisionDirection(const Point& mtv, const Point& velA, const Point& velB)
 {
-	Direction dir;
-	Point relativeVelocity = velA - velB;
+	const Point relativeVelocity = velA - velB;
 
-	// Determine collision side based on MTV direction
 	if (std::abs(mtv.x) > 0 && std::abs(mtv.y) == 0)
-	{
-		dir = (relativeVelocity.x > 0) ? LDIR : RDIR;
-	}
-	else if (std::abs(mtv.y) > 0 && std::abs(mtv.x) == 0)
-	{
-		dir = (relativeVelocity.y > 0) ? DDIR : UDIR;
-	}
-	else
-	{
-		// Diagonal case, pick the stronger axis (MTV dominates)
-		if (std::abs(mtv.x) > std::abs(mtv.y))
-			dir = (relativeVelocity.x > 0) ? LDIR : RDIR;
-		else
-			dir = (relativeVelocity.y > 0) ? DDIR : UDIR;
-	}
+		return (relativeVelocity.x > 0) ? Direction::LDIR : Direction::RDIR;
+	if (std::abs(mtv.y) > 0 && std::abs(mtv.x) == 0)
+		return (relativeVelocity.y > 0) ? Direction::DDIR : Direction::UDIR;
 
-	return dir;
+	return (std::abs(mtv.x) > std::abs(mtv.y))
+		? ((relativeVelocity.x > 0) ? Direction::LDIR : Direction::RDIR)
+		: ((relativeVelocity.y > 0) ? Direction::DDIR : Direction::UDIR);
 }
 
 int BoundingCircle::s_count = 0;
 
 BoundingCircle::BoundingCircle()
-	: BoundingVolume(VolumeType::Circle), m_radius(8)
-{
-	m_circleNumber = s_count++;
-	MakeCircleShape();
-	Reset(m_radius);
-	Update(Point(10, 10));
-}
+	: BoundingCircle(8.0f, Point(10, 10))
+{}
 
 BoundingCircle::BoundingCircle(float radius)
-	: BoundingVolume(VolumeType::Circle), m_radius(radius)
-{
-	m_circleNumber = s_count++;
-	MakeCircleShape();
-	Reset(m_radius);
-	Update(GetPosition());
-}
+	: BoundingCircle(radius, Point(10, 10))
+{}
 
 BoundingCircle::BoundingCircle(float radius, const Point& pos)
 	: BoundingVolume(VolumeType::Circle), m_radius(radius)
@@ -586,13 +547,13 @@ Point BoundingCircle::GetPoint(Side side)
 {
 	switch (side)
 	{
-	case Left:
+	case Side::Left:
 		return m_center - Point(m_radius, 0);
-	case Right:
+	case Side::Right:
 		return m_center + Point(m_radius, 0);
-	case Top:
+	case Side::Top:
 		return m_center - Point(0, m_radius);
-	case Bottom:
+	case Side::Bottom:
 		return m_center + Point(0, m_radius);
 	default:
 		throw std::out_of_range("Side enum value doesn't exist");
@@ -718,26 +679,12 @@ Point BoundingCircle::GetSeparationVector(BoundingCapsule* other)
 int BoundingCapsule::s_count = 0;
 
 BoundingCapsule::BoundingCapsule()
-	: BoundingVolume(VolumeType::Capsule), m_radius(8), m_angle(0)
-{
-	m_capsuleNumber = s_count++;
-	MakeCapsuleShape();
-	Reset(m_radius, 16, m_angle);
-
-	auto thickness = GetRect()->getOutlineThickness();
-	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
-}
+	: BoundingCapsule(8.0f, 16.0f, 0.0f, Point(8.0f, 16.0f))
+{}
 
 BoundingCapsule::BoundingCapsule(float radius, float length, float angle)
-	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(angle)
-{
-	m_capsuleNumber = s_count++;
-	MakeCapsuleShape();
-	Reset(m_radius, length, m_angle);
-
-	auto thickness = GetRect()->getOutlineThickness();
-	Update(Point(m_radius + thickness, (m_radius * 2) + thickness));
-}
+	: BoundingCapsule(radius, length, angle, Point(radius, radius * 2.f))
+{}
 
 BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const Point& pos)
 	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(angle)
@@ -752,6 +699,7 @@ BoundingCapsule::BoundingCapsule(float radius, float length, float angle, const 
 BoundingCapsule::BoundingCapsule(float radius, const Line& segment)
 	: BoundingVolume(VolumeType::Capsule), m_radius(radius), m_angle(segment.CalculateAngle())
 {
+	m_capsuleNumber = s_count++;
 	MakeCapsuleShape();
 	Reset(m_radius, pnt::distance(segment.start, segment.end), m_angle);
 
@@ -760,7 +708,7 @@ BoundingCapsule::BoundingCapsule(float radius, const Line& segment)
 
 void BoundingCapsule::Reset(float radius, float length, float angle)
 {
-	auto scale = GetScale();
+	const auto scale = GetScale();
 	m_length = length * scale.y;
 	m_radius = radius * scale.x;
 
@@ -817,7 +765,6 @@ void CalculateRotatedRectangleCorners(Point corners[4], const Point& centre, con
 void BoundingCapsule::Update(const Point& pos)
 {
 	SetPosition(pos);
-
 	m_center = GetPosition();
 
 	Point corners[4];
@@ -1047,14 +994,9 @@ void BoundingCapsule::SetScale(const Point& scale)
 void BoundingCapsule::MakeCapsuleShape()
 {
 	MakeRectangleShape();
-
-	m_circle1.setFillColor(sf::Color::Transparent);
-	m_circle1.setOutlineColor(sf::Color::Red);
-	m_circle1.setOutlineThickness(2);
-
-	m_circle2.setFillColor(sf::Color::Transparent);
-	m_circle2.setOutlineColor(sf::Color::Red);
-	m_circle2.setOutlineThickness(2);
+	const auto scale = GetScale();
+	SetupShape(m_circle1, scale);
+	SetupShape(m_circle2, scale);
 }
 
 void BoundingVolume::SetScale(const Point& scale)
