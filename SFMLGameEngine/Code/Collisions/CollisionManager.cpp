@@ -25,6 +25,17 @@ void CollisionManager::AddCollidable(Object* go)
 	m_collidables.push_back(go);
 }
 
+void CollisionManager::RemoveCollidable(Object* ngo)
+{
+	if (!ngo)
+		return;
+
+	auto it = std::remove(m_collidables.begin(), m_collidables.end(), ngo);
+
+	if (it != m_collidables.end())
+		m_collidables.erase(it, m_collidables.end());
+}
+
 void CollisionManager::RemoveLastAdded()
 {
 	if (!m_collidables.empty())

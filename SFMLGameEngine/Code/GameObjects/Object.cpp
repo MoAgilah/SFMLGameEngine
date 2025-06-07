@@ -6,64 +6,45 @@
 
 int Object::s_objectNum = 0;
 
-Object::Object(const std::string& texID, float radius)
-	: m_texID(texID)
+Object::Object(const std::string& texID, std::unique_ptr<BoundingVolume> volume, std::unique_ptr<Sprite> sprite)
+	: m_texID(texID), m_sprite(std::move(sprite)), m_colVolume(std::move(volume))
 {
-	m_sprite = std::make_unique<Sprite>(m_texID);
-	m_colVolume = std::make_unique<BoundingCircle>(radius);
 	SetScale(m_scale);
 	m_objectID = s_objectNum++;
 	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
+
+Object::Object(const std::string& texID, float radius)
+	: Object(texID, std::make_unique<BoundingCircle>(radius), std::make_unique<Sprite>(texID))
+{}
 
 Object::Object(const std::string& texID, const Point& boxSize)
-	: m_texID(texID)
-{
-	m_sprite = std::make_unique<Sprite>(m_texID);
-	m_colVolume = std::make_unique<BoundingBox>(boxSize);
-	SetScale(m_scale);
-	m_objectID = s_objectNum++;
-	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
-}
+	: Object(texID, std::make_unique<BoundingBox>(boxSize), std::make_unique<Sprite>(texID))
+{}
+
 
 Object::Object(const std::string& texID, float radius, float length, float angle)
-	: m_texID(texID)
-{
-	m_sprite = std::make_unique<Sprite>(m_texID);
-	m_colVolume = std::make_unique<BoundingCapsule>(radius, length, angle);
-	SetScale(m_scale);
-	m_objectID = s_objectNum++;
-	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
-}
+	: Object(texID, std::make_unique<BoundingCapsule>(radius, length, angle), std::make_unique<Sprite>(texID))
+{}
 
 Object::Object(const std::string& texID, const AnimationData& animData, float radius)
-	: m_texID(texID)
-{
-	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
-	m_colVolume = std::make_unique<BoundingCircle>(radius);
-	SetScale(m_scale);
-	m_objectID = s_objectNum++;
-	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
-}
+	: Object(texID, std::make_unique<BoundingCircle>(radius),
+		std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed))
+{}
 
 Object::Object(const std::string& texID, const AnimationData& animData, const Point& boxSize)
-	: m_texID(texID)
-{
-	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
-	m_colVolume = std::make_unique<BoundingBox>(boxSize);
-	SetScale(m_scale);
-	m_objectID = s_objectNum++;
-	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
-}
+	: Object(texID, std::make_unique<BoundingBox>(boxSize),
+		std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed))
+{}
 
 Object::Object(const std::string& texID, const AnimationData& animData, float radius, float length, float angle)
-	: m_texID(texID)
+	: Object(texID, std::make_unique<BoundingCapsule>(radius, length, angle),
+		std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed))
+{}
+
+Object::~Object()
 {
-	m_sprite = std::make_unique<AnimatedSprite>(m_texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed);
-	m_colVolume = std::make_unique<BoundingCapsule>(radius, length, angle);
-	SetScale(m_scale);
-	m_objectID = s_objectNum++;
-	GameManager::Get()->GetCollisionMgr()->AddCollidable(this);
+	GameManager::Get()->GetCollisionMgr()->RemoveCollidable(this);
 }
 
 void Object::Render(sf::RenderWindow& window)
@@ -101,25 +82,17 @@ void Object::OnCollisionExit(Object* obj)
 
 void Object::Reset()
 {
+	constexpr float ResetYOffset = 3.5f;
 	m_active = false;
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
-	m_colVolume->Update({ GetPosition().x, GetPosition().y + 3.5f });
+	m_colVolume->Update({ GetPosition().x, GetPosition().y + ResetYOffset });
 }
 
 void Object::SetDirection(bool dir)
 {
 	m_direction = dir;
-	if (m_direction)
-	{
-		// flip X
-		m_sprite->SetScale(m_scale);
-	}
-	else
-	{
-		//unflip x
-		m_sprite->SetScale({ -m_scale.x, m_scale.y });
-	}
+	m_sprite->SetScale(dir ? m_scale : Point(-m_scale.x, m_scale.y));
 }
 
 void Object::SetScale(const Point& scale)
@@ -130,40 +103,28 @@ void Object::SetScale(const Point& scale)
 }
 
 DynamicObject::DynamicObject(const std::string& texID, float radius)
-	: Object(texID, radius)
-{
-	m_physicsCtrl = std::make_unique<PhysicsController>();
-}
+	: Object(texID, radius), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}
 
 DynamicObject::DynamicObject(const std::string& texID, const Point& boxSize)
-	: Object(texID, boxSize)
-{
-	m_physicsCtrl = std::make_unique<PhysicsController>();
-}
+	: Object(texID, boxSize), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}
 
 DynamicObject::DynamicObject(const std::string& texID, float radius, float length, float angle)
-	: Object(texID, radius, length, angle)
-{
-	m_physicsCtrl = std::make_unique<PhysicsController>();
-}
+	: Object(texID, radius, length, angle), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}
 
 DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, float circleRadius)
-	: Object(texID, animData, circleRadius)
-{
-	m_physicsCtrl = std::make_unique<PhysicsController>();
-}
+	: Object(texID, animData, circleRadius), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}
 
 DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, const Point& boxSize)
-	: Object(texID, animData, boxSize)
-{
-	m_physicsCtrl = std::make_unique<PhysicsController>();
-}
+	: Object(texID, animData, boxSize), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}
 
 DynamicObject::DynamicObject(const std::string& texID, const AnimationData& animData, float radius, float length, float angle)
-	: Object(texID, animData, radius, length, angle)
-{
-	m_physicsCtrl = std::make_unique<PhysicsController>();
-}
+	: Object(texID, animData, radius, length, angle), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}
 
 bool DynamicObject::Intersects(Object* obj)
 {
@@ -258,36 +219,24 @@ void DynamicObject::Move(float x, float y)
 
 void DynamicObject::Move(const Point& pos)
 {
-	GetSprite()->Move(pos.x, pos.y);
-	GetColVolume()->Move(pos);
+	Move(pos.x, pos.y);
 }
 
 Direction DynamicObject::GetFacingDirection()
 {
-	const Point& currentVel = m_velocity;
+	const Point& vel = m_velocity;
+	if (vel.x == 0.f && vel.y == 0.f)
+		return Direction::DDIR;
 
-	Direction currentDir = Direction::DDIR;
-
-	if (currentVel.x != 0.f || currentVel.y != 0.f)
-	{
-		float vxa = std::abs(currentVel.x);
-		float vya = std::abs(currentVel.y);
-
-		if (vxa > vya)
-		{
-			currentDir = (currentVel.x < 0) ?
-				Direction::LDIR : Direction::RDIR;
-		}
-		else
-		{
-			currentDir = (currentVel.y < 0) ?
-				Direction::UDIR : Direction::DDIR;
-		}
-	}
-
-	return currentDir;
+	return (std::abs(vel.x) > std::abs(vel.y))
+		? (vel.x < 0 ? Direction::LDIR : Direction::RDIR)
+		: (vel.y < 0 ? Direction::UDIR : Direction::DDIR);
 }
 
 void DynamicObject::CheckForHorizontalBounds(float deltaTime)
 {
 }
+
+DynamicObject::DynamicObject(const std::string& texID, std::unique_ptr<BoundingVolume> volume, std::unique_ptr<Sprite> sprite)
+	: Object(texID,std::move(volume),std::move(sprite)), m_physicsCtrl(std::make_unique<PhysicsController>())
+{}

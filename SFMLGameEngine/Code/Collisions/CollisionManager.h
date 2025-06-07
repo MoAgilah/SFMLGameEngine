@@ -20,6 +20,7 @@ public:
 	void Render(sf::RenderWindow& window);
 
 	void AddCollidable(Object* ngo);
+	void RemoveCollidable(Object* ngo);
 	void RemoveLastAdded();
 
 	Object* GetLastAdded();

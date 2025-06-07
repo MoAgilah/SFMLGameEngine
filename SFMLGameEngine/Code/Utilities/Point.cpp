@@ -19,7 +19,7 @@ Point::Point(const sf::Vector2f& vec)
 }
 
 Point::Point(const sf::Vector2u& vec)
-	: x(vec.x), y(vec.y)
+	: x(static_cast<float>(vec.x)), y(static_cast<float>(vec.y))
 {
 }
 

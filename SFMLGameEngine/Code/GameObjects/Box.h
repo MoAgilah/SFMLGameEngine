@@ -22,6 +22,8 @@ public:
 
 private:
 
+	virtual void Init(const Point& initPos);
+
 	bool m_canHit = true;
 	bool m_justHit = false;
 };

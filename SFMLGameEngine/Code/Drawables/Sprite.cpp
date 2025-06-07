@@ -20,7 +20,7 @@ void Sprite::SetTexture(const std::string& texId)
 	}
 	catch (const std::invalid_argument& e)
 	{
-		std::cout << e.what() << std::endl;
+		std::cerr << "Texture Error: " << e.what() << std::endl;
 	}
 
 	SetScale(GameConstants::Scale);
@@ -32,12 +32,10 @@ void Sprite::Update(float dt)
 	// does nothing
 }
 
-void Sprite::Render(sf::RenderWindow& window) const
+void Sprite::Render(sf::RenderTarget& window) const
 {
-	const sf::Sprite* sprite = m_sprite.get();
-	if (sprite) {
-		window.draw(*sprite);
-	}
+	if (m_sprite)
+		window.draw(*m_sprite);
 }
 
 Point Sprite::GetSize() const
@@ -56,22 +54,18 @@ void Sprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, int curren
 {
 	m_frameSize = size;
 
-	//set first frame to display
-	int left = static_cast<int>(currentFrame * m_frameSize.x);
-	int top = static_cast<int>(currentAnim * m_frameSize.y);
-	int width = static_cast<int>(m_frameSize.x);
-	int height = static_cast<int>(m_frameSize.y);
+	int left = currentFrame * size.x;
+	int top = currentAnim * size.y;
 
-	SetTextureRect(sf::IntRect(sf::Vector2i(left, top),
-		sf::Vector2i(width, height)));
-	SetOrigin({ (float)m_frameSize.x / 2.f, (float)m_frameSize.y / 2.f });
+	m_sprite->setTextureRect({ {left, top}, {static_cast<int>(size.x), static_cast<int>(size.y)} });
+	SetOrigin(Point(size) * 0.5f);
 }
 
 AnimatedSprite::AnimatedSprite(const std::string& texId, int rows, int columns, float framesPerSec, bool symmetrical, float animSpeed)
 	: Sprite(texId), m_animSpeed(animSpeed), m_framesPerSecond(framesPerSec / 1000.0f), m_symmetrical(symmetrical)
 {
-	//set single frame size
-	SetFrameSize(sf::Vector2u(GetTextureSize().x / columns, GetTextureSize().y / rows), m_frame.m_current, m_animation.m_current);
+	auto texSize = GetTextureSize();
+	SetFrameSize({ texSize.x / static_cast<unsigned>(columns), texSize.y / static_cast<unsigned>(rows) });
 }
 
 AnimatedSprite::AnimatedSprite(const std::string& texId, float framesPerSec, bool symmetrical, float animSpeed)
@@ -98,9 +92,7 @@ void AnimatedSprite::Update(float dt)
 		if (m_symmetrical)
 		{
 			if (m_frame.m_current >= m_frame.m_max)
-			{
 				m_frame.m_current = 0;
-			}
 		}
 		else
 		{
@@ -114,20 +106,15 @@ void AnimatedSprite::Update(float dt)
 			}
 		}
 
-		int left = static_cast<int>(m_frame.m_current * GetFrameSize().x);
-		int top = static_cast<int>(m_animation.m_current * GetFrameSize().y);
-		int width = static_cast<int>(GetFrameSize().x);
-		int height = static_cast<int>(GetFrameSize().y);
-
-		SetTextureRect(sf::IntRect(sf::Vector2i(left, top),
-			sf::Vector2i(width, height)));
+		int left = m_frame.m_current * GetFrameSize().x;
+		int top = m_animation.m_current * GetFrameSize().y;
+		SetTextureRect({ {left, top}, {static_cast<int>(GetFrameSize().x), static_cast<int>(GetFrameSize().y)} });
 	}
 }
 
 Point AnimatedSprite::GetSize() const
 {
-	auto frameSize = GetFrameSize();
-	return Point((float)frameSize.x, (float)frameSize.y);
+	return GetFrameSize();
 }
 
 void  AnimatedSprite::ChangeAnim(int animNum)
@@ -144,11 +131,9 @@ void AnimatedSprite::SetFrames(const std::vector<int>& numFrames)
 
 void AnimatedSprite::SetFrameData(int rows, int columns, const std::vector<int>& numFrames)
 {
-	//set single frame size
-	SetFrameSize(sf::Vector2u(GetTextureSize().x / columns, GetTextureSize().y / rows), m_frame.m_current, m_animation.m_current);
-
-	m_numFrames = numFrames;
-	m_animation.m_max = m_numFrames[m_animation.m_current];
+	auto texSize = GetTextureSize();
+	SetFrameSize({ texSize.x / static_cast<unsigned>(columns), texSize.y / static_cast<unsigned>(rows) });
+	SetFrames(numFrames);
 }
 
 void AnimatedSprite::UpdateAnimSpeed(float animSpd)

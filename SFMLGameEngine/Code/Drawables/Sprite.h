@@ -20,7 +20,7 @@ public:
 	void SetTexture(const std::string& texId);
 
 	virtual void Update(float dt);
-	void Render(sf::RenderWindow& window) const;
+	void Render(sf::RenderTarget& window) const;
 
 	sf::Sprite* GetSprite() { return m_sprite.get(); }
 
