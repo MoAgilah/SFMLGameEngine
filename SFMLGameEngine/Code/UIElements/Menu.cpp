@@ -76,7 +76,7 @@ void Menu::SetActiveCells()
 		{
 			if (m_rows[i][j].GetMenuSlotNumber() >= 0)
 			{
-				m_activeCells.emplace_back(i, j);
+				m_activeCells.emplace_back(static_cast<int>(i), static_cast<int>(j));
 			}
 		}
 	}

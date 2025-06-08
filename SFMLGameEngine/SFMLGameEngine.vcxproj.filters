@@ -16,9 +16,6 @@
     <Filter Include="Resource Files\Fonts">
       <UniqueIdentifier>{e32d38ed-5c6e-40ab-84cb-ac0ada0ec330}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Dlls">
-      <UniqueIdentifier>{1f717415-dd62-4b44-86f6-a43dcf74cc5b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Code">
       <UniqueIdentifier>{39cf1d37-f4aa-4abb-9719-2b3d96b80c8e}</UniqueIdentifier>
     </Filter>
@@ -297,36 +294,6 @@
   <ItemGroup>
     <None Include="Resources\Shaders\FadeInOutShader.frag">
       <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="bin\Debug\sfml-audio-d-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Debug\sfml-graphics-d-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Debug\sfml-network-d-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Debug\sfml-system-d-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Debug\sfml-window-d-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Release\sfml-audio-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Release\sfml-graphics-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Release\sfml-network-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Release\sfml-system-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
-    </None>
-    <None Include="bin\Release\sfml-window-3.dll">
-      <Filter>Resource Files\Dlls</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
