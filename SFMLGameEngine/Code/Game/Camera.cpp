@@ -5,33 +5,31 @@
 
 Camera::Camera()
 {
-	// initialise m_camera view
-	m_camera = sf::View(sf::FloatRect({ 0, 0 }, { GameConstants::ScreenDim.x, GameConstants::ScreenDim.y }));
-	m_camera.setViewport(sf::FloatRect({ 0, 0 }, { 1.0f, 1.0f }));
-	m_camera.setCenter(GameConstants::ScreenDim * 0.5f);
+	const auto& screenDim = GameConstants::ScreenDim;
+	const sf::Vector2f center = screenDim * 0.5f;
 
-	m_viewBox.Reset(GameConstants::ScreenDim);
-	m_viewBox.Update(m_camera.getCenter());
+	m_camera.setSize(screenDim);
+	m_camera.setCenter(center);
+	m_camera.setViewport({ {0.f, 0.f},{ 1.f, 1.f} });
+
+	m_viewBox.Reset(screenDim);
+	m_viewBox.Update(center);
 	m_viewBox.SetFillColour(sf::Color(255, 0, 0, 128));
 }
 
 void Camera::Update()
 {
-	//scroll the screen view with the player
-	float posX = 0;
+	// Assuming dynamic camera follow logic will be added later
+	const float posX = 0.f;
 
-	if (posX < 0)
-		posX = 0;
-
-	//reset the m_camera position
-	m_camera = sf::View(sf::FloatRect({ posX, 0 }, { GameConstants::ScreenDim.x, GameConstants::ScreenDim.y }));
+	m_camera.setCenter({ posX + (GameConstants::ScreenDim.x * 0.5f), m_camera.getCenter().y });
 	m_viewBox.Update(m_camera.getCenter());
 }
 
 void Camera::Reset(sf::RenderWindow& window)
 {
+	Update(); // Ensure position is up-to-date
 	window.setView(m_camera);
-	Update();
 }
 
 bool Camera::IsInView(BoundingVolume* volume)
@@ -41,7 +39,8 @@ bool Camera::IsInView(BoundingVolume* volume)
 
 bool Camera::CheckVerticalBounds(BoundingBox* box)
 {
-	return box->GetPosition().y > (m_camera.getCenter().y + (GameConstants::ScreenDim.y * 0.5f)) - (box->GetExtents().y * 2);
+	const float cameraBottom = m_camera.getCenter().y + (GameConstants::ScreenDim.y * 0.5f);
+	return box->GetPosition().y > (cameraBottom - (box->GetExtents().y * 2.f));
 }
 
 void Camera::RenderViewBox(sf::RenderWindow& window)
