@@ -11,8 +11,8 @@ public:
 	sf::SoundBuffer* GetSound(const std::string& name);
 	sf::Music* GetMusic(const std::string& name);
 
-	void AddSounds(fs::path path);
-	void AddMusic(fs::path path);
+	void AddSounds(const fs::path& path);
+	void AddMusic(const fs::path& path);
 
 private:
 

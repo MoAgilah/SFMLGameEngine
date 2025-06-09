@@ -9,7 +9,7 @@ public:
 	~ShaderManager() = default;
 
 	sf::Shader* GetShader(const std::string& name);
-	void AddShaders(fs::path path);
+	void AddShaders(const fs::path& path);
 
 private:
 

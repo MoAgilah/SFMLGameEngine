@@ -28,8 +28,8 @@ public:
 	virtual void AddObjects();
 	virtual void AddForeGroundSprites();
 
-	Object* GetObjectByName(const std::string& name);
-	Enemy* GetEnemyByName(const std::string& name);
+	[[nodiscard]] Object* GetObjectByName(const std::string& name);
+	[[nodiscard]] Enemy* GetEnemyByName(const std::string& name);
 
 private:
 

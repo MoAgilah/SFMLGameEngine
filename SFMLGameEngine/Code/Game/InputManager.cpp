@@ -27,7 +27,7 @@ sf::Keyboard::Key InputManager::GetFirstPressedKey(const std::vector<sf::Keyboar
 
 	for (auto key : keys)
 	{
-		auto time = m_keyPressTimestamps[(int)key];
+		const auto time = m_keyPressTimestamps[static_cast<int>(key)];
 		if (time != std::chrono::steady_clock::time_point::min() && time < earliestTime)
 		{
 			earliestTime = time;
@@ -43,8 +43,10 @@ void InputManager::SetKeyPressed(sf::Keyboard::Key key)
 	if (key == sf::Keyboard::Key::Unknown)
 		return;
 
-	if (!m_keyStates[(int)key]) // Only record the timestamp on first press
-		m_keyPressTimestamps[(int)key] = std::chrono::steady_clock::now();
+	const int keyIndex = static_cast<int>(key);
+
+	if (!m_keyStates[keyIndex])
+		m_keyPressTimestamps[keyIndex] = std::chrono::steady_clock::now();
 
 	SetKeyState(key, true);
 }
@@ -55,10 +57,10 @@ void InputManager::SetKeyReleased(sf::Keyboard::Key key)
 		return;
 
 	SetKeyState(key, false);
-	m_keyPressTimestamps[(int)key] = std::chrono::steady_clock::time_point::min(); // Reset timestamp on release
+	m_keyPressTimestamps[static_cast<int>(key)] = std::chrono::steady_clock::time_point::min();
 }
 
 bool InputManager::IsAnyKeyPressed()
 {
-	return std::any_of(m_keyStates.begin(), m_keyStates.end(), [](const auto& keyState) { return keyState == true; });
+	return std::any_of(m_keyStates.begin(), m_keyStates.end(), [](bool keyState) { return keyState == true; });
 }

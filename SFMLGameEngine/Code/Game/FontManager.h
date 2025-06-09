@@ -9,7 +9,7 @@ public:
 	~FontManager() = default;
 
 	sf::Font* GetFont(const std::string& name);
-	void AddFonts(fs::path path);
+	void AddFonts(const fs::path& path);
 
 private:
 

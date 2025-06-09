@@ -10,7 +10,7 @@ public:
 
 	sf::Texture* GetTexture(const std::string& name);
 
-	void AddTextures(fs::path path);
+	void AddTextures(const fs::path& path);
 
 private:
 

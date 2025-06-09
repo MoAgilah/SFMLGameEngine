@@ -12,8 +12,6 @@ GameManager::GameManager()
 	m_collisionManager = std::make_unique<CollisionManager>();
 
 	m_world = std::make_unique<World>();
-
-	//m_stateManager.ChangeState(new DebugState(this));
 }
 
 GameManager::~GameManager()

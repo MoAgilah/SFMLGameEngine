@@ -31,23 +31,24 @@ public:
 	void Render();
 
 	void ChangeWorld(World* world);
-	World* GetWorld() { return m_world.get(); }
+	[[nodiscard]] World* GetWorld() { return m_world.get(); }
 
 	void ChangeCollisionManager(CollisionManager* mgr);
 
-	Timer& GetTimer() { return m_timer; }
-	Camera& GetCamera() { return m_camera; }
-	InputManager& GetInputManager() { return m_inputManager; }
-	FontManager& GetFontMgr() { return m_fontManager; }
-	ShaderManager& GetShaderMgr() { return m_shaderManager; }
-	SoundManager& GetSoundMgr() { return m_soundManager; }
-	TextureManager& GetTextureMgr() { return m_texureManager; }
-	CollisionManager* GetCollisionMgr() { return m_collisionManager.get(); }
-	GameStateMgr* GetGameStateMgr() { return &m_stateManager; }
+	[[nodiscard]] Timer& GetTimer() noexcept { return m_timer; }
+	[[nodiscard]] Camera& GetCamera() noexcept { return m_camera; }
+	[[nodiscard]] InputManager& GetInputManager() noexcept { return m_inputManager; }
+	[[nodiscard]] FontManager& GetFontMgr() noexcept { return m_fontManager; }
+	[[nodiscard]] ShaderManager& GetShaderMgr() noexcept { return m_shaderManager; }
+	[[nodiscard]] SoundManager& GetSoundMgr() noexcept { return m_soundManager; }
+	[[nodiscard]] TextureManager& GetTextureMgr() noexcept { return m_texureManager; }
+	[[nodiscard]] CollisionManager* GetCollisionMgr() noexcept { return m_collisionManager.get(); }
+	[[nodiscard]] GameStateMgr* GetGameStateMgr() noexcept { return &m_stateManager; }
 
 private:
 
 	static GameManager*					m_instance;
+
 	sf::RenderWindow					m_window;
 	Timer								m_timer;
 	Camera								m_camera;
