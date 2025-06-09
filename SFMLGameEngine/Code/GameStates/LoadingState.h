@@ -1,16 +1,17 @@
 #pragma once
 
-#include "GameState.h"
+#include "IGameState.h"
 #include "../Game/GameManager.h"
 #include "../UIElements/Text.h"
 
 void LoadResources();
 
-class LoadingState : public GameState
+class LoadingState final : public IGameState
 {
 public:
 	explicit LoadingState(GameManager* gameMgr);
-	~LoadingState() override = default;
+
+	std::string_view GetStateName() const override { return "Loading"; }
 
 	void Initialise() override;
 	void Pause() override;
@@ -23,5 +24,4 @@ private:
 
 	Sprite m_backgroundSpr;
 	AnimatedText m_loadingMessage;
-	GameManager* m_gameMgr;
 };

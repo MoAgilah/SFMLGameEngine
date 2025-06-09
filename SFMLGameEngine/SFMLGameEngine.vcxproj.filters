@@ -150,12 +150,6 @@
     <ClCompile Include="Code\Collisions\BoundingVolume.cpp">
       <Filter>Source Files\Code\Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Code\GameStates\MenuState.cpp">
-      <Filter>Source Files\Code\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\GameStates\PlayerState.cpp">
-      <Filter>Source Files\Code\GameStates</Filter>
-    </ClCompile>
     <ClCompile Include="Code\UIElements\Text.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
@@ -239,7 +233,7 @@
     <ClInclude Include="Code\GameStates\DebugState.h">
       <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="Code\GameStates\GameState.h">
+    <ClInclude Include="Code\GameStates\IGameState.h">
       <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Code\GameStates\GameStateMgr.h">
@@ -262,12 +256,6 @@
     </ClInclude>
     <ClInclude Include="Code\Collisions\BoundingVolume.h">
       <Filter>Header Files\Code\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GameStates\MenuState.h">
-      <Filter>Header Files\Code\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GameStates\PlayerState.h">
-      <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Code\Utilities\DecisionTree.h">
       <Filter>Header Files\Code\Utilities</Filter>

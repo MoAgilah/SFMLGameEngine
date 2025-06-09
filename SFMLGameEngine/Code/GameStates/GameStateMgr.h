@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameState.h"
+#include "IGameState.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -12,8 +12,8 @@ public:
 
 	std::string_view GetStateName();
 
-	void ChangeState(GameState* state);
-	void PushState(GameState* state);
+	void ChangeState(IGameState* state);
+	void PushState(IGameState* state);
 	void PopState();
 	void ClearStates();
 
@@ -26,5 +26,5 @@ public:
 
 private:
 
-	std::vector<GameState*> m_vGameStates;
+	std::vector<IGameState*> m_vGameStates;
 };

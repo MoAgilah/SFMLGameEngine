@@ -6,7 +6,7 @@
 enum MenuPosition { Automation, Manual };
 
 MainMenuState::MainMenuState(GameManager* gameMgr)
-	: GameState("MainMenu"),
+	: IGameState(gameMgr),
 	m_menu({ GameConstants::ScreenDim.x * 0.8f, GameConstants::ScreenDim.y * 0.4f }, 2.f, { 1,2 }, { MenuPositionMode::Anchored, GameConstants::ScreenDim })
 {
 	m_gameMgr = gameMgr;

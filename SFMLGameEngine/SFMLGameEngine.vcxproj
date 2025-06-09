@@ -34,8 +34,6 @@
     <ClCompile Include="Code\GameStates\GameStateMgr.cpp" />
     <ClCompile Include="Code\GameStates\LoadingState.cpp" />
     <ClCompile Include="Code\GameStates\MainMenuState.cpp" />
-    <ClCompile Include="Code\GameStates\MenuState.cpp" />
-    <ClCompile Include="Code\GameStates\PlayerState.cpp" />
     <ClCompile Include="Code\Game\Camera.cpp" />
     <ClCompile Include="Code\Game\Constants.cpp" />
     <ClCompile Include="Code\Game\FontManager.cpp" />
@@ -68,12 +66,10 @@
     <ClInclude Include="Code\GameObjects\Enemy.h" />
     <ClInclude Include="Code\GameObjects\Object.h" />
     <ClInclude Include="Code\GameStates\DebugState.h" />
-    <ClInclude Include="Code\GameStates\GameState.h" />
+    <ClInclude Include="Code\GameStates\IGameState.h" />
     <ClInclude Include="Code\GameStates\GameStateMgr.h" />
     <ClInclude Include="Code\GameStates\LoadingState.h" />
     <ClInclude Include="Code\GameStates\MainMenuState.h" />
-    <ClInclude Include="Code\GameStates\MenuState.h" />
-    <ClInclude Include="Code\GameStates\PlayerState.h" />
     <ClInclude Include="Code\Game\Camera.h" />
     <ClInclude Include="Code\Game\Constants.h" />
     <ClInclude Include="Code\Game\FontManager.h" />

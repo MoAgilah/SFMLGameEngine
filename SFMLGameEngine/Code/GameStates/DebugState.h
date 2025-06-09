@@ -1,13 +1,14 @@
 #pragma once
 
-#include "GameState.h"
+#include "IGameState.h"
 #include "../Game/GameManager.h"
 
-class DebugState : public GameState
+class DebugState final : public IGameState
 {
 public:
 	explicit DebugState(GameManager* gameMgr);
-	~DebugState() override = default;
+
+	std::string_view GetStateName() const override { return "Debug"; }
 
 	void Initialise() override;
 	void Pause() override;
@@ -15,8 +16,4 @@ public:
 	void ProcessInputs() override;
 	void Update(float deltaTime) override;
 	void Render() override;
-
-private:
-
-	GameManager* m_gameMgr;
 };

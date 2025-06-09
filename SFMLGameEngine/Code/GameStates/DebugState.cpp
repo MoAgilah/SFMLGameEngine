@@ -3,10 +3,8 @@
 #include "../Game/Constants.h"
 
 DebugState::DebugState(GameManager* gameMgr)
-	: GameState("Debug")
-{
-	m_gameMgr = gameMgr;
-}
+	: IGameState(gameMgr)
+{}
 
 void DebugState::Initialise()
 {

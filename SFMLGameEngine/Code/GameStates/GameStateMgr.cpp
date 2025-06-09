@@ -17,7 +17,7 @@ std::string_view GameStateMgr::GetStateName()
 	return std::string_view();
 }
 
-void GameStateMgr::ChangeState(GameState* state)
+void GameStateMgr::ChangeState(IGameState* state)
 {
 	if (!m_vGameStates.empty())
 		m_vGameStates.pop_back();
@@ -29,7 +29,7 @@ void GameStateMgr::ChangeState(GameState* state)
 		std::cout << std::format("Changed too {} state\n", m_vGameStates.back()->GetStateName());
 }
 
-void GameStateMgr::PushState(GameState* state)
+void GameStateMgr::PushState(IGameState* state)
 {
 	if (!m_vGameStates.empty())
 		m_vGameStates.back()->Pause();
