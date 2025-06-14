@@ -43,9 +43,7 @@ void Menu::Update(float deltaTime)
 	{
 		auto cell = GetCell(cellNo);
 		if (cell)
-		{
 			cell->Update(deltaTime);
-		}
 	}
 }
 
@@ -90,9 +88,7 @@ void Menu::AddCursor(Sprite* spr, const MenuNav& menuNav)
 MenuCursor* Menu::GetCursor(unsigned int cursorNumber)
 {
 	if (cursorNumber >= 0 && cursorNumber < m_cursors.size())
-	{
 		return &m_cursors[cursorNumber];
-	}
 
 	return nullptr;
 }

@@ -11,14 +11,10 @@ MenuItem::MenuItem(const Point& menuSize, float outlineThickness)
 void MenuItem::Update(float deltaTime)
 {
 	if (m_textElement)
-	{
 		m_textElement->Update(deltaTime);
-	}
 
 	if (m_spriteElement)
-	{
 		m_spriteElement->Update(deltaTime);
-	}
 }
 
 void MenuItem::Render(sf::RenderWindow& window)

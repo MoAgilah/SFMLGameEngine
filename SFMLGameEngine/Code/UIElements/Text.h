@@ -28,18 +28,15 @@ struct TextConfig
 
 	TextConfig()
 		: m_fontName("Standard"), m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_animType(Static), m_alignment(None)
-	{
-	}
+	{}
 
 	TextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, sf::Color colour = sf::Color::Black, TextAlignment alignment = TextAlignment::Center)
 		: m_fontName(fontName), m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
-	{
-	}
+	{}
 
 	TextConfig(const TextConfig& config)
 		: m_fontName(config.m_fontName), m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_animType(config.m_animType), m_alignment(config.m_alignment)
-	{
-	}
+	{}
 };
 
 Point CalculateTextOrigin(const sf::FloatRect& bounds);

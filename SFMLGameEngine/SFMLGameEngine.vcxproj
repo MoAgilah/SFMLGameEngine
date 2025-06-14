@@ -24,6 +24,8 @@
     <ClCompile Include="Code\Collisions\Grid.cpp" />
     <ClCompile Include="Code\Collisions\BoundingVolume.cpp" />
     <ClCompile Include="Code\Collisions\Tile.cpp" />
+    <ClCompile Include="Code\Drawables\SFSprite.cpp" />
+    <ClCompile Include="Code\Drawables\SFTexture.cpp" />
     <ClCompile Include="Code\Drawables\Sprite.cpp" />
     <ClCompile Include="Code\Framework.cpp" />
     <ClCompile Include="Code\GameObjects\Box.cpp" />
@@ -45,6 +47,8 @@
     <ClCompile Include="Code\Game\TextureManager.cpp" />
     <ClCompile Include="Code\Game\Timer.cpp" />
     <ClCompile Include="Code\Game\World.cpp" />
+    <ClCompile Include="Code\Renderer\SFMLRenderer.cpp" />
+    <ClCompile Include="Code\Renderer\SFMLWindow.cpp" />
     <ClCompile Include="Code\UIElements\Menu.cpp" />
     <ClCompile Include="Code\UIElements\MenuCursor.cpp" />
     <ClCompile Include="Code\UIElements\MenuItem.cpp" />
@@ -59,6 +63,9 @@
     <ClInclude Include="Code\Collisions\Grid.h" />
     <ClInclude Include="Code\Collisions\BoundingVolume.h" />
     <ClInclude Include="Code\Collisions\Tile.h" />
+    <ClInclude Include="Code\Drawables\SFDrawables.h" />
+    <ClInclude Include="Code\Drawables\SFSprite.h" />
+    <ClInclude Include="Code\Drawables\SFTexture.h" />
     <ClInclude Include="Code\Drawables\Sprite.h" />
     <ClInclude Include="Code\Framework.h" />
     <ClInclude Include="Code\GameObjects\Box.h" />
@@ -66,7 +73,6 @@
     <ClInclude Include="Code\GameObjects\Enemy.h" />
     <ClInclude Include="Code\GameObjects\Object.h" />
     <ClInclude Include="Code\GameStates\DebugState.h" />
-    <ClInclude Include="Code\GameStates\IGameState.h" />
     <ClInclude Include="Code\GameStates\GameStateMgr.h" />
     <ClInclude Include="Code\GameStates\LoadingState.h" />
     <ClInclude Include="Code\GameStates\MainMenuState.h" />
@@ -81,6 +87,15 @@
     <ClInclude Include="Code\Game\TextureManager.h" />
     <ClInclude Include="Code\Game\Timer.h" />
     <ClInclude Include="Code\Game\World.h" />
+    <ClInclude Include="Code\Interfaces\IGameState.h" />
+    <ClInclude Include="Code\Interfaces\IRenderable.h" />
+    <ClInclude Include="Code\Interfaces\IRenderer.h" />
+    <ClInclude Include="Code\Interfaces\ITexture.h" />
+    <ClInclude Include="Code\Interfaces\ITransforms.h" />
+    <ClInclude Include="Code\Interfaces\IUpdatable.h" />
+    <ClInclude Include="Code\Interfaces\IWindow.h" />
+    <ClInclude Include="Code\Renderer\SFMLRenderer.h" />
+    <ClInclude Include="Code\Renderer\SFMLWindow.h" />
     <ClInclude Include="Code\UIElements\Menu.h" />
     <ClInclude Include="Code\UIElements\MenuCursor.h" />
     <ClInclude Include="Code\UIElements\MenuItem.h" />
@@ -162,7 +177,6 @@
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
     <ExtensionsToDeleteOnClean>*.dll;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
-    <ExecutablePath>$(SolutionDir)\bin\$(Configuration);$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

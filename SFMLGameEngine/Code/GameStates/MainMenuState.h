@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IGameState.h"
+#include "../Interfaces/IGameState.h"
 #include "../Game/GameManager.h"
 #include "../UIElements/Menu.h"
 

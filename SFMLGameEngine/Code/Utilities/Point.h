@@ -35,6 +35,7 @@ public:
 	friend bool operator!=(const Point& a, const Point& b);
 
 	operator sf::Vector2f() const;
+	operator sf::Vector2u() const;
 
 	Point Clamp(const Point& p1, const Point& p2) const;
 

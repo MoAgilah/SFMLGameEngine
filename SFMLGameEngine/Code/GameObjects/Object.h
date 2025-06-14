@@ -78,6 +78,7 @@ protected:
 	Object(const std::string& texID, std::unique_ptr<BoundingVolume> volume, std::unique_ptr<Sprite> sprite);
 
 private:
+
 	int m_objectID = 0;
 	static int s_objectNum;
 	std::string m_texID;
@@ -142,6 +143,7 @@ protected:
 	DynamicObject(const std::string& texID, std::unique_ptr<BoundingVolume> volume, std::unique_ptr<Sprite> sprite);
 
 private:
+
 	bool m_onSlope = false;
 	bool m_shouldSlideLeft = false;
 	bool m_slideLeft = false;

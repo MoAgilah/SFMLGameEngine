@@ -1,86 +1,34 @@
-﻿STEP 1: Open Properties for Game Project
-Right-click Game in Solution Explorer
+﻿Game Project Settings
+This is the project that should:
 
-Click Properties
+Link to SFML .lib files
 
-Make sure you’re editing for:
+Run .exe with .dll dependencies
 
-Configuration: All Configurations or both Debug and Release
+Consume the SFMLGameEngine.lib from your static lib project
 
-Platform: x64
+VC++ Directories:
 
-🔹 STEP 2: Set Library Directories
-To find .lib files like sfml-graphics-d.lib:
+Include Directories:
+$(SolutionDir)SFMLGameEngine\SFMLGameEngine\include
 
-Go to:
+Library Directories:
+$(SolutionDir)SFMLGameEngine\SFMLGameEngine\lib
 
-mathematica
-Copy
-Edit
-Configuration Properties → VC++ Directories → Library Directories
-Set the value to:
-
-text
-Copy
-Edit
-$(SolutionDir)SFMLGameEngine\SFMLGameEngine\lib;%(AdditionalLibraryDirectories)
-🔹 STEP 3: Set Executable Directories
-To find DLLs like sfml-graphics-d-3.dll:
-
-Go to:
-
-mathematica
-Copy
-Edit
-Configuration Properties → VC++ Directories → Executable Directories
-Set the value to:
-
-text
-Copy
-Edit
+Executable Directories:
 $(SolutionDir)SFMLGameEngine\SFMLGameEngine\bin\$(Configuration);%(ExecutableDirectories)
-✅ This ensures that:
 
-When you run Game.exe, it can find sfml-*.dll in the right place
+Linker → Input → Additional Dependencies:
 
-It still includes paths to MSVC tools like cl.exe (because of %(ExecutableDirectories))
-
-🔹 STEP 4: Set Additional Dependencies
-Go to:
-
-mathematica
-Copy
-Edit
-Configuration Properties → Linker → Input → Additional Dependencies
-Add this (for Debug configuration):
-
-text
-Copy
-Edit
+Debug:
 sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)
-For Release, use the non--d versions:
 
-text
-Copy
-Edit
+Release:
 sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-audio.lib;sfml-network.lib;%(AdditionalDependencies)
-🔹 STEP 5: Confirm SFMLGameEngine Doesn't Link SFML
-In the SFMLGameEngine project:
 
-Right-click → Properties
+Tips
+Rebuild the SFMLGameEngine project first (so Game can link its .lib)
 
-Go to:
+Ensure that the DLLs are in the output folder (or use a post-build copy as mentioned before)
 
-css
-Copy
-Edit
-Linker → Input → Additional Dependencies
-❌ Make sure SFML .lib files are NOT listed here
-They should only be in the Game project.
-
-Under:
-
-Copy
-Edit
-VC++ Directories → Library Directories
-❌ Remove any entry like $(ProjectDir)lib unless you’re doing something custom
+Check that your Game.exe runs from Game\x64\Debug, and not from an outdated path

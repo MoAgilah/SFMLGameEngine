@@ -67,6 +67,15 @@
     <Filter Include="Header Files\Code\Game">
       <UniqueIdentifier>{37e36a15-64ef-463b-b097-daaa73768b6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Renderer">
+      <UniqueIdentifier>{e85ff8c6-a31b-4927-ba98-5f788a69b0a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Renderer">
+      <UniqueIdentifier>{c9b60e51-076b-4617-bf5d-1fb0390d791b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Interfaces">
+      <UniqueIdentifier>{0fe92ee1-f054-4c2f-8bcf-e1baa9e80ce6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -168,6 +177,18 @@
     <ClCompile Include="Code\UIElements\MenuNavigation.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Renderer\SFMLRenderer.cpp">
+      <Filter>Source Files\Code\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\SFMLWindow.cpp">
+      <Filter>Source Files\Code\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Drawables\SFTexture.cpp">
+      <Filter>Source Files\Code\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Drawables\SFSprite.cpp">
+      <Filter>Source Files\Code\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\CollisionManager.h">
@@ -233,9 +254,6 @@
     <ClInclude Include="Code\GameStates\DebugState.h">
       <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="Code\GameStates\IGameState.h">
-      <Filter>Header Files\Code\GameStates</Filter>
-    </ClInclude>
     <ClInclude Include="Code\GameStates\GameStateMgr.h">
       <Filter>Header Files\Code\GameStates</Filter>
     </ClInclude>
@@ -277,6 +295,42 @@
     </ClInclude>
     <ClInclude Include="Code\UIElements\MenuNavigation.h">
       <Filter>Header Files\Code\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFMLRenderer.h">
+      <Filter>Header Files\Code\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFMLWindow.h">
+      <Filter>Header Files\Code\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IRenderable.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IRenderer.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\ITransforms.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IWindow.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IGameState.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFDrawables.h">
+      <Filter>Header Files\Code\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IUpdatable.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFSprite.h">
+      <Filter>Header Files\Code\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\ITexture.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFTexture.h">
+      <Filter>Header Files\Code\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
