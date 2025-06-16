@@ -76,6 +76,9 @@
     <Filter Include="Header Files\Code\Interfaces">
       <UniqueIdentifier>{0fe92ee1-f054-4c2f-8bcf-e1baa9e80ce6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\bin">
+      <UniqueIdentifier>{23b5df96-f61c-4e11-8481-f8263f082999}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -336,6 +339,36 @@
   <ItemGroup>
     <None Include="Resources\Shaders\FadeInOutShader.frag">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-audio-d-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-graphics-d-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-network-d-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-system-d-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Debug\sfml-window-d-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Release\sfml-audio-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Release\sfml-graphics-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Release\sfml-network-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Release\sfml-system-3.dll">
+      <Filter>Resource Files\bin</Filter>
+    </None>
+    <None Include="bin\Release\sfml-window-3.dll">
+      <Filter>Resource Files\bin</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
