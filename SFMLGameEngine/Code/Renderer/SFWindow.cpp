@@ -1,16 +1,16 @@
-#include "SFMLWindow.h"
+#include "SFWindow.h"
 
 #include "../Game/Constants.h"
 #include "../Game/GameManager.h"
 
 
-bool SFMLWindow::Create(const Point& screemDims, const std::string& title)
+bool SFWindow::Create(const Point& screemDims, const std::string& title)
 {
 	GetWindow()->create(sf::VideoMode(screemDims), title);
 	return m_window->isOpen();
 }
 
-void SFMLWindow::PollEvents()
+void SFWindow::PollEvents()
 {
 	while (auto event = m_window->pollEvent())
 	{
@@ -35,12 +35,12 @@ void SFMLWindow::PollEvents()
 	}
 }
 
-bool SFMLWindow::ShouldClose() const
+bool SFWindow::ShouldClose() const
 {
 	return m_shouldClose || !m_window->isOpen();
 }
 
-void SFMLWindow::Close()
+void SFWindow::Close()
 {
 	if (m_window)
 		m_window->close();
@@ -48,12 +48,12 @@ void SFMLWindow::Close()
 	m_shouldClose = true;
 }
 
-void* SFMLWindow::GetNativeHandle()
+void* SFWindow::GetNativeHandle()
 {
    return reinterpret_cast<void*>(m_window->getNativeHandle());
 }
 
-sf::RenderWindow* SFMLWindow::GetWindow()
+sf::RenderWindow* SFWindow::GetWindow()
 {
 	return m_window.get();
 }

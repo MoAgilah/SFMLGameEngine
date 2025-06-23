@@ -4,7 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
-class SFMLWindow : public IWindow<sf::RenderWindow>
+class SFWindow : public IWindow<sf::RenderWindow>
 {
 public:
     bool Create(const Point& screemDims, const std::string& title) override;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SFMLWindow.h"
+#include "SFWindow.h"
 #include "../Interfaces/IRenderer.h"
 
-class SFMLRenderer : public IRenderer
+class SFRenderer : public IRenderer
 {
 public:
     void Initialise(const Point& screenDims, const std::string& title) override;

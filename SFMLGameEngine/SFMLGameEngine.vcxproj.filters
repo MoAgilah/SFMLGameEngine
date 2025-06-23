@@ -85,6 +85,15 @@
     <Filter Include="Resource Files\bin\Release">
       <UniqueIdentifier>{021bd193-81f7-4f72-a0d8-dbccced0d521}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Code\Interfaces">
+      <UniqueIdentifier>{0bdd0aeb-fa94-4869-b109-b7ba2f4ae528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Drawables\SFML">
+      <UniqueIdentifier>{705dacf9-5ddc-4d00-8a8f-db48b044b1e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Renderer\SFML">
+      <UniqueIdentifier>{d2305b74-0475-48ab-8da5-478724a6269c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
@@ -186,10 +195,10 @@
     <ClCompile Include="Code\UIElements\MenuNavigation.cpp">
       <Filter>Source Files\Code\UIElements</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Renderer\SFMLRenderer.cpp">
+    <ClCompile Include="Code\Renderer\SFRenderer.cpp">
       <Filter>Source Files\Code\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Renderer\SFMLWindow.cpp">
+    <ClCompile Include="Code\Renderer\SFWindow.cpp">
       <Filter>Source Files\Code\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Code\Drawables\SFTexture.cpp">
@@ -197,6 +206,21 @@
     </ClCompile>
     <ClCompile Include="Code\Drawables\SFSprite.cpp">
       <Filter>Source Files\Code\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Drawables\SFShape.cpp">
+      <Filter>Source Files\Code\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Drawables\SFText.cpp">
+      <Filter>Source Files\Code\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Interfaces\IFramework.cpp">
+      <Filter>Source Files\Code\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\SFCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\NGameManager.cpp">
+      <Filter>Source Files\Code\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -305,12 +329,6 @@
     <ClInclude Include="Code\UIElements\MenuNavigation.h">
       <Filter>Header Files\Code\UIElements</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Renderer\SFMLRenderer.h">
-      <Filter>Header Files\Code\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Renderer\SFMLWindow.h">
-      <Filter>Header Files\Code\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Interfaces\IRenderable.h">
       <Filter>Header Files\Code\Interfaces</Filter>
     </ClInclude>
@@ -326,20 +344,44 @@
     <ClInclude Include="Code\Interfaces\IGameState.h">
       <Filter>Header Files\Code\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Drawables\SFDrawables.h">
-      <Filter>Header Files\Code\Drawables</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Interfaces\IUpdatable.h">
       <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\SFSprite.h">
-      <Filter>Header Files\Code\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="Code\Interfaces\ITexture.h">
       <Filter>Header Files\Code\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Interfaces\IFramework.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFDrawables.h">
+      <Filter>Header Files\Code\Drawables\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFShape.h">
+      <Filter>Header Files\Code\Drawables\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFSprite.h">
+      <Filter>Header Files\Code\Drawables\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFText.h">
+      <Filter>Header Files\Code\Drawables\SFML</Filter>
+    </ClInclude>
     <ClInclude Include="Code\Drawables\SFTexture.h">
-      <Filter>Header Files\Code\Drawables</Filter>
+      <Filter>Header Files\Code\Drawables\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFRenderer.h">
+      <Filter>Header Files\Code\Renderer\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFWindow.h">
+      <Filter>Header Files\Code\Renderer\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\ICamera.h">
+      <Filter>Header Files\Code\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFCamera.h">
+      <Filter>Header Files\Code\Renderer\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\NGameManager.h">
+      <Filter>Header Files\Code\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

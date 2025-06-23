@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Camera.h"
 #include "InputManager.h"
 #include "FontManager.h"
 #include "ShaderManager.h"
@@ -10,33 +9,30 @@
 #include "World.h"
 #include "../Collisions/CollisionManager.h"
 #include "../GameStates/GameStateMgr.h"
+#include "../Interfaces/ICamera.h"
 #include "../Interfaces/IRenderer.h"
-#include <SFML/Graphics.hpp>
 #include <array>
 #include <memory>
 
-class GameManager
+class NGameManager
 {
 public:
-	GameManager();
-	~GameManager();
-	GameManager(const GameManager& obj) = delete;
+	NGameManager();
+	~NGameManager();
+	NGameManager(const NGameManager& obj) = delete;
 
-	static GameManager* Get() { return m_instance; }
+	static NGameManager* Get() { return m_instance; }
 
 	void CheckInView();
-
-	sf::RenderWindow& GetRenderWindow() { return m_window; }
-
 	void Update(float deltaTime);
 	void Render();
 
 	void ChangeWorld(World* world);
-
 	void ChangeCollisionManager(CollisionManager* mgr);
 
+	// Getters
 	[[nodiscard]] Timer& GetTimer() noexcept { return m_timer; }
-	[[nodiscard]] Camera& GetCamera() noexcept { return m_camera; }
+	[[nodiscard]] ICamera* GetCamera() noexcept { return m_camera.get(); }
 	[[nodiscard]] InputManager& GetInputManager() noexcept { return m_inputManager; }
 	[[nodiscard]] FontManager& GetFontMgr() noexcept { return m_fontManager; }
 	[[nodiscard]] ShaderManager& GetShaderMgr() noexcept { return m_shaderManager; }
@@ -47,19 +43,22 @@ public:
 	[[nodiscard]] IRenderer* GetRenderer() noexcept { return m_renderer.get(); }
 	[[nodiscard]] World* GetWorld() { return m_world.get(); }
 
+	// Setters
+	void SetCamera(std::unique_ptr<ICamera> camera) { m_camera = std::move(camera); }
+	void SetRenderer(std::unique_ptr<IRenderer> renderer) { m_renderer = std::move(renderer); }
+
 private:
+	static NGameManager* m_instance;
 
-	static GameManager*					m_instance;
-
-	sf::RenderWindow					m_window;
 	Timer								m_timer;
-	Camera								m_camera;
 	InputManager						m_inputManager;
 	FontManager							m_fontManager;
 	ShaderManager						m_shaderManager;
 	SoundManager						m_soundManager;
 	TextureManager						m_texureManager;
 	GameStateMgr						m_stateManager;
+
+	std::unique_ptr<ICamera>			m_camera;
 	std::unique_ptr<IRenderer>			m_renderer;
 	std::unique_ptr<CollisionManager>	m_collisionManager;
 	std::unique_ptr<World>				m_world;

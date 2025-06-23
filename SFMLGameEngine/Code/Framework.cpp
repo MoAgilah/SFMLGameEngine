@@ -1,6 +1,7 @@
 #include "Framework.h"
 
 #include <SFML/Graphics.hpp>
+#include <chrono>
 
 FrameWork::FrameWork(const std::string& windowTitle)
 {
@@ -13,71 +14,75 @@ void FrameWork::Initialise()
 
 int FrameWork::Run()
 {
-	// Fixed time step (e.g., for 60 updates per second)
-	const float dt = 1.f / GameConstants::FPS;
-	const int subSteps = 4;  // Number of sub-steps for improved collision accuracy
-	const float subStepDt = dt / static_cast<float>(subSteps);
+    using clock = std::chrono::steady_clock;
+    using duration = std::chrono::duration<float>;
 
-	auto& window = m_gameMgr.GetRenderWindow();
-	window.create(sf::VideoMode(sf::Vector2u{
+    const float dt = 1.f / GameConstants::FPS;
+    const int subSteps = 4;
+    const float subStepDt = dt / static_cast<float>(subSteps);
+
+    auto& window = m_gameMgr.GetRenderWindow();
+    window.create(sf::VideoMode(sf::Vector2u{
         static_cast<unsigned>(GameConstants::ScreenDim.x),
         static_cast<unsigned>(GameConstants::ScreenDim.y)
-    }),
-		GameConstants::WindowTitle);
+        }),
+        GameConstants::WindowTitle);
 
-	window.setFramerateLimit(static_cast<int>(GameConstants::FPS));
+    window.setFramerateLimit(static_cast<int>(GameConstants::FPS));
 
-	sf::Clock clock;
-	float accumulator = 0.0f;
+    float accumulator = 0.0f;
+    auto previousTime = clock::now();
 
-	while (window.isOpen())
-	{
-		// Process events
-		while (auto event = window.pollEvent())
-		{
-			if (event.has_value())
-			{
+    while (window.isOpen())
+    {
+        // Process events
+        while (auto event = window.pollEvent())
+        {
+            if (event.has_value())
+            {
+                if (event->is<sf::Event::Closed>())
+                {
+                    window.close();
+                }
+                else if (auto keyPressed = event->getIf<sf::Event::KeyPressed>())
+                {
+                    if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                        window.close();
 
-				if (event->is<sf::Event::Closed>())
-				{
-					window.close();
-				}
-				else if (auto keyPressed = event->getIf<sf::Event::KeyPressed>())
-				{
-					if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-						window.close();
+                    m_gameMgr.GetInputManager().ProcessKeyPressedEvent(keyPressed);
+                }
+                else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+                {
+                    m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(keyReleased);
+                }
+            }
+        }
 
-					m_gameMgr.GetInputManager().ProcessKeyPressedEvent(keyPressed);
-				}
-				else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
-				{
-					m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(keyReleased);
-				}
-			}
-		}
+        // Time step calculation using generic clock
+        auto currentTime = clock::now();
+        float frameTime = std::chrono::duration_cast<duration>(currentTime - previousTime).count();
+        previousTime = currentTime;
 
-		// Calculate elapsed time for this frame
-		float frameTime = clock.restart().asSeconds();
+        // Clamp frame time
+        if (frameTime > 0.25f)
+            frameTime = 0.25f;
 
-		// Clamp frameTime to avoid instability during long frames
-		if (frameTime > 0.25f)
-			frameTime = 0.25f;
-		accumulator += frameTime;
+        accumulator += frameTime;
 
-		// Sub-stepping update loop for better collision accuracy
-		while (accumulator >= dt)
-		{
-			for (int i = 0; i < subSteps; ++i)
-				m_gameMgr.Update(subStepDt);  // Perform sub-step updates
+        // Sub-stepped updates
+        while (accumulator >= dt)
+        {
+            for (int i = 0; i < subSteps; ++i)
+                m_gameMgr.Update(subStepDt);
 
-			accumulator -= dt;
-		}
+            accumulator -= dt;
+        }
 
-		// Render once per frame
-		window.clear(GameConstants::WindowColour);
-		m_gameMgr.Render();
-		window.display();
-	}
+        // Render
+        window.clear(GameConstants::WindowColour);
+        m_gameMgr.Render();
+        window.display();
+    }
 
-	return 0;
+    return 0;
 }

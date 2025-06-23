@@ -56,6 +56,7 @@ public:
 
 	void SetFillColour(const sf::Color& col) { m_shape->setFillColor(col); }
 	void SetOutlineColour(const sf::Color& col) { m_shape->setOutlineColor(col); }
+
 	void SetOutlineThickness(float scale) { m_shape->setOutlineThickness(scale); }
 
 	sf::CircleShape* GetCircle() { return static_cast<sf::CircleShape*>(m_shape.get()); }

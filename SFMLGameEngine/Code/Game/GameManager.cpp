@@ -2,6 +2,7 @@
 
 #include "../Game/Constants.h"
 #include "../GameStates/DebugState.h"
+#include "NGameManager.h"
 
 GameManager* GameManager::m_instance = nullptr;
 
