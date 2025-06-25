@@ -19,62 +19,20 @@
     <Filter Include="Header Files\Code">
       <UniqueIdentifier>{39cf1d37-f4aa-4abb-9719-2b3d96b80c8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Code\Collisions">
-      <UniqueIdentifier>{46227079-e18f-42c8-8c2d-e538aad97fcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\Drawables">
-      <UniqueIdentifier>{edcb146b-9d76-4b09-bc91-8cf929d83dfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\GameObjects">
-      <UniqueIdentifier>{5192685e-36e1-4480-90fb-224e7a9006d4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\GameStates">
-      <UniqueIdentifier>{d1077f4b-1433-421f-95b1-c03a4ca02d81}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\UIElements">
-      <UniqueIdentifier>{c9807a80-4b3f-4f9f-ab07-4f7533c1d5f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Code\Utilities">
       <UniqueIdentifier>{c4b6a071-4ad0-4525-8ba4-a595328e2a62}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Code">
       <UniqueIdentifier>{0a6e994b-d4c5-486e-b300-f750d55c8f4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Code\Collisions">
-      <UniqueIdentifier>{8a069f78-6eb3-4a34-a825-1d9445303bfb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Code\Drawables">
-      <UniqueIdentifier>{bc76a6e8-cd3b-4a2f-b37d-2a88a8b4ae29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Code\Game">
       <UniqueIdentifier>{b9d66b93-531a-417a-a1d6-9bc437bdca1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Code\GameObjects">
-      <UniqueIdentifier>{7999abac-4dc8-4f81-8fab-b7560372781b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Code\GameStates">
-      <UniqueIdentifier>{7a11cb52-1b5f-49a2-8655-c95dc5ed576b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Code\UIElements">
-      <UniqueIdentifier>{db6f3370-caf7-48e3-994e-335dd2a09aca}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Code\Utilities">
       <UniqueIdentifier>{470d85ac-c526-4a7d-afea-4c8567264a4c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{e67edff7-99ac-41ea-8886-20c6cf0d297e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\Game">
-      <UniqueIdentifier>{37e36a15-64ef-463b-b097-daaa73768b6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\Renderer">
-      <UniqueIdentifier>{e85ff8c6-a31b-4927-ba98-5f788a69b0a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Code\Renderer">
-      <UniqueIdentifier>{c9b60e51-076b-4617-bf5d-1fb0390d791b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\Interfaces">
-      <UniqueIdentifier>{0fe92ee1-f054-4c2f-8bcf-e1baa9e80ce6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\bin">
       <UniqueIdentifier>{23b5df96-f61c-4e11-8481-f8263f082999}</UniqueIdentifier>
@@ -85,85 +43,142 @@
     <Filter Include="Resource Files\bin\Release">
       <UniqueIdentifier>{021bd193-81f7-4f72-a0d8-dbccced0d521}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Code\Interfaces">
-      <UniqueIdentifier>{0bdd0aeb-fa94-4869-b109-b7ba2f4ae528}</UniqueIdentifier>
+    <Filter Include="Header Files\Code\Engine">
+      <UniqueIdentifier>{19cedda9-d046-4374-8cd6-23a7db62f32c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Code\Drawables\SFML">
+    <Filter Include="Header Files\Code\Engine\Core">
+      <UniqueIdentifier>{67fca27e-0230-411c-a861-a20551b84d4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\Interfaces">
+      <UniqueIdentifier>{18d0aa5c-37d6-48d3-b318-983a9169dc2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\Graphics">
+      <UniqueIdentifier>{eece3721-ad9e-490c-a2d6-80aa71262b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\Resources">
+      <UniqueIdentifier>{c916c8c5-2627-4025-a627-9b4a7598e3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\States">
+      <UniqueIdentifier>{46937f6a-6606-4f3d-bc7b-4557fad4c5cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\World">
+      <UniqueIdentifier>{d901adc0-2862-427f-8d25-96d9550528c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\Collisions">
+      <UniqueIdentifier>{46227079-e18f-42c8-8c2d-e538aad97fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\Input">
+      <UniqueIdentifier>{35f29a1d-a29d-494b-9810-e19277b71de7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Platform">
+      <UniqueIdentifier>{b2c0d3d3-e021-4a53-a92a-1889c2715503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML">
       <UniqueIdentifier>{705dacf9-5ddc-4d00-8a8f-db48b044b1e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Code\Renderer\SFML">
-      <UniqueIdentifier>{d2305b74-0475-48ab-8da5-478724a6269c}</UniqueIdentifier>
+    <Filter Include="Header Files\Code\Platform\SFML\Drawables">
+      <UniqueIdentifier>{8a7771bc-4645-40f9-bf4f-75012b7bebeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Renderer">
+      <UniqueIdentifier>{3d5f2345-ff47-4f1a-845c-a1158e4cf872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\UI">
+      <UniqueIdentifier>{c9807a80-4b3f-4f9f-ab07-4f7533c1d5f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Game">
+      <UniqueIdentifier>{37e36a15-64ef-463b-b097-daaa73768b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Game\Objects">
+      <UniqueIdentifier>{5192685e-36e1-4480-90fb-224e7a9006d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine">
+      <UniqueIdentifier>{4c80154f-edc2-405f-a97c-34148dcb035b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\Core">
+      <UniqueIdentifier>{7c9b307d-efc9-4756-9895-b28ba4c7b27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\Graphics">
+      <UniqueIdentifier>{98bac442-69a0-4aa6-807e-6c2d9f30a58a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\Interfaces">
+      <UniqueIdentifier>{0bdd0aeb-fa94-4869-b109-b7ba2f4ae528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\States">
+      <UniqueIdentifier>{7a11cb52-1b5f-49a2-8655-c95dc5ed576b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\World">
+      <UniqueIdentifier>{c2bb42fc-5cd5-45e0-afa9-15c3a163bcdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\Resources">
+      <UniqueIdentifier>{896a991f-1432-4588-876a-72f21d75e379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\Input">
+      <UniqueIdentifier>{7f0385a3-25cc-4f0c-adae-6d189bde76d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms">
+      <UniqueIdentifier>{e94c2521-1d6d-4cdf-a29f-6d4f4784436b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML">
+      <UniqueIdentifier>{bd626d46-2568-44a2-8cf4-50450826a952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML\Drawables">
+      <UniqueIdentifier>{bc76a6e8-cd3b-4a2f-b37d-2a88a8b4ae29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML\Renderer">
+      <UniqueIdentifier>{c9b60e51-076b-4617-bf5d-1fb0390d791b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\UI">
+      <UniqueIdentifier>{db6f3370-caf7-48e3-994e-335dd2a09aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Game\Objects">
+      <UniqueIdentifier>{7999abac-4dc8-4f81-8fab-b7560372781b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Engine\Collisions">
+      <UniqueIdentifier>{8a069f78-6eb3-4a34-a825-1d9445303bfb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Collisions\Tile.cpp">
-      <Filter>Source Files\Code\Collisions</Filter>
+      <Filter>Source Files\Code\Engine\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Code\Collisions\CollisionManager.cpp">
-      <Filter>Source Files\Code\Collisions</Filter>
+      <Filter>Source Files\Code\Engine\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Code\Collisions\Grid.cpp">
-      <Filter>Source Files\Code\Collisions</Filter>
+      <Filter>Source Files\Code\Engine\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Code\Drawables\Sprite.cpp">
-      <Filter>Source Files\Code\Drawables</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\World.cpp">
-      <Filter>Source Files\Code\Game</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Code\Game\Camera.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Constants.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\FontManager.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\GameManager.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\InputManager.cpp">
       <Filter>Source Files\Code\Game</Filter>
     </ClCompile>
     <ClCompile Include="Code\Game\PhysicsController.cpp">
       <Filter>Source Files\Code\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Game\ShaderManager.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\SoundManager.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\TextureManager.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Timer.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Code\GameObjects\Object.cpp">
-      <Filter>Source Files\Code\GameObjects</Filter>
+      <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameObjects\Box.cpp">
-      <Filter>Source Files\Code\GameObjects</Filter>
+      <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameObjects\Collectables.cpp">
-      <Filter>Source Files\Code\GameObjects</Filter>
+      <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameObjects\Enemy.cpp">
-      <Filter>Source Files\Code\GameObjects</Filter>
+      <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameStates\MainMenuState.cpp">
-      <Filter>Source Files\Code\GameStates</Filter>
+      <Filter>Source Files\Code\Engine\States</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameStates\DebugState.cpp">
-      <Filter>Source Files\Code\GameStates</Filter>
+      <Filter>Source Files\Code\Engine\States</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameStates\GameStateMgr.cpp">
-      <Filter>Source Files\Code\GameStates</Filter>
+      <Filter>Source Files\Code\Engine\States</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameStates\LoadingState.cpp">
-      <Filter>Source Files\Code\GameStates</Filter>
+      <Filter>Source Files\Code\Engine\States</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utilities\Point.cpp">
       <Filter>Source Files\Code\Utilities</Filter>
@@ -171,127 +186,112 @@
     <ClCompile Include="Code\Utilities\Utilities.cpp">
       <Filter>Source Files\Code\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Framework.cpp">
-      <Filter>Source Files\Code</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Collisions\BoundingVolume.cpp">
-      <Filter>Source Files\Code\Collisions</Filter>
+      <Filter>Source Files\Code\Engine\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\Text.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
+      <Filter>Source Files\Code\Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\Menu.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
+      <Filter>Source Files\Code\Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\MenuItem.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
+      <Filter>Source Files\Code\Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\PaginatedMenu.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
+      <Filter>Source Files\Code\Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\MenuCursor.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
+      <Filter>Source Files\Code\Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Code\UIElements\MenuNavigation.cpp">
-      <Filter>Source Files\Code\UIElements</Filter>
+      <Filter>Source Files\Code\Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Renderer\SFRenderer.cpp">
-      <Filter>Source Files\Code\Renderer</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Code\Renderer\SFWindow.cpp">
-      <Filter>Source Files\Code\Renderer</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Code\Drawables\SFTexture.cpp">
-      <Filter>Source Files\Code\Drawables</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Code\Drawables\SFSprite.cpp">
-      <Filter>Source Files\Code\Drawables</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Code\Drawables\SFShape.cpp">
-      <Filter>Source Files\Code\Drawables</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Code\Drawables\SFText.cpp">
-      <Filter>Source Files\Code\Drawables</Filter>
+      <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Code\Interfaces\IFramework.cpp">
-      <Filter>Source Files\Code\Interfaces</Filter>
+      <Filter>Source Files\Code\Engine\Interfaces</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Renderer\SFCamera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Code\Game\Constants.cpp">
+      <Filter>Source Files\Code\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\GameManager.cpp">
+      <Filter>Source Files\Code\Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Code\Game\NGameManager.cpp">
-      <Filter>Source Files\Code\Game</Filter>
+      <Filter>Source Files\Code\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\Timer.cpp">
+      <Filter>Source Files\Code\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\World.cpp">
+      <Filter>Source Files\Code\Engine\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\FontManager.cpp">
+      <Filter>Source Files\Code\Engine\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\ShaderManager.cpp">
+      <Filter>Source Files\Code\Engine\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\SoundManager.cpp">
+      <Filter>Source Files\Code\Engine\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\TextureManager.cpp">
+      <Filter>Source Files\Code\Engine\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\InputManager.cpp">
+      <Filter>Source Files\Code\Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Framework.cpp">
+      <Filter>Source Files\Code\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Renderer\SFCamera.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Collisions\CollisionManager.h">
-      <Filter>Header Files\Code\Collisions</Filter>
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Code\Collisions\Grid.h">
-      <Filter>Header Files\Code\Collisions</Filter>
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Code\Collisions\Tile.h">
-      <Filter>Header Files\Code\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\Sprite.h">
-      <Filter>Header Files\Code\Drawables</Filter>
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Code\Game\Camera.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Constants.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\FontManager.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\GameManager.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\InputManager.h">
       <Filter>Header Files\Code\Game</Filter>
     </ClInclude>
     <ClInclude Include="Code\Game\PhysicsController.h">
       <Filter>Header Files\Code\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Game\ShaderManager.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\SoundManager.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\TextureManager.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Timer.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\World.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Code\GameObjects\Box.h">
-      <Filter>Header Files\Code\GameObjects</Filter>
+      <Filter>Header Files\Code\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Code\GameObjects\Collectables.h">
-      <Filter>Header Files\Code\GameObjects</Filter>
+      <Filter>Header Files\Code\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Code\GameObjects\Enemy.h">
-      <Filter>Header Files\Code\GameObjects</Filter>
+      <Filter>Header Files\Code\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Code\GameObjects\Object.h">
-      <Filter>Header Files\Code\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GameStates\MainMenuState.h">
-      <Filter>Header Files\Code\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GameStates\DebugState.h">
-      <Filter>Header Files\Code\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GameStates\GameStateMgr.h">
-      <Filter>Header Files\Code\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GameStates\LoadingState.h">
-      <Filter>Header Files\Code\GameStates</Filter>
+      <Filter>Header Files\Code\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Code\Utilities\Point.h">
       <Filter>Header Files\Code\Utilities</Filter>
@@ -302,85 +302,127 @@
     <ClInclude Include="Code\Utilities\ResourceLoader.h">
       <Filter>Header Files\Code\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Framework.h">
-      <Filter>Header Files\Code</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Collisions\BoundingVolume.h">
-      <Filter>Header Files\Code\Collisions</Filter>
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Code\Utilities\DecisionTree.h">
       <Filter>Header Files\Code\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\Text.h">
-      <Filter>Header Files\Code\UIElements</Filter>
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\Menu.h">
-      <Filter>Header Files\Code\UIElements</Filter>
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\MenuItem.h">
-      <Filter>Header Files\Code\UIElements</Filter>
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\PaginatedMenu.h">
-      <Filter>Header Files\Code\UIElements</Filter>
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\MenuCursor.h">
-      <Filter>Header Files\Code\UIElements</Filter>
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
     <ClInclude Include="Code\UIElements\MenuNavigation.h">
-      <Filter>Header Files\Code\UIElements</Filter>
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Interfaces\IRenderable.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
+    <ClInclude Include="Code\Game\GameManager.h">
+      <Filter>Header Files\Code\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Interfaces\IRenderer.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
+    <ClInclude Include="Code\Game\Constants.h">
+      <Filter>Header Files\Code\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Interfaces\ITransforms.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Interfaces\IWindow.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Interfaces\IGameState.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Interfaces\IUpdatable.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Interfaces\ITexture.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Interfaces\IFramework.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\SFDrawables.h">
-      <Filter>Header Files\Code\Drawables\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\SFShape.h">
-      <Filter>Header Files\Code\Drawables\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\SFSprite.h">
-      <Filter>Header Files\Code\Drawables\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\SFText.h">
-      <Filter>Header Files\Code\Drawables\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Drawables\SFTexture.h">
-      <Filter>Header Files\Code\Drawables\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Renderer\SFRenderer.h">
-      <Filter>Header Files\Code\Renderer\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Renderer\SFWindow.h">
-      <Filter>Header Files\Code\Renderer\SFML</Filter>
+    <ClInclude Include="Code\Game\Timer.h">
+      <Filter>Header Files\Code\Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Code\Interfaces\ICamera.h">
-      <Filter>Header Files\Code\Interfaces</Filter>
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Renderer\SFCamera.h">
-      <Filter>Header Files\Code\Renderer\SFML</Filter>
+    <ClInclude Include="Code\Interfaces\IFramework.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IGameState.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IRenderable.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IRenderer.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\ITexture.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\ITransforms.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IUpdatable.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Interfaces\IWindow.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Code\Game\NGameManager.h">
+      <Filter>Header Files\Code\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\FontManager.h">
+      <Filter>Header Files\Code\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\ShaderManager.h">
+      <Filter>Header Files\Code\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\SoundManager.h">
+      <Filter>Header Files\Code\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\TextureManager.h">
+      <Filter>Header Files\Code\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameStates\DebugState.h">
+      <Filter>Header Files\Code\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameStates\GameStateMgr.h">
+      <Filter>Header Files\Code\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameStates\LoadingState.h">
+      <Filter>Header Files\Code\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameStates\MainMenuState.h">
+      <Filter>Header Files\Code\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\World.h">
+      <Filter>Header Files\Code\Engine\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Game\InputManager.h">
+      <Filter>Header Files\Code\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFTexture.h">
+      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFDrawables.h">
+      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFShape.h">
+      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFSprite.h">
+      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\SFText.h">
+      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFCamera.h">
+      <Filter>Header Files\Code\Platform\SFML\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFRenderer.h">
+      <Filter>Header Files\Code\Platform\SFML\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Renderer\SFWindow.h">
+      <Filter>Header Files\Code\Platform\SFML\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Framework.h">
+      <Filter>Header Files\Code\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Drawables\Sprite.h">
       <Filter>Header Files\Code\Game</Filter>
     </ClInclude>
   </ItemGroup>
