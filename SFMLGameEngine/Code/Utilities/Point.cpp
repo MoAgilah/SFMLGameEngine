@@ -1,6 +1,6 @@
 #include "Point.h"
 
-#include "../Collisions/BoundingVolume.h"
+#include "../Engine/Collisions/BoundingVolume.h"
 #include <stdexcept>
 
 Point::Point()

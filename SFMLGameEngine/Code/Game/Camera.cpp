@@ -1,7 +1,7 @@
-#include "../Game/Camera.h"
+#include "Camera.h"
 
-#include "../Game/GameManager.h"
-#include "../Game/Constants.h"
+#include "../Engine/Core/GameManager.h"
+#include "../Engine/Core/Constants.h"
 
 Camera::Camera()
 {

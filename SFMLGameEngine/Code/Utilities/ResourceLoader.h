@@ -2,13 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <algorithm>
+#include <iostream>
+#include <filesystem>
+#include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
-#include <memory>
-#include <iostream>
-#include <optional>
-#include <filesystem>
-#include <algorithm>
 
 namespace fs = std::filesystem;
 
