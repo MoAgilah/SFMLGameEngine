@@ -1,6 +1,6 @@
 #include "SFSprite.h"
 
-#include "../../../Engine/Core/GameManager.h"
+#include "../../../Engine/Core/NGameManager.h"
 
 SFSprite::SFSprite(const std::string& texId)
 {
@@ -13,7 +13,7 @@ void SFSprite::SetTexture(const std::string& texId)
 
 	try
 	{
-		m_drawable = std::make_shared<sf::Sprite>(*GameManager::Get()->GetTextureMgr().GetTexture(m_texID));
+		m_drawable = std::make_shared<sf::Sprite>(*NGameManager::Get()->GetTextureMgr().GetTexture(m_texID));
 	}
 	catch (const std::invalid_argument& e)
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFDrawables.h"
+#include "../../../Engine/Core/Timer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 
@@ -41,12 +42,10 @@ class SFText : public SFDrawables<sf::Text>
 public:
 	SFText(const NTextConfig& config);
 
-	void Update(float deltaTime);
-
 	virtual void SetText(const std::string& text);
 	virtual void Reset(const std::string& text, std::optional<NTextConfig> config = std::nullopt);
 
-	Point GetSize();
+	Point GetSize() override;
 
 	unsigned int GetCharSize() { return m_drawable->getCharacterSize(); }
 	void SetCharSize(unsigned int charSize) { m_drawable->setCharacterSize(charSize); }
@@ -59,8 +58,6 @@ public:
 
 	void ResetOutlineColour() { SetOutlineColour(m_config.m_colour); }
 
-	bool IsAnimated() { return m_config.m_animType > NTextAnimType::Static; }
-
 private:
 
 	virtual void Init();
@@ -69,3 +66,55 @@ protected:
 
 	NTextConfig m_config;
 };
+
+using NUpdateFunc = std::function<void(float)>;
+using NRenderFunc = std::function<void(IRenderer* renderer)>;
+
+class SFAnimatedText : public SFText
+{
+public:
+	SFAnimatedText(const NTextConfig& config);
+
+	void Update(float deltaTime) override;
+	void Render(IRenderer* renderer) override;
+
+	void Reset(const std::string& text, std::optional<NTextConfig> config = std::nullopt) override;
+
+	bool GetIsLooping() { return m_looping; }
+	void SetIsLooping(bool loop) { m_looping = loop; }
+
+	bool GetIsPaused() { return m_paused; }
+	void SetIsPaused(bool pause) { m_paused = pause; }
+
+	void SetMaxCount(int startFrom);
+	bool CountHasEnded() const { return m_count == 0; }
+
+	void SetCountDown(const std::string& msg) { m_countdownMsg = msg; }
+
+	void SetUpdateFunc(NUpdateFunc func);
+	void SetRenderFunc(NRenderFunc func);
+
+	Timer& GetTimer() { return m_timer; }
+
+private:
+
+	void FadeInAndOutUpdate(float deltaTime);
+	void FadeInFadeOutRender(IRenderer* renderer);
+
+private:
+
+	Timer m_timer;
+	bool m_paused = false;
+	bool m_looping = true;
+	bool m_reduceAlpha = true;
+	int m_count = 0;
+	int m_maxCount = 0;
+	NUpdateFunc m_updateFunc;
+	NRenderFunc m_renderFunc;
+	std::string m_countdownMsg;
+	std::shared_ptr<sf::Shader> m_textShader;
+};
+
+void InitFlashingText(SFAnimatedText* txtObj, const std::string& text, bool loop = true, std::optional<NTextConfig> config = std::nullopt);
+void InitCountdownText(SFAnimatedText* txtObj, int startFrom, const std::string& countDownMessage, std::optional<NTextConfig> config = std::nullopt);
+void InitCustomTextAnim(SFAnimatedText* txtObj, const std::string& text, NUpdateFunc updator, NRenderFunc rendaror, const std::string& shaderName = "", std::optional<NTextConfig> config = std::nullopt);

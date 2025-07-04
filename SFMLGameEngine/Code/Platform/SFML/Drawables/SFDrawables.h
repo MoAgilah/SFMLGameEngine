@@ -3,6 +3,7 @@
 #include "../../../Engine/Interfaces/IRenderable.h"
 #include "../../../Engine/Interfaces/ITransforms.h"
 #include "../../../Engine/Interfaces/IUpdatable.h"
+#include "../Renderer/SFRenderer.h"
 #include <memory>
 
 template <typename T>
@@ -13,7 +14,16 @@ public:
 
 	void Render(IRenderer* renderer) override
 	{
-		renderer->Draw(this);
+		auto* sfRenderer = dynamic_cast<SFRenderer*>(renderer);
+		if (!sfRenderer || !m_drawable)
+			return;
+
+		// Get native handle as sf::RenderWindow*
+		sf::RenderWindow* window = static_cast<sf::RenderWindow*>(sfRenderer->GetWindow()->GetNativeHandle());
+		if (window)
+		{
+			window->draw(*m_drawable);
+		}
 	}
 
 	virtual void SetPosition(const Point& pos) override

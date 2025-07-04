@@ -39,6 +39,7 @@
     <ClCompile Include="Code\Engine\States\GameStateMgr.cpp" />
     <ClCompile Include="Code\Engine\States\LoadingState.cpp" />
     <ClCompile Include="Code\Engine\States\MainMenuState.cpp" />
+    <ClCompile Include="Code\Engine\States\NGameStateMgr.cpp" />
     <ClCompile Include="Code\Engine\UI\Menu.cpp" />
     <ClCompile Include="Code\Engine\UI\MenuCursor.cpp" />
     <ClCompile Include="Code\Engine\UI\MenuItem.cpp" />
@@ -56,6 +57,7 @@
     <ClCompile Include="Code\Platform\SFML\Drawables\SFSprite.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFText.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFTexture.cpp" />
+    <ClCompile Include="Code\Platform\SFML\Engine\Core\SFFramework.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFCamera.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFRenderer.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFWindow.cpp" />
@@ -76,6 +78,7 @@
     <ClInclude Include="Code\Engine\Interfaces\ICamera.h" />
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
+    <ClInclude Include="Code\Engine\Interfaces\INGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderer.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITexture.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="Code\Engine\States\GameStateMgr.h" />
     <ClInclude Include="Code\Engine\States\LoadingState.h" />
     <ClInclude Include="Code\Engine\States\MainMenuState.h" />
+    <ClInclude Include="Code\Engine\States\NGameStateMgr.h" />
     <ClInclude Include="Code\Engine\UI\Menu.h" />
     <ClInclude Include="Code\Engine\UI\MenuCursor.h" />
     <ClInclude Include="Code\Engine\UI\MenuItem.h" />
@@ -108,6 +112,7 @@
     <ClInclude Include="Code\Platform\SFML\Drawables\SFSprite.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFText.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFTexture.h" />
+    <ClInclude Include="Code\Platform\SFML\Engine\Core\SFFramework.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFCamera.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFRenderer.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h" />

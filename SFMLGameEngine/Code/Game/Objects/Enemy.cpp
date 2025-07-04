@@ -35,7 +35,7 @@ void Enemy::Update(float deltaTime)
     {
         if (!m_resetAllowed)
         {
-            m_resetTimer.SetTime(1);
+            m_resetTimer.SetCurrTime(1);
             m_resetAllowed = true;
         }
 
@@ -60,8 +60,8 @@ void Enemy::Reset()
     m_resetAllowed = false;
     m_invulnerable = false;
 
-    m_resetTimer.ResetTime();
-    m_activationTimer.ResetTime();
+    m_resetTimer.RestartTimer();
+    m_activationTimer.RestartTimer();
 }
 
 void Enemy::DecrementLife()
@@ -72,10 +72,10 @@ void Enemy::DecrementLife()
 
 void Enemy::SetAirTime(float time)
 {
-    m_airTimer.SetTime(time);
+    m_airTimer.SetCurrTime(time);
 }
 
 void Enemy::SetTimeLeftActive(float time)
 {
-    m_activationTimer.SetTime(time);
+    m_activationTimer.SetCurrTime(time);
 }

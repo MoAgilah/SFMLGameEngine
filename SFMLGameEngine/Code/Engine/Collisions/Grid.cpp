@@ -2,7 +2,7 @@
 
 #include "Tile.h"
 #include "../Core/Constants.h"
-#include "../Core/GameManager.h"
+#include "../Core/NGameManager.h"
 #include <algorithm>
 #include <format>
 #include <fstream>
@@ -11,7 +11,7 @@
 Grid::Grid(int rows, int columns, const std::string & tileFilePaths)
 	: m_rows(rows), m_columns(columns)
 {
-	const auto font = GameManager::Get()->GetFontMgr().GetFont("Standard");
+	const auto font = NGameManager::Get()->GetFontMgr().GetFont("Arial");
 	m_grid.reserve(m_rows * m_columns);
 
 	for (int y = 0; y < m_rows; ++y)

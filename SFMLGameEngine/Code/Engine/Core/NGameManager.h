@@ -11,7 +11,7 @@
 #include "../Resources/SoundManager.h"
 #include "../Resources/TextureManager.h"
 #include "../World/World.h"
-#include "../States/GameStateMgr.h"
+#include "../States/NGameStateMgr.h"
 #include <array>
 #include <memory>
 
@@ -40,7 +40,7 @@ public:
 	[[nodiscard]] SoundManager& GetSoundMgr() noexcept { return m_soundManager; }
 	[[nodiscard]] TextureManager& GetTextureMgr() noexcept { return m_texureManager; }
 	[[nodiscard]] CollisionManager* GetCollisionMgr() noexcept { return m_collisionManager.get(); }
-	[[nodiscard]] GameStateMgr* GetGameStateMgr() noexcept { return &m_stateManager; }
+	[[nodiscard]] NGameStateMgr* GetGameStateMgr() noexcept { return &m_stateManager; }
 	[[nodiscard]] IRenderer* GetRenderer() noexcept { return m_renderer.get(); }
 	[[nodiscard]] World* GetWorld() { return m_world.get(); }
 
@@ -57,7 +57,7 @@ private:
 	ShaderManager						m_shaderManager;
 	SoundManager						m_soundManager;
 	TextureManager						m_texureManager;
-	GameStateMgr						m_stateManager;
+	NGameStateMgr						m_stateManager;
 
 	std::unique_ptr<ICamera>			m_camera;
 	std::unique_ptr<IRenderer>			m_renderer;

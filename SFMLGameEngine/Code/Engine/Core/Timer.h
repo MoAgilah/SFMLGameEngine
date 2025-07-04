@@ -8,15 +8,19 @@ public:
 
 	void Update(float deltaTime);
 
-	float GetTime() const { return m_time; }
+	float GetCurrTime() const { return m_time; }
+	void SetCurrTime(float time) { m_time = time; }
+
 	bool CheckEnd() const { return m_time <= 0.0f; }
 	void ForceEnd() { m_time = m_maxTime; }
-	void SetTime(float time) { m_time = time; }
 
 	void Pause() { m_stopped = true; }
 	void Resume() { m_stopped = false; }
-	void ResetTime();
 
+	void RestartTimer();
+
+	void SetMaxTime(float maxTime) { m_maxTime = maxTime; }
+	float GetMaxTime() const { return m_maxTime; }
 private:
 
 	float m_time = 0;

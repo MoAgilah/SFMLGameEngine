@@ -40,5 +40,33 @@ int IFrameWork::Run()
     }
 
     Shutdown();
+
     return 0;
+}
+
+void IFrameWork::PollEvents()
+{
+    auto* renderer = m_gameMgr.GetRenderer();
+
+    if (renderer)
+        renderer->PollWindowEvents();
+}
+
+void IFrameWork::Update(float dt)
+{
+    m_gameMgr.Update(dt);
+}
+
+void IFrameWork::Render()
+{
+    auto* renderer = m_gameMgr.GetRenderer();
+
+    if (renderer)
+    {
+        renderer->Clear();
+
+        m_gameMgr.Render();
+
+        renderer->Present();
+    }
 }

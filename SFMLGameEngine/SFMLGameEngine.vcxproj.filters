@@ -136,6 +136,18 @@
     <Filter Include="Source Files\Code\Game\Objects">
       <UniqueIdentifier>{7999abac-4dc8-4f81-8fab-b7560372781b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Engine">
+      <UniqueIdentifier>{bff14472-eb12-43b2-b0a8-1d7ca7c553f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Engine\Core">
+      <UniqueIdentifier>{8330511c-f916-4705-a044-c04be32a7c03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML\Engine">
+      <UniqueIdentifier>{29b34759-ad05-4084-81f8-c46cde78fe27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML\Engine\Core">
+      <UniqueIdentifier>{f9cdb72c-0858-4a09-99f8-9ecc3011015c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Camera.cpp">
@@ -260,6 +272,12 @@
     </ClCompile>
     <ClCompile Include="Code\Platform\SFML\Renderer\SFWindow.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\Engine\Core\SFFramework.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\NGameStateMgr.cpp">
+      <Filter>Source Files\Code\Engine\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -418,6 +436,15 @@
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h">
       <Filter>Header Files\Code\Platform\SFML\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Engine\Core\SFFramework.h">
+      <Filter>Header Files\Code\Platform\SFML\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\INGameState.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\NGameStateMgr.h">
+      <Filter>Header Files\Code\Engine\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

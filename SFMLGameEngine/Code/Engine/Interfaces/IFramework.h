@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/GameManager.h"
+#include "../Core/NGameManager.h"
 
 class IFrameWork
 {
@@ -12,14 +12,13 @@ public:
 
     // Life cycle hooks
     virtual void Initialise() = 0;
-    virtual void LoadContent() = 0;
-    virtual void PollEvents() = 0;
-    virtual void Update(float dt) = 0;
-    virtual void Render() = 0;
+    virtual void PollEvents();
+    virtual void Update(float dt);
+    virtual void Render();
     virtual void Shutdown() = 0;
 
 protected:
 
     bool m_isRunning = true;
-    GameManager m_gameMgr;
+    NGameManager m_gameMgr;
 };

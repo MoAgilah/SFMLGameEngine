@@ -3,7 +3,7 @@
 Timer::Timer(float maxTime)
 	: m_maxTime(maxTime)
 {
-	ResetTime();
+	RestartTimer();
 }
 
 void Timer::Update(float deltaTime)
@@ -12,7 +12,7 @@ void Timer::Update(float deltaTime)
 		m_time -= deltaTime;
 }
 
-void Timer::ResetTime()
+void Timer::RestartTimer()
 {
 	m_time = m_maxTime;
 }

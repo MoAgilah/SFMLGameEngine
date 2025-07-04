@@ -1,12 +1,14 @@
 #include "SFWindow.h"
 
 #include "../../../Engine/Core/Constants.h"
-#include "../../../Engine/Core/GameManager.h"
+#include "../../../Engine/Core/NGameManager.h"
 
 
 bool SFWindow::Create(const Point& screemDims, const std::string& title)
 {
-	GetWindow()->create(sf::VideoMode(screemDims), title);
+	m_window = std::make_shared<sf::RenderWindow>();
+	m_window->create(sf::VideoMode(screemDims), title);
+	m_window->setFramerateLimit(static_cast<int>(GameConstants::FPS));
 	return m_window->isOpen();
 }
 
@@ -25,11 +27,11 @@ void SFWindow::PollEvents()
 				if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 					Close();
 
-				GameManager::Get()->GetInputManager().ProcessKeyPressedEvent(keyPressed);
+				NGameManager::Get()->GetInputManager().ProcessKeyPressedEvent(keyPressed);
 			}
 			else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
 			{
-				GameManager::Get()->GetInputManager().ProcessKeyReleasedEvent(keyReleased);
+				NGameManager::Get()->GetInputManager().ProcessKeyReleasedEvent(keyReleased);
 			}
 		}
 	}
@@ -50,7 +52,7 @@ void SFWindow::Close()
 
 void* SFWindow::GetNativeHandle()
 {
-   return reinterpret_cast<void*>(m_window->getNativeHandle());
+	return static_cast<void*>(m_window.get());
 }
 
 sf::RenderWindow* SFWindow::GetWindow()

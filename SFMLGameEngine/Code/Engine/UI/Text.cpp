@@ -141,7 +141,7 @@ void AnimatedText::Render(sf::RenderWindow& window)
 void AnimatedText::Reset(const std::string& text)
 {
 	Text::Reset(text);
-	m_timer.ResetTime();
+	m_timer.RestartTimer();
 	m_reduceAlpha = true;
 	m_paused = false;
 }
@@ -192,7 +192,7 @@ void AnimatedText::FadeInAndOutUpdate(float deltaTime)
 	if (m_reduceAlpha)
 	{
 		m_timer.Update(deltaTime);
-		m_time = m_timer.GetTime() / m_maxTime;
+		m_time = m_timer.GetCurrTime() / m_timer.GetMaxTime();
 
 		if (m_timer.CheckEnd())
 		{
@@ -206,12 +206,12 @@ void AnimatedText::FadeInAndOutUpdate(float deltaTime)
 		if (m_loop)
 		{
 			m_timer.Update(-deltaTime);
-			m_time = m_timer.GetTime() / m_maxTime;
+			m_time = m_timer.GetCurrTime() / m_maxTime;
 
-			if (m_timer.GetTime() >= m_maxTime)
+			if (m_timer.GetCurrTime() >= m_maxTime)
 			{
 				m_reduceAlpha = true;
-				m_timer.ResetTime();
+				m_timer.RestartTimer();
 			}
 		}
 		else
