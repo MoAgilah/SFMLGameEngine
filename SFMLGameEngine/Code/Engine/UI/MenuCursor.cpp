@@ -1,9 +1,9 @@
 #include "MenuCursor.h"
 
-MenuCursor::MenuCursor(Sprite* spr, const MenuNav& menuNav)
+MenuCursor::MenuCursor(SFSprite* spr, const MenuNav& menuNav)
 	: m_menuNav(menuNav)
 {
-	m_cursor = std::shared_ptr<Sprite>(spr);
+	m_cursor = std::shared_ptr<SFSprite>(spr);
 }
 
 void MenuCursor::Update(float deltaTime)
@@ -14,10 +14,10 @@ void MenuCursor::Update(float deltaTime)
 		m_cursor->Update(deltaTime);
 }
 
-void MenuCursor::Render(sf::RenderWindow& window)
+void MenuCursor::Render(IRenderer* renderer)
 {
 	if (m_cursor)
-		m_cursor->Render(window);
+		m_cursor->Render(renderer);
 }
 
 void MenuCursor::SetScale(const Point& cellSize)

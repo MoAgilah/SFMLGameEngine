@@ -11,7 +11,7 @@ public:
 	~PaginatedMenu() = default;
 
 	void Update(float deltaTime);
-	void Render(sf::RenderWindow& window);
+	void Render(IRenderer* renderer);
 
 	void SetCurrentMenuNumber(int menuNumer);
 	int GetCurrentMenuNumber() { return m_currentMenuNum; }

@@ -17,6 +17,11 @@ enum class NTextAlignment
 
 struct NTextConfig
 {
+	NTextConfig()
+		: m_fontName("Standard"), m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_animType(NTextAnimType::Static), m_alignment(NTextAlignment::None)
+	{
+	}
+
 	NTextConfig(const std::string fontName, unsigned int charSize, const Point& position, NTextAnimType textAnimType, sf::Color colour = sf::Color::Black, NTextAlignment alignment = NTextAlignment::Center)
 		: m_fontName(fontName), m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
 	{}
@@ -57,6 +62,8 @@ public:
 	void SetFillColour(const sf::Color& colour) { m_drawable->setFillColor(colour); }
 
 	void ResetOutlineColour() { SetOutlineColour(m_config.m_colour); }
+
+	bool IsAnimated() { return m_config.m_animType > NTextAnimType::Static; }
 
 private:
 

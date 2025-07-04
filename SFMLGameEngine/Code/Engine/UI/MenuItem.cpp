@@ -17,26 +17,28 @@ void MenuItem::Update(float deltaTime)
 		m_spriteElement->Update(deltaTime);
 }
 
-void MenuItem::Render(sf::RenderWindow& window)
+void MenuItem::Render(IRenderer* renderer)
 {
 #if defined _DEBUG
-	DebugRender(window);
+	auto window = static_cast<sf::RenderWindow*>(renderer->GetWindow()->GetNativeHandle());
+	if (window)
+		window->draw(m_cellSpace);
 #endif
 
 	if (m_textElement)
-		m_textElement->Render(window);
+		m_textElement->Render(renderer);
 
 	if (m_spriteElement)
-		m_spriteElement->Render(window);
+		m_spriteElement->Render(renderer);
 }
 
-Text* MenuItem::AddTextElement(Text* text)
+SFText* MenuItem::AddTextElement(SFText* text)
 {
-	m_textElement = std::shared_ptr<Text>(text);
+	m_textElement = std::shared_ptr<SFText>(text);
 	return GetTextElement();
 }
 
-Text* MenuItem::GetTextElement()
+SFText* MenuItem::GetTextElement()
 {
 	if (m_textElement)
 		return m_textElement.get();
@@ -44,21 +46,16 @@ Text* MenuItem::GetTextElement()
 	return nullptr;
 }
 
-Sprite* MenuItem::AddSpriteElement(Sprite* spr)
+SFSprite* MenuItem::AddSpriteElement(SFSprite* spr)
 {
-	m_spriteElement = std::shared_ptr<Sprite>(spr);
+	m_spriteElement = std::shared_ptr<SFSprite>(spr);
 	return GetSpriteElement();
 }
 
-Sprite* MenuItem::GetSpriteElement()
+SFSprite* MenuItem::GetSpriteElement()
 {
 	if (m_spriteElement)
 		return m_spriteElement.get();
 
 	return nullptr;
-}
-
-void MenuItem::DebugRender(sf::RenderWindow& window)
-{
-	window.draw(m_cellSpace);
 }

@@ -3,7 +3,7 @@
 #include "MenuItem.h"
 #include "MenuCursor.h"
 #include "MenuNavigation.h"
-#include "../../Game/Sprite.h"
+#include "../../Platform/SFML/Drawables/SFSprite.h"
 #include "../../Utilities/Point.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -47,7 +47,7 @@ public:
 	~Menu() = default;
 
 	void Update(float deltaTime);
-	void Render(sf::RenderWindow& window);
+	void Render(IRenderer* window);
 
 	void SetActiveCells();
 
@@ -55,7 +55,7 @@ public:
 
 	Point GetCellSize() const { return m_cellsSize; }
 
-	void AddCursor(Sprite* spr, const MenuNav& menuNav);
+	void AddCursor(SFSprite* spr, const MenuNav& menuNav);
 	MenuCursor* GetCursor(unsigned int cursorNumber);
 
 	void SetPassiveColour(const sf::Color& colour) { m_passiveColour = colour; }
@@ -68,8 +68,6 @@ private:
 	void BuildMenuSpace();
 	void BuildColumns();
 	void BuildRows();
-
-	void DebugRender(sf::RenderWindow& window);
 
 	void ProcessInput();
 

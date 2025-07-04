@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Core/GameManager.h"
-#include "../Interfaces/IGameState.h"
+#include "../Core/NGameManager.h"
+#include "../Interfaces/INGameState.h"
 #include "../UI/Menu.h"
 
-class MainMenuState final : public IGameState
+class MainMenuState final : public INGameState
 {
 public:
-	explicit MainMenuState(GameManager* gameMgr);
+	explicit MainMenuState(NGameManager* gameMgr);
 
 	std::string_view GetStateName() const override { return "Debug"; }
 
@@ -21,5 +21,5 @@ public:
 private:
 
 	Menu m_menu;
-	Sprite m_backgroundSpr;
+	SFSprite m_backgroundSpr;
 };

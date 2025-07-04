@@ -47,22 +47,29 @@ void Menu::Update(float deltaTime)
 	}
 }
 
-void Menu::Render(sf::RenderWindow& window)
+void Menu::Render(IRenderer* renderer)
 {
 #if defined _DEBUG
-	DebugRender(window);
+	auto window = static_cast<sf::RenderWindow*>(renderer->GetWindow()->GetNativeHandle());
+	if (window)
+	{
+		window->draw(m_menuSpace);
+
+		for (auto& col : m_columns)
+			window->draw(col);
+	}
 #endif
 
 	for (auto& row : m_rows)
 	{
 		for (auto& cell : row)
-			cell.Render(window);
+			cell.Render(renderer);
 	}
 
 	if (!m_cursors.empty())
 	{
 		for (auto& cursor : m_cursors)
-			cursor.Render(window);
+			cursor.Render(renderer);
 	}
 }
 
@@ -80,7 +87,7 @@ void Menu::SetActiveCells()
 	}
 }
 
-void Menu::AddCursor(Sprite* spr, const MenuNav& menuNav)
+void Menu::AddCursor(SFSprite* spr, const MenuNav& menuNav)
 {
 	m_cursors.push_back({ spr, menuNav });
 }
@@ -201,14 +208,6 @@ void Menu::BuildRows()
 	}
 }
 
-void Menu::DebugRender(sf::RenderWindow& window)
-{
-	window.draw(m_menuSpace);
-
-	for (auto& col : m_columns)
-		window.draw(col);
-}
-
 void Menu::ProcessInput()
 {
 	if (!m_cursors.empty())
@@ -235,7 +234,7 @@ void Menu::SetActiveTextElement()
 				if (cell->GetMenuSlotNumber() == m_menuNavigation.GetCurrCursorPos())
 				{
 					if (text->IsAnimated())
-						dynamic_cast<AnimatedText*>(text)->Resume();
+						dynamic_cast<SFAnimatedText*>(text)->SetIsPaused(false);
 
 					if (m_passiveColour)
 						text->ResetOutlineColour();
@@ -243,7 +242,7 @@ void Menu::SetActiveTextElement()
 				else
 				{
 					if (text->IsAnimated())
-						dynamic_cast<AnimatedText*>(text)->Pause();
+						dynamic_cast<SFAnimatedText*>(text)->SetIsPaused(true);
 
 					if (m_passiveColour)
 						text->SetOutlineColour(*m_passiveColour);

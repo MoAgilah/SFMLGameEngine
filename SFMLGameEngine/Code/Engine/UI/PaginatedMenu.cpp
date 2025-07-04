@@ -8,12 +8,12 @@ void PaginatedMenu::Update(float deltaTime)
 	m_menuPages[m_currentMenuNum]->Update(deltaTime);
 }
 
-void PaginatedMenu::Render(sf::RenderWindow& window)
+void PaginatedMenu::Render(IRenderer* renderer)
 {
 	if (m_menuPages.empty())
 		return;
 
-	m_menuPages[m_currentMenuNum]->Render(window);
+	m_menuPages[m_currentMenuNum]->Render(renderer);
 }
 
 void PaginatedMenu::SetCurrentMenuNumber(int menuNo)
