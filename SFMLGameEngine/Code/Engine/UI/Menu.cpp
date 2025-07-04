@@ -4,7 +4,7 @@
 #include "../Core/GameManager.h"
 
 Menu::Menu(const Point& menuSize, float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData)
-	: m_menuSpace(menuSize), m_outlineThickness(outlineThickness), m_dimensions(dimensions), m_menuPositionData(menuPositionData), m_menuNavigation(sf::Keyboard::Key::Up, sf::Keyboard::Key::Down)
+	: m_menuSpace(menuSize), m_outlineThickness(outlineThickness), m_dimensions(dimensions), m_menuPositionData(menuPositionData), m_menuNavigation(KeyCode::Up, KeyCode::Down)
 {
 	BuildMenuSpace();
 }

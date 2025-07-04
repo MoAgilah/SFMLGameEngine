@@ -75,9 +75,11 @@
     <ClInclude Include="Code\Engine\Core\NGameManager.h" />
     <ClInclude Include="Code\Engine\Core\Timer.h" />
     <ClInclude Include="Code\Engine\Input\InputManager.h" />
+    <ClInclude Include="Code\Engine\Input\KeyCode.h" />
     <ClInclude Include="Code\Engine\Interfaces\ICamera.h" />
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h" />
     <ClInclude Include="Code\Engine\Interfaces\INGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderer.h" />
@@ -113,6 +115,7 @@
     <ClInclude Include="Code\Platform\SFML\Drawables\SFText.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFTexture.h" />
     <ClInclude Include="Code\Platform\SFML\Engine\Core\SFFramework.h" />
+    <ClInclude Include="Code\Platform\SFML\Engine\Input\SFKeyConverter.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFCamera.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFRenderer.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h" />

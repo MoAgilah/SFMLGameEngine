@@ -1,35 +1,33 @@
 #pragma once
-
-#include <SFML/Window/event.hpp>
+#include "KeyCode.h"
+#include "../Interfaces/IKeyConverter.h"
 #include <array>
 #include <chrono>
 
-class InputManager
-{
+class InputManager {
 public:
-	InputManager();
-	~InputManager() = default;
+    explicit InputManager(const INativeKeyConverter* keyConverter);
 
-	void ProcessKeyPressedEvent(const sf::Event::KeyPressed* event);
-	void ProcessKeyReleasedEvent(const sf::Event::KeyReleased* event);
+    void ProcessPlatformKeyPress(void* platformKey);
+    void ProcessPlatformKeyRelease(void* platformKey);
 
-	bool GetKeyState(int key) { return m_keyStates[key]; }
+    bool GetKeyState(int key) { return m_keyStates[key]; }
 
-	bool IsAnyKeyPressed();
+    bool IsAnyKeyPressed() const;
 
-	std::chrono::steady_clock::time_point GetKeyPressTimestamp(sf::Keyboard::Key key) const
-	{
-		return m_keyPressTimestamps[static_cast<int>(key)];
-	}
+    std::chrono::steady_clock::time_point GetKeyPressTimestamp(KeyCode key) const
+    {
+        return m_keyPressTimestamps[static_cast<int>(key)];
+    }
 
-	sf::Keyboard::Key GetFirstPressedKey(const std::vector<sf::Keyboard::Key>& keys) const;
+    KeyCode GetFirstPressedKey(const std::vector<KeyCode>& keys) const;
 
 private:
+    void SetKeyPressed(KeyCode key);
+    void SetKeyReleased(KeyCode key);
 
-	void SetKeyPressed(sf::Keyboard::Key key);
-	void SetKeyReleased(sf::Keyboard::Key key);
-	void SetKeyState(sf::Keyboard::Key key, bool state) { m_keyStates[static_cast<int>(key)] = state; }
+    const INativeKeyConverter* m_converter;
 
-	std::array<bool, sf::Keyboard::KeyCount> m_keyStates;
-	std::array<std::chrono::steady_clock::time_point, sf::Keyboard::KeyCount> m_keyPressTimestamps;
+    std::array<bool, KeyCount> m_keyStates{};
+    std::array<std::chrono::steady_clock::time_point, KeyCount> m_keyPressTimestamps{};
 };

@@ -27,11 +27,11 @@ void SFWindow::PollEvents()
 				if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 					Close();
 
-				NGameManager::Get()->GetInputManager().ProcessKeyPressedEvent(keyPressed);
+				NGameManager::Get()->GetInputManager()->ProcessPlatformKeyPress(const_cast<sf::Keyboard::Key*>(&keyPressed->code));
 			}
 			else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
 			{
-				NGameManager::Get()->GetInputManager().ProcessKeyReleasedEvent(keyReleased);
+				NGameManager::Get()->GetInputManager()->ProcessPlatformKeyRelease(const_cast<sf::Keyboard::Key*>(&keyReleased->code));
 			}
 		}
 	}

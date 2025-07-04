@@ -37,7 +37,7 @@ public:
 
 	[[nodiscard]] Timer& GetTimer() noexcept { return m_timer; }
 	[[nodiscard]] Camera& GetCamera() noexcept { return m_camera; }
-	[[nodiscard]] InputManager& GetInputManager() noexcept { return m_inputManager; }
+	[[nodiscard]] InputManager* GetInputManager() noexcept { return m_inputManager.get(); }
 	[[nodiscard]] FontManager& GetFontMgr() noexcept { return m_fontManager; }
 	[[nodiscard]] ShaderManager& GetShaderMgr() noexcept { return m_shaderManager; }
 	[[nodiscard]] SoundManager& GetSoundMgr() noexcept { return m_soundManager; }
@@ -54,7 +54,7 @@ private:
 	sf::RenderWindow					m_window;
 	Timer								m_timer;
 	Camera								m_camera;
-	InputManager						m_inputManager;
+	std::unique_ptr<InputManager>						m_inputManager;
 	FontManager							m_fontManager;
 	ShaderManager						m_shaderManager;
 	SoundManager						m_soundManager;

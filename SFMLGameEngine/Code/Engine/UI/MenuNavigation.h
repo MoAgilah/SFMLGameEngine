@@ -1,17 +1,17 @@
 #pragma once
 
-#include <SFML/Window/Keyboard.hpp>
+#include "../Input/KeyCode.h"
 #include <vector>
 
 class MenuNav
 {
 public:
-	MenuNav(sf::Keyboard::Key ascKey, sf::Keyboard::Key desKey);
+	MenuNav(KeyCode ascKey, KeyCode desKey);
 	~MenuNav() = default;
 
 	void HandleNavigation();
 
-	void ChangeNavKeys(sf::Keyboard::Key ascKey, sf::Keyboard::Key desKey);
+	void ChangeNavKeys(KeyCode ascKey, KeyCode desKey);
 
 	void SetCursorRange(const std::vector<int>& cursorRange);
 
@@ -29,7 +29,7 @@ private:
 	bool m_canDes = true;
 	int m_currCursorPos = 0;
 	int m_prevCursorPos = -1;
-	sf::Keyboard::Key m_ascKey;
-	sf::Keyboard::Key m_desKey;
+	KeyCode m_ascKey;
+	KeyCode m_desKey;
 	std::vector<int> m_cursorRange;
 };

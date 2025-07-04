@@ -148,6 +148,9 @@
     <Filter Include="Source Files\Code\Platforms\SFML\Engine\Core">
       <UniqueIdentifier>{f9cdb72c-0858-4a09-99f8-9ecc3011015c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Engine\Input">
+      <UniqueIdentifier>{e83cd684-923d-45f0-9ead-288780aa22e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Camera.cpp">
@@ -445,6 +448,15 @@
     </ClInclude>
     <ClInclude Include="Code\Engine\States\NGameStateMgr.h">
       <Filter>Header Files\Code\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Input\KeyCode.h">
+      <Filter>Header Files\Code\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Engine\Input\SFKeyConverter.h">
+      <Filter>Header Files\Code\Platform\SFML\Engine\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

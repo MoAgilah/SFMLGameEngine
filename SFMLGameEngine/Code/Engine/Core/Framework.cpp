@@ -49,11 +49,11 @@ int FrameWork::Run()
                     if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
                         window.close();
 
-                    m_gameMgr.GetInputManager().ProcessKeyPressedEvent(keyPressed);
+                   // m_gameMgr.GetInputManager().ProcessKeyPressedEvent(keyPressed);
                 }
                 else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
                 {
-                    m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(keyReleased);
+                    //m_gameMgr.GetInputManager().ProcessKeyReleasedEvent(keyReleased);
                 }
             }
         }
