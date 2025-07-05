@@ -1,13 +1,11 @@
 #pragma once
 
-#include "../../../Engine/Interfaces/IRenderable.h"
-#include "../../../Engine/Interfaces/ITransforms.h"
-#include "../../../Engine/Interfaces/IUpdatable.h"
+#include "../../../Engine/Interfaces/IDrawable.h"
 #include "../Renderer/SFRenderer.h"
 #include <memory>
 
 template <typename T>
-class SFDrawables : public IRenderable, public IUpdatable, public ITransforms
+class SFDrawables : public IDrawable
 {
 public:
 	virtual ~SFDrawables() = default;
@@ -61,6 +59,10 @@ public:
 	{
 		auto bounds = m_drawable->getGlobalBounds();
 		return bounds.size;
+	}
+
+	void SetSize(const Point& size) override
+	{
 	}
 
 protected:

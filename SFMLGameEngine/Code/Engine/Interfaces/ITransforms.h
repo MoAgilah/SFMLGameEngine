@@ -17,6 +17,7 @@ public:
 	virtual void SetOrigin(const Point& pos) = 0;
 
 	virtual Point GetSize() = 0;
+	virtual void SetSize(const Point& size) = 0;
 
 protected:
 
@@ -31,6 +32,8 @@ public:
 	virtual void SetVelocity(const Point& vel) { m_velocity = vel; }
 	virtual Point GetVelocity() { return m_velocity; }
 
+	virtual void Move(float x, float y) = 0;
+	virtual void Move(const Point& mov) = 0;
 private:
 
 	Point m_velocity;

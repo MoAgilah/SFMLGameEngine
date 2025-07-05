@@ -30,6 +30,7 @@ public:
 
 	static std::vector<std::string> s_canCollideWithTile;
 	inline static const float EPSILON = std::numeric_limits<float>::epsilon() * 100;
+	inline static const float BUFFER = 0.01f;
 
 private:
 

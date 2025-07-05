@@ -65,6 +65,9 @@
     <ClCompile Include="Code\Utilities\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Engine\Collisions\BoundingBox.h" />
+    <ClInclude Include="Code\Engine\Collisions\BoundingCapsule.h" />
+    <ClInclude Include="Code\Engine\Collisions\BoundingCircle.h" />
     <ClInclude Include="Code\Engine\Collisions\BoundingVolume.h" />
     <ClInclude Include="Code\Engine\Collisions\CollisionManager.h" />
     <ClInclude Include="Code\Engine\Collisions\Grid.h" />
@@ -76,7 +79,9 @@
     <ClInclude Include="Code\Engine\Core\Timer.h" />
     <ClInclude Include="Code\Engine\Input\InputManager.h" />
     <ClInclude Include="Code\Engine\Input\KeyCode.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IBoundingVolume.h" />
     <ClInclude Include="Code\Engine\Interfaces\ICamera.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IDrawable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h" />

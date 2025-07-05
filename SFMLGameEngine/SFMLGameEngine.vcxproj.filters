@@ -151,6 +151,9 @@
     <Filter Include="Header Files\Code\Platform\SFML\Engine\Input">
       <UniqueIdentifier>{e83cd684-923d-45f0-9ead-288780aa22e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Engine\Collisions">
+      <UniqueIdentifier>{9197141b-3900-4321-b4f4-8f376a3ca8a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Camera.cpp">
@@ -457,6 +460,21 @@
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Engine\Input\SFKeyConverter.h">
       <Filter>Header Files\Code\Platform\SFML\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IDrawable.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IBoundingVolume.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Collisions\BoundingBox.h">
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Collisions\BoundingCapsule.h">
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Collisions\BoundingCircle.h">
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

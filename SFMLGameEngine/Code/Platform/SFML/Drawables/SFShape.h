@@ -35,6 +35,8 @@ public:
 
 	sf::RectangleShape* GetRect() { return static_cast<sf::RectangleShape*>(m_drawable.get()); }
 
+	void SetSize(const Point& size) override { GetRect()->setSize(size); }
+
 protected:
 
 	void UpdateShape(const Point& pos) override;
