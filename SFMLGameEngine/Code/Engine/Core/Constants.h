@@ -10,6 +10,7 @@ public:
 	static void Init();
 
 	static bool DRender;
+	static bool SFMLUsage;
 	static bool GameIsReady;
 	static float FPS;
 	static float Gravity;

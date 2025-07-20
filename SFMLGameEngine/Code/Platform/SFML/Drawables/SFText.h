@@ -52,14 +52,17 @@ public:
 
 	Point GetSize() override;
 
-	unsigned int GetCharSize() { return m_drawable->getCharacterSize(); }
-	void SetCharSize(unsigned int charSize) { m_drawable->setCharacterSize(charSize); }
+	unsigned int GetCharSize() { return this->GetPrimaryDrawableAs<sf::Text>()->getCharacterSize(); }
+	void SetCharSize(unsigned int charSize) { this->GetPrimaryDrawableAs<sf::Text>()->setCharacterSize(charSize); }
 
-	sf::Color GetOutlineColour() { return m_drawable->getOutlineColor(); }
-	void SetOutlineColour(const sf::Color& colour) { m_drawable->setOutlineColor(colour); }
+	sf::Color GetOutlineColour() { return this->GetPrimaryDrawableAs<sf::Text>()->getOutlineColor(); }
+	void SetOutlineColour(const sf::Color& colour) { this->GetPrimaryDrawableAs<sf::Text>()->setOutlineColor(colour); }
 
-	sf::Color GetFillColour() { return m_drawable->getFillColor(); }
-	void SetFillColour(const sf::Color& colour) { m_drawable->setFillColor(colour); }
+	sf::Color GetFillColour() { return this->GetPrimaryDrawableAs<sf::Text>()->getFillColor(); }
+	void SetFillColour(const sf::Color& colour) { this->GetPrimaryDrawableAs<sf::Text>()->setFillColor(colour); }
+
+	float GetOutlineThickness() { return this->GetPrimaryDrawableAs<sf::Text>()->getOutlineThickness(); }
+	void SetOutlineThickness(float thickness) { this->GetPrimaryDrawableAs<sf::Text>()->setOutlineThickness(thickness); }
 
 	void ResetOutlineColour() { SetOutlineColour(m_config.m_colour); }
 

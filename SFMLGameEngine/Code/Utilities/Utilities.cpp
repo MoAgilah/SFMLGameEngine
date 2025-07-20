@@ -52,7 +52,7 @@ float Line::CalculateAngle() const
 	return angleInDegrees;
 }
 
-float Line::SqDistPointSegment(const Point& p)
+float Line::SqDistPointSegment(const Point& p) const
 {
 	Point es = end - start;
 	Point ps = p - start;
@@ -117,7 +117,7 @@ bool Line::IntersectsPoint(const Point& pnt) const
 	return d1 + d2 >= lineLen - buffer && d1 + d2 <= lineLen + buffer;
 }
 
-bool Line::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
+bool Line::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) const
 {
 	// Get relative velocity vector
 	Point relativeVelocity = vb - va;

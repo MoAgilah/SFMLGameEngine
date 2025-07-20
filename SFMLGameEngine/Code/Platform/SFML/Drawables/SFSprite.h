@@ -16,13 +16,13 @@ public:
 
 	void Update(float dt);
 
-	sf::Sprite* GetSprite() { return m_drawable.get(); }
+	sf::Sprite* GetSprite() { return this->GetPrimaryDrawableAs<sf::Sprite>(); }
 
 	void Move(float x, float y);
 	void Move(const Point& mov);
 
-	sf::Vector2u GetTextureSize() const { return m_drawable->getTexture().getSize(); }
-	void SetTextureRect(const sf::IntRect& rect) { m_drawable->setTextureRect(rect); }
+	sf::Vector2u GetTextureSize() const { return this->GetPrimaryDrawableAs<sf::Sprite>()->getTexture().getSize(); }
+	void SetTextureRect(const sf::IntRect& rect) { this->GetPrimaryDrawableAs<sf::Sprite>()->setTextureRect(rect); }
 
 private:
 

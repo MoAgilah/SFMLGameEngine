@@ -38,7 +38,7 @@ public:
 
 	virtual Point GetSeparationVector(BoundingVolume* volume) = 0;
 
-	VolumeType GetType() { return m_type; }
+	VolumeType GetType() const { return m_type; }
 
 	virtual void SetPosition(const Point& pos) { m_shape->setPosition(pos); }
 	virtual Point GetPosition() { return m_shape->getPosition(); }

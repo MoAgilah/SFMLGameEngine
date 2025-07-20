@@ -13,7 +13,7 @@ void SFSprite::SetTexture(const std::string& texId)
 
 	try
 	{
-		m_drawable = std::make_shared<sf::Sprite>(*NGameManager::Get()->GetTextureMgr().GetTexture(m_texID));
+		SetDrawable(std::make_shared<sf::Sprite>(*NGameManager::Get()->GetTextureMgr().GetTexture(m_texID)));
 	}
 	catch (const std::invalid_argument& e)
 	{
@@ -21,7 +21,7 @@ void SFSprite::SetTexture(const std::string& texId)
 	}
 
 	SetScale(GameConstants::Scale);
-	SetOrigin(Point(m_drawable->getTexture().getSize()) * 0.5f);
+	SetOrigin(Point(GetTextureSize()) * 0.5f);
 }
 
 void SFSprite::Update(float dt)
@@ -36,7 +36,7 @@ void SFSprite::Move(float x, float y)
 
 void SFSprite::Move(const Point& mov)
 {
-	m_drawable->move(mov);
+	this->GetPrimaryDrawableAs<sf::Sprite>()->move(mov);
 }
 
 SFAnimatedSprite::SFAnimatedSprite(const std::string& texId, int rows, int columns, float framesPerSec, bool symmetrical, float animSpeed)
@@ -102,7 +102,7 @@ void SFAnimatedSprite::SetFrameSize(const sf::Vector2u& size, int currentFrame, 
 	int left = currentFrame * size.x;
 	int top = currentAnim * size.y;
 
-	m_drawable->setTextureRect({{left, top}, {static_cast<int>(size.x), static_cast<int>(size.y)}});
+	SetTextureRect({{left, top}, {static_cast<int>(size.x), static_cast<int>(size.y)}});
 	SetOrigin(Point(size) * 0.5f);
 }
 

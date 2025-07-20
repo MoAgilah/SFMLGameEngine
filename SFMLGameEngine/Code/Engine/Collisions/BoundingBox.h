@@ -1,320 +1,328 @@
 ﻿#pragma once
 
+#include "CollisionManager.h"
 #include "../Interfaces/IBoundingVolume.h"
+#include <type_traits>
 
-template<typename TDrawable>
-class NBoundingBox : public NBoundingVolume<TDrawable>
+template <typename PlatformBox, typename PlatformCircle>
+class NBoundingCapsule;
+
+template <typename PlatformType>
+class NBoundingBox : public IBoundingBox, public NBoundingVolume<PlatformType>
 {
 public:
-	NBoundingBox(const Point& size, const Point& pos)
-		: NBoundingVolume<TDrawable>(NVolumeType::Box, std::make_unique<TDrawable>(size)),
-		m_size(size)
-	{
-		Reset(size);
-		this->Update(pos);
-	}
+    // Only call the virtual base constructor here, not in any parent!
+    NBoundingBox(const Point& size, const Point& pos)
+        : IBoundingVolume(NVolumeType::Box)
+        , IBoundingBox()
+        , NBoundingVolume<PlatformType>(NVolumeType::Box)
+    {
+        this->m_shape = std::make_shared<PlatformType>();
+        Reset(size);
+        Update(pos);
+    }
 
-	void Reset(const Point& size)
-	{
-		auto* rect = this->GetDrawable();
-		if (rect)
-		{
-			rect->SetSize(size);
-			auto scale = this->GetScale();
-			m_extents = { size.x * 0.5f * scale.x, size.y * 0.5f * scale.y };
-			this->SetOrigin(size * 0.5f);
-		}
-	}
+    template <typename PlatformBox, typename PlatformCircle>
+    NBoundingBox(const NBoundingCapsule<PlatformBox, PlatformCircle>* capsule)
+        : IBoundingBox(), NBoundingVolume<PlatformType>(NVolumeType::Box)
+    {
+        static_assert(std::is_same_v<PlatformType, PlatformBox>,
+            "PlatformType and PlatformBox must be the same type!");
 
-	void Update(const Point& pos) override
-	{
-		this->SetPosition(pos);
-		this->SetCenter(this->GetPosition());
-		m_min = this->GetCenter() - m_extents;
-		m_max = this->GetCenter() + m_extents;
-	}
+        this->m_shape = std::make_unique<PlatformType>();
+        const float radius = capsule->GetRadius();
+        const auto& seg = capsule->GetSegment();
 
-	float SqDistPoint(const Point& p)
-	{
-		float sqDist = 0.0f;
+        const float minX = std::min(seg.start.x, seg.end.x) - radius;
+        const float maxX = std::max(seg.start.x, seg.end.x) + radius;
+        const float minY = std::min(seg.start.y, seg.end.y) - radius;
+        const float maxY = std::max(seg.start.y, seg.end.y) + radius;
 
-		for (size_t i = 0; i < 2; i++)
-		{
-			float v = p[i];
-			if (v < m_min[i]) sqDist += (m_min[i] - v) * (m_min[i] - v);
-			if (v > m_max[i]) sqDist += (v - m_max[i]) * (v - m_max[i]);
-		}
+        Reset({ maxX - minX, maxY - minY });
+        Update(seg.GetMidPoint());
+    }
 
-		return sqDist;
-	}
 
-	bool Intersects(const Point& p) const override
-	{
-		if (pnt.x >= m_min.x &&
-			pnt.x <= m_max.x &&
-			pnt.y >= m_min.y &&
-			pnt.y <= m_max.y)
-			return true;
+    void Reset(const Point& size)
+    {
+        this->m_shape->Reset(size);
+        auto scale = GetScale();
+        m_extents = { size.x * 0.5f * scale.x, size.y * 0.5f * scale.y };
+    }
 
-		return false;
-	}
+    void Update(const Point& pos) override
+    {
+        this->m_shape->Update(pos);
+        m_min = this->GetCenter() - m_extents;
+        m_max = this->GetCenter() + m_extents;
+    }
 
-	bool Intersects(IBoundingVolume* other) override
-	{
-		return other->Intersects(this);
-	}
+    void SetScale(const Point& scale) override
+    {
+        this->SetScale(scale);
+        if (this->m_shape)
+            Reset(this->m_shape->GetSize());
+    }
 
-	bool IntersectsMoving(IBoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
-	{
-		return other->IntersectsMoving(this, va, vb, tfirst, tlast);
-	}
+    float SqDistPoint(const Point& p) const
+    {
+        float sqDist = 0.0f;
+        for (size_t i = 0; i < 2; i++)
+        {
+            float v = p[i];
+            if (v < m_min[i]) sqDist += (m_min[i] - v) * (m_min[i] - v);
+            if (v > m_max[i]) sqDist += (v - m_max[i]) * (v - m_max[i]);
+        }
+        return sqDist;
+    }
 
-	Point GetSeparationVector(IBoundingVolume* other) override
-	{
-		return other->GetSeparationVector(this);
-	}
+    bool Intersects(const Point& pnt) const override
+    {
+        return (pnt.x >= m_min.x && pnt.x <= m_max.x &&
+            pnt.y >= m_min.y && pnt.y <= m_max.y);
+    }
 
-	const Point& GetMin() const { return m_min; }
-	const Point& GetMax() const { return m_max; }
-	const Point& GetExtents() const { return m_extents; }
+    bool Intersects(IBoundingVolume* other) override
+    {
+        return this->Intersects(other);
+    }
 
-	Point GetPoint(NSide side) override
-	{
-		switch (side) {
-		case NSide::Top:    return { this->GetCenter().x, m_min.y };
-		case NSide::Bottom: return { this->GetCenter().x, m_max.y };
-		case NSide::Left:   return { m_min.x, this->GetCenter().y };
-		case NSide::Right:  return { m_max.x, this->GetCenter().y };
-		}
-		return {};
-	}
+    bool IntersectsMoving(IBoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    {
+        return this->IntersectsMoving(other, va, vb, tfirst, tlast);
+    }
 
-	void SetScale(const Point& scale) override
-	{
-		NBoundingVolume<TDrawable>::SetScale(scale);
-		Reset(NBoundingVolume<TDrawable>::GetSize());
-	}
+    Point GetSeparationVector(IBoundingVolume* other) override
+    {
+        return this->GetSeparationVector(other);
+    }
+
+    Point GetPoint(NSide side) override
+    {
+        switch (side) {
+        case NSide::Top:    return Point(this->GetCenter().x, m_min.y);
+        case NSide::Bottom: return Point(this->GetCenter().x, m_max.y);
+        case NSide::Left:   return Point(m_min.x, this->GetCenter().y);
+        case NSide::Right:  return Point(m_max.x, this->GetCenter().y);
+        }
+        return Point(0, 0);
+    }
 
 protected:
-	// Double dispatch methods
-	bool Intersects(NBoundingBox<TDrawable>* box) override
-	{
-		for (size_t i = 0; i < 2; i++)
-		{
-			if (std::abs(this->m_center[i] - box->m_center[i])
-		> m_extents[i] + box->m_extents[i])
-				return false;
-		}
 
-		// Overlapping on all axes means AABBs are intersecting
-		return true;
-	}
+    bool Intersects(IBoundingBox* box) override
+    {
+        for (size_t i = 0; i < 2; i++)
+        {
+            if (std::abs(this->GetCenter()[i] - box->GetCenter()[i])
+        > m_extents[i] + box->GetExtents()[i])
+                return false;
+        }
 
-	bool Intersects(NBoundingCircle<TDrawable>* circle) override
-	{
-		// Compute squared distance between sphere center and AABB
-		float sqDist = SqDistPoint(circle->GetCenter());
-		float radius = circle->GetRadius();
+        // Overlapping on all axes means AABBs are intersecting
+        return true;
+    }
 
-		// Sphere and AABB intersect if the (squared) distance
-		// between them is less than the (squared) sphere radius
-		return sqDist <= radius * radius;
-	}
+    bool Intersects(IBoundingCircle* circle) override
+    {
+        // Compute squared distance between sphere center and AABB
+        float sqDist = SqDistPoint(circle->GetCenter());
+        float radius = circle->GetRadius();
 
-	bool Intersects(NBoundingCapsule<TDrawable>* capsule) override
-	{
-		// Compute the box's min and max corners
-		Point boxMin = m_min;
-		Point boxMax = m_max;
+        // Sphere and AABB intersect if the (squared) distance
+        // between them is less than the (squared) sphere radius
+        return sqDist <= radius * radius;
+    }
 
-		auto line = capsule->GetSegment();
+    bool Intersects(IBoundingCapsule* capsule) override
+    {
+        // Compute the box's min and max corners
+        Point boxMin = m_min;
+        Point boxMax = m_max;
 
-		// Check the line segment (capsule core) against the box
-		Point closestToStart = line.start.Clamp(boxMin, boxMax);
-		Point closestToEnd = line.end.Clamp(boxMin, boxMax);
+        const auto& line = capsule->GetSegment();
 
-		float distStart = line.SqDistPointSegment(closestToStart);
-		float distEnd = line.SqDistPointSegment(closestToEnd);
+        // Check the line segment (capsule core) against the box
+        Point closestToStart = line.start.Clamp(boxMin, boxMax);
+        Point closestToEnd = line.end.Clamp(boxMin, boxMax);
 
-		float radSq = capsule->GetRadius() * capsule->GetRadius();
+        float distStart = line.SqDistPointSegment(closestToStart);
+        float distEnd = line.SqDistPointSegment(closestToEnd);
 
-		// Check if the distances are less than or equal to the capsule's radius squared
-		if (distStart <= radSq || distEnd <= radSq)
-			return true;
+        float radSq = capsule->GetRadius() * capsule->GetRadius();
 
-		float closestPointStartDistSq = pnt::lengthSquared((closestToStart - line.start));
-		float closestPointEndDistSq = pnt::lengthSquared((closestToEnd - line.end));
+        // Check if the distances are less than or equal to the capsule's radius squared
+        if (distStart <= radSq || distEnd <= radSq)
+            return true;
 
-		return closestPointStartDistSq <= radSq || closestPointEndDistSq <= radSq;
-	}
+        float closestPointStartDistSq = pnt::lengthSquared((closestToStart - line.start));
+        float closestPointEndDistSq = pnt::lengthSquared((closestToEnd - line.end));
 
-	bool IntersectsMoving(NBoundingBox<TDrawable>* box, const Point& vb, const Point& va, float& tfirst, float& tlast) override
-	{
-		if (Intersects(box))
-		{
-			tfirst = tlast = 0.0f;
-			return true;
-		}
+        return closestPointStartDistSq <= radSq || closestPointEndDistSq <= radSq;
+    }
 
-		Point v = vb - va;
-		if (std::abs(v.x) < CollisionManager::EPSILON && std::abs(v.y) < CollisionManager::EPSILON)
-			return false;
+    bool IntersectsMoving(IBoundingBox* box, const Point& vb, const Point& va, float& tfirst, float& tlast) override
+    {
+        if (Intersects(box))
+        {
+            tfirst = tlast = 0.0f;
+            return true;
+        }
 
-		tfirst = 0.0f;
-		tlast = 1.0f;
+        Point v = vb - va;
+        if (std::abs(v.x) < CollisionManager::EPSILON && std::abs(v.y) < CollisionManager::EPSILON)
+            return false;
 
-		for (int i = 0; i < 2; i++)
-		{
-			if (std::abs(v[i]) < CollisionManager::EPSILON)
-			{
-				if (box->m_max[i] < m_min[i] || box->m_min[i] > m_max[i])
-					return false;
+        tfirst = 0.0f;
+        tlast = 1.0f;
 
-				continue;
-			}
+        for (int i = 0; i < 2; i++)
+        {
+            if (std::abs(v[i]) < CollisionManager::EPSILON)
+            {
+                if (box->GetMax()[i] < m_min[i] || box->GetMin()[i] > m_max[i])
+                    return false;
 
-			if (v[i] < 0.0f)
-			{
-				if (box->m_max[i] < m_min[i] && v[i] <= 0.0f) return false;
-				if (m_max[i] <= box->m_min[i]) tfirst = std::max((m_max[i] - box->m_min[i]) / v[i], tfirst);
-				if (box->m_max[i] >= m_min[i]) tlast = std::min((m_min[i] - box->m_max[i]) / v[i], tlast);
-			}
-			else if (v[i] > 0.0f)
-			{
-				if (box->m_min[i] > m_max[i] && v[i] >= 0.0f) return false;
-				if (box->m_max[i] <= m_min[i]) tfirst = std::max((m_min[i] - box->m_max[i]) / v[i], tfirst);
-				if (m_max[i] >= box->m_min[i]) tlast = std::min((m_max[i] - box->m_min[i]) / v[i], tlast);
-			}
-		}
+                continue;
+            }
 
-		if (tfirst > tlast) return false;
-		return true;
-	}
+            if (v[i] < 0.0f)
+            {
+                if (box->GetMax()[i] < m_min[i] && v[i] <= 0.0f) return false;
+                if (m_max[i] <= box->GetMin()[i]) tfirst = std::max((m_max[i] - box->GetMin()[i]) / v[i], tfirst);
+                if (box->GetMax()[i] >= m_min[i]) tlast = std::min((m_min[i] - box->GetMax()[i]) / v[i], tlast);
+            }
+            else if (v[i] > 0.0f)
+            {
+                if (box->GetMin()[i] > m_max[i] && v[i] >= 0.0f) return false;
+                if (box->GetMax()[i] <= m_min[i]) tfirst = std::max((m_min[i] - box->GetMax()[i]) / v[i], tfirst);
+                if (m_max[i] >= box->GetMin()[i]) tlast = std::min((m_max[i] - box->GetMin()[i]) / v[i], tlast);
+            }
+        }
 
-	bool IntersectsMoving(NBoundingCircle<TDrawable>* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
-	{
-		// Calculate relative velocity: circle's motion relative to the box
-		Point relativeVelocity = vb - va;
+        if (tfirst > tlast)
+            return false;
 
-		// No movement → fall back to static check
-		if (pnt::lengthSquared(relativeVelocity) < CollisionManager::EPSILON * CollisionManager::EPSILON)
-			return Intersects(circle);
+        return true;
+    }
 
-		// Treat the circle as a moving point by expanding the box by the radius
-		float r = circle->GetRadius();
-		Point boxMin = GetMin() - Point(r, r);
-		Point boxMax = GetMax() + Point(r, r);
+    bool IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    {
+        // Calculate relative velocity: circle's motion relative to the box
+        Point relativeVelocity = vb - va;
 
-		Point invVelocity = {
-			std::abs(relativeVelocity.x) > CollisionManager::EPSILON ? 1.f / relativeVelocity.x : 0.f,
-			std::abs(relativeVelocity.y) > CollisionManager::EPSILON ? 1.f / relativeVelocity.y : 0.f
-		};
+        // No movement → fall back to static check
+        if (pnt::lengthSquared(relativeVelocity) < CollisionManager::EPSILON * CollisionManager::EPSILON)
+            return Intersects(circle);
 
-		float tEnterX = (boxMin.x - circle->GetPosition().x) * invVelocity.x;
-		float tExitX = (boxMax.x - circle->GetPosition().x) * invVelocity.x;
-		if (invVelocity.x < 0.f) std::swap(tEnterX, tExitX);
+        // Treat the circle as a moving point by expanding the box by the radius
+        float r = circle->GetRadius();
+        Point boxMin = GetMin() - Point(r, r);
+        Point boxMax = GetMax() + Point(r, r);
 
-		float tEnterY = (boxMin.y - circle->GetPosition().y) * invVelocity.y;
-		float tExitY = (boxMax.y - circle->GetPosition().y) * invVelocity.y;
-		if (invVelocity.y < 0.f) std::swap(tEnterY, tExitY);
+        Point invVelocity = {
+            std::abs(relativeVelocity.x) > CollisionManager::EPSILON ? 1.f / relativeVelocity.x : 0.f,
+            std::abs(relativeVelocity.y) > CollisionManager::EPSILON ? 1.f / relativeVelocity.y : 0.f
+        };
 
-		float entryTime = std::max(tEnterX, tEnterY);
-		float exitTime = std::min(tExitX, tExitY);
+        float tEnterX = (boxMin.x - circle->GetPosition().x) * invVelocity.x;
+        float tExitX = (boxMax.x - circle->GetPosition().x) * invVelocity.x;
+        if (invVelocity.x < 0.f) std::swap(tEnterX, tExitX);
 
-		// Reject if exit before entry, or exit is in the past, or entry is too far in future
-		if (entryTime > exitTime || exitTime < -CollisionManager::EPSILON || entryTime > 1.0f)
-			return false;
+        float tEnterY = (boxMin.y - circle->GetPosition().y) * invVelocity.y;
+        float tExitY = (boxMax.y - circle->GetPosition().y) * invVelocity.y;
+        if (invVelocity.y < 0.f) std::swap(tEnterY, tExitY);
 
-		// ✅ Allow t=0 contact as a valid collision
-		tfirst = std::max(0.f, entryTime);
-		tlast = std::min(1.f, exitTime);
-		return true;
-	}
+        float entryTime = std::max(tEnterX, tEnterY);
+        float exitTime = std::min(tExitX, tExitY);
 
-	bool IntersectsMoving(NBoundingCapsule<TDrawable>* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
-	{
-		return capsule->IntersectsMoving(this, va, vb, tfirst, tlast);
-	}
+        // Reject if exit before entry, or exit is in the past, or entry is too far in future
+        if (entryTime > exitTime || exitTime < -CollisionManager::EPSILON || entryTime > 1.0f)
+            return false;
 
-	Point GetSeparationVector(NBoundingBox<TDrawable>* other) override
-	{
-		Point delta = other->GetPosition() - this->GetPosition();
-		delta = { std::abs(delta.x), std::abs(delta.y) };
-		Point overlap = (other->GetExtents() + m_extents) - delta;
+        // ✅ Allow t=0 contact as a valid collision
+        tfirst = std::max(0.f, entryTime);
+        tlast = std::min(1.f, exitTime);
+        return true;
+    }
 
-		if (overlap.x < overlap.y)
-		{
-			float direction = (other->GetPosition().x < this->GetPosition().x) ? -1.0f : 1.0f;
-			return { (overlap.x + CollisionManager::BUFFER) * direction, 0 };
-		}
-		else
-		{
-			float direction = (other->GetPosition().y < this->GetPosition().y) ? -1.0f : 1.0f;
-			return { 0, (overlap.y + CollisionManager::BUFFER) * direction };
-		}
-	}
+    bool IntersectsMoving(IBoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    {
+        return capsule->IntersectsMoving(static_cast<IBoundingVolume*>(this), va, vb, tfirst, tlast);
+    }
 
-	Point GetSeparationVector(NBoundingCircle<TDrawable>* other) override
-	{
-		Point circlePos = other->GetPosition();
-		Point closestPoint = {
-			std::max(m_min.x, std::min(circlePos.x, m_max.x)),
-			std::max(m_min.y, std::min(circlePos.y, m_max.y))
-		};
+    Point GetSeparationVector(IBoundingBox* other) override
+    {
+        Point delta = other->GetPosition() - GetPosition();
+        delta = { std::abs(delta.x), std::abs(delta.y) };
+        Point overlap = (other->GetExtents() + m_extents) - delta;
 
-		Point displacement = circlePos - closestPoint;
-		float distance = pnt::length(displacement);
-		float penetrationDepth = other->GetRadius() - distance;
+        if (overlap.x < overlap.y)
+        {
+            float direction = (other->GetPosition().x < GetPosition().x) ? -1.0f : 1.0f;
+            return { (overlap.x + CollisionManager::BUFFER) * direction, 0 };
+        }
+        else
+        {
+            float direction = (other->GetPosition().y < GetPosition().y) ? -1.0f : 1.0f;
+            return { 0, (overlap.y + CollisionManager::BUFFER) * direction };
+        }
+    }
 
-		// If overlapping and distance is meaningful
-		if (penetrationDepth > 0.f && distance > std::numeric_limits<float>::epsilon())
-		{
-			return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
-		}
+    Point GetSeparationVector(IBoundingCircle* other) override
+    {
+        Point circlePos = other->GetPosition();
+        Point closestPoint = {
+            std::max(m_min.x, std::min(circlePos.x, m_max.x)),
+            std::max(m_min.y, std::min(circlePos.y, m_max.y))
+        };
 
-		// If the circle's center is inside the box (distance ≈ 0), pick an arbitrary direction
-		if (distance <= std::numeric_limits<float>::epsilon())
-		{
-			// Choose vertical push direction based on position relative to box center
-			float pushDir = (circlePos.y < this->m_center.y) ? -1.f : 1.f;
-			return Point(0.f, pushDir * (other->GetRadius() + CollisionManager::BUFFER));
-		}
+        Point displacement = circlePos - closestPoint;
+        float distance = pnt::length(displacement);
+        float penetrationDepth = other->GetRadius() - distance;
 
-		// No collision
-		return Point(0.f, 0.f);
-	}
+        // If overlapping and distance is meaningful
+        if (penetrationDepth > 0.f && distance > std::numeric_limits<float>::epsilon())
+        {
+            return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
+        }
 
-	Point GetSeparationVector(NBoundingCapsule<TDrawable>* other) override
-	{
-		Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(this->GetCenter());
-		Point clampedPoint = {
-			std::max(m_min.x, std::min(closestPoint.x, m_max.x)),
-			std::max(m_min.y, std::min(closestPoint.y, m_max.y))
-		};
+        // If the circle's center is inside the box (distance ≈ 0), pick an arbitrary direction
+        if (distance <= std::numeric_limits<float>::epsilon())
+        {
+            // Choose vertical push direction based on position relative to box center
+            float pushDir = (circlePos.y < this->GetCenter().y) ? -1.f : 1.f;
+            return Point(0.f, pushDir * (other->GetRadius() + CollisionManager::BUFFER));
+        }
 
-		Point displacement = closestPoint - clampedPoint;
-		float distance = pnt::length(displacement);
-		float penetrationDepth = other->GetRadius() - distance;
+        // No collision
+        return Point();
+    }
 
-		if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
-			return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
+    Point GetSeparationVector(IBoundingCapsule* other) override
+    {
+        Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(this->GetCenter());
+        Point clampedPoint = {
+            std::max(m_min.x, std::min(closestPoint.x, m_max.x)),
+            std::max(m_min.y, std::min(closestPoint.y, m_max.y))
+        };
 
-		if (distance <= std::numeric_limits<float>::epsilon())
-		{
-			Point centerDelta = other->GetPosition() - this->GetCenter();
-			if (std::abs(centerDelta.y) > std::abs(centerDelta.x))
-				return { 0.f, (centerDelta.y > 0.f ? 1.f : -1.f) * (other->GetRadius() + CollisionManager::BUFFER) };
-			else
-				return { (centerDelta.x > 0.f ? 1.f : -1.f) * (other->GetRadius() + CollisionManager::BUFFER), 0.f };
-		}
+        Point displacement = closestPoint - clampedPoint;
+        float distance = pnt::length(displacement);
+        float penetrationDepth = other->GetRadius() - distance;
 
-		return { 0.f, 0.f };
-	}
+        if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
+            return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
 
+        if (distance <= std::numeric_limits<float>::epsilon())
+        {
+            Point centerDelta = other->GetPosition() - this->GetCenter();
+            if (std::abs(centerDelta.y) > std::abs(centerDelta.x))
+                return { 0.f, (centerDelta.y > 0.f ? 1.f : -1.f) * (other->GetRadius() + CollisionManager::BUFFER) };
+            else
+                return { (centerDelta.x > 0.f ? 1.f : -1.f) * (other->GetRadius() + CollisionManager::BUFFER), 0.f };
+        }
 
-private:
-	Point m_size;
-	Point m_min;
-	Point m_max;
-	Point m_extents;
+        return Point();
+    }
 };

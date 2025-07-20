@@ -1,147 +1,188 @@
 #include "SFShape.h"
 
+#include "../../../Engine/Core/Constants.h"
 #include <numbers>
 
-void SFShape::Move(float x, float y)
+SFRect::SFRect()
 {
-	Move(Point(x, y));
+	SetDrawable(std::make_shared<sf::RectangleShape>());
+	SetScale(GameConstants::Scale);
+	SetFillColour(sf::Color::Transparent);
+	SetOutlineColour(sf::Color::Red);
+	SetOutlineThickness(2);
 }
 
-void SFShape::Move(const Point& pos)
+SFRect::SFRect(const Point& size, const Point& pos)
+    : SFRect()
 {
-	m_drawable->move(pos);
+    Reset(size);
+    Update(pos);
 }
 
-SFRect::SFRect(const Point& size)
+void SFRect::Update(const Point& pos)
 {
-	m_drawable = std::make_shared<sf::RectangleShape>(size);
-}
-
-void SFRect::Update(float deltaTime)
-{
-	UpdateShape(GetPosition());
+	SetPosition(pos);
+	this->SetCenter(GetPosition());
 }
 
 void SFRect::Reset(const Point& size)
 {
-	GetRect()->setSize(size);
-	const auto scale = GetScale();
-	m_extents[0] = (size.x * scale.x) * 0.5f;
-	m_extents[1] = (size.y * scale.y) * 0.5f;
+	SetSize(size);
 	SetOrigin(size * 0.5f);
 }
 
-void SFRect::UpdateShape(const Point& pos)
+SFCircle::SFCircle()
+{
+	SetDrawable(std::make_shared<sf::CircleShape>());
+	SetScale(GameConstants::Scale);
+	SetFillColour(sf::Color::Transparent);
+	SetOutlineColour(sf::Color::Red);
+	SetOutlineThickness(2);
+}
+
+SFCircle::SFCircle(float radius, const Point& pos)
+    : SFCircle()
+{
+    Reset(radius);
+    Update(pos);
+}
+
+void SFCircle::Update(const Point& pos)
 {
 	SetPosition(pos);
-	m_min = GetPosition() - m_extents;
-	m_max = GetPosition() + m_extents;
-}
-
-SFCircle::SFCircle(float radius)
-	: m_radius(radius)
-{
-	m_drawable = std::make_shared<sf::CircleShape>(radius);
-	Reset(radius);
-}
-
-void SFCircle::Update(float deltaTime)
-{
-	UpdateShape(GetPosition());
+	this->SetCenter(GetPosition());
 }
 
 void SFCircle::Reset(float radius)
 {
-	m_radius = radius * GetScale().x;
-	GetCircle()->setRadius(radius);
+	SetRadius(radius);
 	SetOrigin(Point(radius, radius));
-}
-
-void SFCircle::UpdateShape(const Point& pos)
-{
-	SetPosition(pos);
-}
-
-SFCapsule::SFCapsule(float radius, float length, float angle)
-	: m_radius(radius), m_angle(angle)
-{
-	m_drawable = std::make_shared<sf::RectangleShape>();
-	Reset(m_radius, length, m_angle);
-}
-
-void SFCapsule::Update(float deltaTime)
-{
-	UpdateShape(GetPosition());
-}
-
-void SFCapsule::Reset(float radius, float length, float angle)
-{
-	const auto scale = GetScale();
-	m_length = length * scale.y;
-	m_radius = radius * scale.x;
-
-	auto body = static_cast<sf::RectangleShape*>(m_drawable.get());
-	body->setSize(Point(radius * 2.f, length));
-	body->setOrigin({ radius, length / 2.f });
-	body->setRotation(sf::degrees(angle));
-
-	m_circle1.setRadius(radius);
-	m_circle1.setOrigin({ radius, radius });
-
-	m_circle2.setRadius(radius);
-	m_circle2.setOrigin({ radius, radius });
 }
 
 namespace
 {
-	void CalculateRotatedRectangleCorners(Point corners[4], const Point& centre, const Point& size, float angle)
-	{
-		// Convert the angle from degrees to radians
-		float radians = angle * std::numbers::pi_v<float> / 180.0f;
-
-		// Precompute sine and cosine of the angle
-		float cosTheta = cos(radians);
-		float sinTheta = sin(radians);
-
-		// Half dimensions
-		float halfWidth = size.x / 2.0f;
-		float halfHeight = size.y / 2.0f;
-
-		// Relative corners before rotation
-		Point relativeCorners[4] =
-		{
-			{ -halfWidth, -halfHeight }, // Bottom-left
-			{  halfWidth, -halfHeight }, // Bottom-right
-			{  halfWidth,  halfHeight }, // Top-right
-			{ -halfWidth,  halfHeight }  // Top-left
-		};
-
-		// Compute rotated corners
-		for (int i = 0; i < 4; ++i)
-		{
-			corners[i].x = centre.x + relativeCorners[i].x * cosTheta - relativeCorners[i].y * sinTheta;
-			corners[i].y = centre.y + relativeCorners[i].x * sinTheta + relativeCorners[i].y * cosTheta;
-		}
-	}
+    void CalculateRotatedRectangleCorners(Point corners[4], const Point& centre, const Point& size, float angle)
+    {
+        float radians = angle * std::numbers::pi_v<float> / 180.0f;
+        float cosTheta = cos(radians);
+        float sinTheta = sin(radians);
+        float halfWidth = size.x / 2.0f;
+        float halfHeight = size.y / 2.0f;
+        Point relativeCorners[4] =
+        {
+            { -halfWidth, -halfHeight }, // Bottom-left
+            {  halfWidth, -halfHeight }, // Bottom-right
+            {  halfWidth,  halfHeight }, // Top-right
+            { -halfWidth,  halfHeight }  // Top-left
+        };
+        for (int i = 0; i < 4; ++i)
+        {
+            corners[i].x = centre.x + relativeCorners[i].x * cosTheta - relativeCorners[i].y * sinTheta;
+            corners[i].y = centre.y + relativeCorners[i].x * sinTheta + relativeCorners[i].y * cosTheta;
+        }
+    }
 }
 
-void SFCapsule::UpdateShape(const Point& pos)
+SFCapsule::SFCapsule()
 {
-	SetPosition(pos);
+    // Set up primary and secondary drawables
+    auto rect = std::make_shared<sf::RectangleShape>();
+    SetDrawable(std::static_pointer_cast<sf::Shape>(rect));
+    SetFillColour(sf::Color::Transparent);
+    SetOutlineColour(sf::Color::Red);
+    SetOutlineThickness(2);
+    SetScale(GameConstants::Scale);
 
-	Point corners[4];
-	auto size = static_cast<sf::RectangleShape*>(m_drawable.get())->getSize();
-	auto scale = GetScale();
-	size.x *= scale.x;
-	size.y *= scale.y;
+    auto cap1 = std::make_shared<sf::CircleShape>();
+    cap1->setFillColor(sf::Color::Transparent);
+    cap1->setOutlineColor(sf::Color::Red);
+    cap1->setOutlineThickness(2);
+    cap1->setScale(GameConstants::Scale);
+    AddDrawable(std::static_pointer_cast<sf::Shape>(cap1));
 
-	CalculateRotatedRectangleCorners(corners, GetPosition(), size, m_angle);
+    auto cap2 = std::make_shared<sf::CircleShape>();
+    cap2->setFillColor(sf::Color::Transparent);
+    cap2->setOutlineColor(sf::Color::Red);
+    cap2->setOutlineThickness(2);
+    cap2->setScale(GameConstants::Scale);
+    AddDrawable(std::static_pointer_cast<sf::Shape>(cap2));
+}
 
-	// Calculate the midpoint of the top side
-	m_circle1.setPosition(Line(corners[3], corners[2]).GetMidPoint());
-	// Calculate the midpoint of the top side
-	m_circle2.setPosition(Line(corners[1], corners[0]).GetMidPoint());
+SFCapsule::SFCapsule(float radius, float length, float angle, const Point& pos)
+    : SFCapsule()
+{
+    Reset(radius, length, angle);
+    Update(pos);
+}
 
-	m_segment.start = m_circle1.getPosition();
-	m_segment.end = m_circle2.getPosition();
+void SFCapsule::Update(const Point& pos)
+{
+    SetPosition(pos);
+    this->SetCenter(pos);
+
+   Point corners[4];
+   auto size = GetSize();
+   auto scale = GetScale();
+   size.x *= scale.x;
+   size.y *= scale.y;
+   CalculateRotatedRectangleCorners(corners, pos, size, m_angle);
+
+   // Compute endpoints for circles
+   Point end1 = Line(corners[3], corners[2]).GetMidPoint(); // top
+   Point end2 = Line(corners[1], corners[0]).GetMidPoint(); // bottom
+
+   auto* cap1 = GetEndCap1();
+   if (cap1)
+       cap1->setPosition(end1);
+
+   auto* cap2 = GetEndCap2();
+   if (cap2)
+       cap2->setPosition(end2);
+
+   m_segment.start = end1;
+   m_segment.end = end2;
+}
+
+void SFCapsule::Reset(float radius, float length, float angle)
+{
+    m_angle = angle;
+    m_radius = radius;
+    m_length = length;
+
+    SetSize(Point(radius * 2.f, length));
+    SetOrigin({ radius, length / 2.f });
+    SetRotation(angle);
+
+    auto* cap1 = GetEndCap1();
+    if (cap1)
+    {
+        cap1->setRadius(radius);
+        cap1->setOrigin({ radius, radius });
+    }
+
+    auto* cap2 = GetEndCap2();
+    if (cap2)
+    {
+        cap2->setRadius(radius);
+        cap2->setOrigin({ radius, radius });
+    }
+}
+
+sf::RectangleShape* SFCapsule::GetBody()
+{
+    return this->GetPrimaryDrawableAs<sf::RectangleShape>();
+}
+
+sf::CircleShape* SFCapsule::GetEndCap1()
+{
+    if (this->GetDrawables().size() > 1)
+        return dynamic_cast<sf::CircleShape*>(this->GetDrawables()[1].get());
+    return nullptr;
+}
+
+sf::CircleShape* SFCapsule::GetEndCap2()
+{
+    if (this->GetDrawables().size() > 2)
+        return dynamic_cast<sf::CircleShape*>(this->GetDrawables()[2].get());
+    return nullptr;
 }

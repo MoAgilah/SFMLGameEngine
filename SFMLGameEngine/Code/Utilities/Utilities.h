@@ -28,13 +28,13 @@ struct Line
 	Point GetMidPoint() const;
 	float CalculateAngle() const;
 
-	float SqDistPointSegment(const Point& p);
+	float SqDistPointSegment(const Point& p) const;
 	Point ClosestPointOnLineSegment(const Point& pnt) const;
 
 	bool IsPointAboveLine(const Point& pnt) const;
 	bool IntersectsPoint(const Point& pnt) const;
 
-	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast);
+	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) const;
 
 	float DistX() const { return end.x - start.x; }
 	float DistY() const { return end.y - start.y; }
@@ -59,9 +59,9 @@ struct FloatRect
 
 	FloatRect(float left, float top, float width, float height);
 
-	Point Min() { return m_min; }
-	Point Max() { return m_max; }
-	Point MidPoint() { return m_midPoint; }
+	Point Min() const { return m_min; }
+	Point Max() const { return m_max; }
+	Point MidPoint() const { return m_midPoint; }
 
 private:
 

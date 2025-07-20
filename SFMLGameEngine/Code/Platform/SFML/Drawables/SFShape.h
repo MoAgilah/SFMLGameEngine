@@ -2,90 +2,83 @@
 
 #include "SFDrawables.h"
 #include "../../../Utilities/Utilities.h"
+#include "../../../Engine/Interfaces/IShape.h"
 #include <SFML/Graphics.hpp>
 
-class SFShape : public SFDrawables<sf::Shape>
+template<typename TShape>
+class SFShape : public SFDrawables<TShape>, public IShape, public IMoveable
 {
 public:
-	void Move(float x, float y);
-	void Move(const Point& mov);
+    void Move(float x, float y) override { this->Move(Point(x, y)); }
+    void Move(const Point& pos) override { this->SetPosition(this->GetPosition() + pos); }
+    virtual void Update(const Point& pos) = 0;
 
-	sf::Color GetFillColour() { return m_drawable->getFillColor(); }
-	void SetFillColour(const sf::Color& col) { m_drawable->setFillColor(col); }
+    Colour GetFillColour() override { return this->GetPrimaryDrawableAs<TShape>()->getFillColor(); }
+    void SetFillColour(const Colour& col) override { this->GetPrimaryDrawableAs<TShape>()->setFillColor(col); }
 
-	sf::Color GetOutlineColour() { return m_drawable->getOutlineColor(); }
-	void SetOutlineColour(const sf::Color& col) { m_drawable->setOutlineColor(col); }
+    Colour GetOutlineColour() override { return this->GetPrimaryDrawableAs<TShape>()->getOutlineColor(); }
+    void SetOutlineColour(const Colour& col) override { this->GetPrimaryDrawableAs<TShape>()->setOutlineColor(col); }
 
-	float GetOutlineThickness() { return m_drawable->getOutlineThickness(); }
-	void SetOutlineThickness(float scale) { m_drawable->setOutlineThickness(scale); }
+    float GetOutlineThickness() override { return this->GetPrimaryDrawableAs<TShape>()->getOutlineThickness(); }
+    void SetOutlineThickness(float scale) override { this->GetPrimaryDrawableAs<TShape>()->setOutlineThickness(scale); }
 
-protected:
-
-	virtual void UpdateShape(const Point& pos) = 0;
+    void SetRotation(float rotation) override { this->GetPrimaryDrawableAs<TShape>()->setRotation(sf::degrees(rotation)); }
 };
 
-class SFRect : public SFShape
+// --- Rectangle Shape ---
+class SFRect : public SFShape<sf::RectangleShape>
 {
 public:
-	SFRect(const Point& size);
+    SFRect();
+    SFRect(const Point& size, const Point& pos);
 
-	void Update(float deltaTime) override;
+    void Update(const Point& pos) override;
+    void Reset(const Point& size);
 
-	void Reset(const Point& size);
+    sf::RectangleShape* GetRect() { return this->GetPrimaryDrawableAs<sf::RectangleShape>(); }
 
-	sf::RectangleShape* GetRect() { return static_cast<sf::RectangleShape*>(m_drawable.get()); }
-
-	void SetSize(const Point& size) override { GetRect()->setSize(size); }
-
-protected:
-
-	void UpdateShape(const Point& pos) override;
-
-private:
-
-	Point m_min;
-	Point m_max;
-	Point m_extents;
+    Point GetSize() override { return GetRect()->getSize(); }
+    void SetSize(const Point& size) override { GetRect()->setSize(size); }
 };
 
-class SFCircle : public SFShape
+// --- Circle Shape ---
+class SFCircle : public SFShape<sf::CircleShape>, public ICircleShape
 {
 public:
-	SFCircle(float radius);
+    SFCircle();
+    SFCircle(float radius, const Point& pos);
 
-	void Update(float deltaTime) override;
+    void Update(const Point& pos) override;
+    void Reset(float radius);
 
-	void Reset(float radius);
+    sf::CircleShape* GetCircle() { return this->GetPrimaryDrawableAs<sf::CircleShape>(); }
 
-	sf::CircleShape* GetCircle() { return static_cast<sf::CircleShape*>(m_drawable.get()); }
-
-protected:
-
-	void UpdateShape(const Point& pos) override;
-
-private:
-
-	float m_radius;
+    float GetRadius() override { return GetCircle()->getRadius(); }
+    void SetRadius(float radius) override { GetCircle()->setRadius(radius); }
 };
 
-class SFCapsule : public SFShape
+class SFCapsule : public SFShape<sf::Shape>
 {
 public:
-	SFCapsule(float radius, float length, float angle);
+    SFCapsule();
+    SFCapsule(float radius, float length, float angle, const Point& pos);
 
-	void Update(float deltaTime) override;
-	void Reset(float radius, float length, float angle);
+    void Update(const Point& pos) override;
+    void Reset(float radius, float length, float angle);
 
-protected:
+    // Getters for native drawables
+    sf::RectangleShape* GetBody();
+    sf::CircleShape* GetEndCap1();
+    sf::CircleShape* GetEndCap2();
 
-	void UpdateShape(const Point& pos) override;
+    float GetRadius() const { return m_radius; }
+    float GetLength() const { return m_length; }
+    float GetAngle() const { return m_angle; }
+    const Line& GetSegment() const { return m_segment; }
 
 private:
-
-	float m_angle;
-	float m_radius;
-	float m_length;
-	Line m_segment;
-	sf::CircleShape m_circle1;
-	sf::CircleShape m_circle2;
+    float m_angle = 0.f;
+    float m_radius = 0.f;
+    float m_length = 0.f;
+    Line m_segment;
 };

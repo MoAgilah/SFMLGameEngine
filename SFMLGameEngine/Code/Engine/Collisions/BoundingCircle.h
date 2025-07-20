@@ -1,35 +1,47 @@
 #pragma once
 
-#include "../Interfaces/IBoundingVolume.h"
 #include "CollisionManager.h"
+#include "../Interfaces/IShape.h"
+#include "../Interfaces/IBoundingVolume.h"
 
-template<typename TDrawable>
-class NBoundingCircle : public NBoundingVolume<TDrawable>
+template <typename PlatformType>
+class NBoundingCircle : public IBoundingCircle, public NBoundingVolume<PlatformType>
 {
 public:
     NBoundingCircle(float radius, const Point& pos)
-        : NBoundingVolume<TDrawable>(NVolumeType::Circle, std::make_unique<TDrawable>(radius)),
-        m_radius(radius)
+        : IBoundingVolume(NVolumeType::Circle)
+        , IBoundingCircle()
+        , NBoundingVolume<PlatformType>(NVolumeType::Circle)
     {
+        this->m_shape = std::make_shared<PlatformType>();
         Reset(radius);
-        this->Update(pos);
+        Update(pos);
     }
 
     void Reset(float radius)
     {
-        auto* circle = this->GetDrawable();
-        if (circle)
-        {
-            m_radius = radius * this->GetScale().x;
-            this->SetRadius(radius);
-            this->SetOrigin(Point(radius, radius));
-        }
+        this->m_shape->Reset(radius);
     }
 
     void Update(const Point& pos) override
     {
-        this->SetPosition(pos);
-        this->SetCenter(this->GetPosition());
+        this->m_shape->Update(pos);
+    }
+
+    float GetRadius() const override
+    {
+        ICircleShape* radiusShape = dynamic_cast<ICircleShape*>(this->m_shape.get());
+        if (radiusShape)
+            return radiusShape->GetRadius() * this->GetScale().x;
+
+        return 0.f;
+    }
+
+    void SetScale(const Point& scale) override
+    {
+        this->SetScale(scale);
+        if (this->m_shape)
+            Reset(this->m_shape->GetRadius());
     }
 
     bool Intersects(const Point& pnt) const override
@@ -42,79 +54,71 @@ public:
 
         // if the distance is less than the circle's
         // radius the point is inside!
-        return distance <= m_radius;
+        return distance <= this->GetRadius();
     }
 
     bool Intersects(IBoundingVolume* other) override
     {
-        return other->Intersects(this);
+        return this->Intersects(other);
     }
 
-    bool IntersectsMoving(BoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    bool IntersectsMoving(IBoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
-        return other->IntersectsMoving(this, va, vb, tfirst, tlast);
+        return this->IntersectsMoving(other, va, vb, tfirst, tlast);
     }
 
     Point GetSeparationVector(IBoundingVolume* other) override
     {
-        return other->GetSeparationVector(this);
+        return this->GetSeparationVector(other);
     }
 
     Point GetPoint(NSide side) override
     {
         switch (side) {
-        case NSide::Left:   return m_center - Point(m_radius, 0);
-        case NSide::Right:  return m_center + Point(m_radius, 0);
-        case NSide::Top:    return m_center - Point(0, m_radius);
-        case NSide::Bottom: return m_center + Point(0, m_radius);
+        case NSide::Left:   return this->GetCenter() - Point(this->GetRadius(), 0);
+        case NSide::Right:  return this->GetCenter() + Point(this->GetRadius(), 0);
+        case NSide::Top:    return this->GetCenter() - Point(0, this->GetRadius());
+        case NSide::Bottom: return this->GetCenter() + Point(0, this->GetRadius());
         }
         return {};
     }
 
-    float GetRadius() const { return m_radius; }
-
-    void SetScale(const Point& scale) override
-    {
-        NBoundingVolume<TDrawable>::SetScale(scale);
-        Reset(GetRadius());
-    }
-
 protected:
-    // Double dispatch methods
-    bool Intersects(NBoundingBox<TDrawable>* box) override
+
+    bool Intersects(IBoundingBox* box) override
     {
-        return box->Intersects(this);
+        return this->Intersects(box);
     }
 
-    bool Intersects(NBoundingCircle<TDrawable>* circle) override
+    bool Intersects(IBoundingCircle* circle) override
     {
         // Calculate squared distance between centers
         Point d = this->GetCenter() - circle->GetCenter();
         float dist2 = pnt::dot(d, d);
 
         // Spheres intersect if squared distance is less than squared sum of radii
-        float radiusSum = m_radius + circle->m_radius;
+        float radiusSum = this->GetRadius() + circle->GetRadius();
         return dist2 <= radiusSum * radiusSum;
     }
 
-    bool Intersects(NBoundingCapsule<TDrawable>* capsule) override
+    bool Intersects(IBoundingCapsule* capsule) override
     {
-        float r = m_radius + capsule->GetRadius();
+        float r = this->GetRadius() + capsule->GetRadius();
 
-        float distSq = capsule->GetSegment().SqDistPointSegment(m_center);
+        float distSq = capsule->GetSegment().SqDistPointSegment(this->GetCenter());
 
         return distSq <= r * r;
     }
 
-    bool IntersectsMoving(NBoundingBox<TDrawable>* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    bool IntersectsMoving(IBoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
-        return box->IntersectsMoving(this, va, vb, tfirst, tlast);
+        return this->IntersectsMoving(box, va, vb, tfirst, tlast);
     }
 
-    bool IntersectsMoving(NBoundingCircle<TDrawable>* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    bool IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
         Point s = this->GetCenter() - circle->GetCenter();
-        float r = circle->m_radius + m_radius;
+        float r = circle->GetRadius() + this->GetRadius();
 
         Point v = vb - va; // Relative motion
         float a = pnt::dot(v, v);
@@ -148,19 +152,19 @@ protected:
         return true;
     }
 
-    bool IntersectsMoving(NBoundingCapsule<TDrawable>* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+    bool IntersectsMoving(IBoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
-        return capsule->IntersectsMoving(this, va, vb, tfirst, tlast);
+        return this->IntersectsMoving(capsule, va, vb, tfirst, tlast);
     }
 
-    Point GetSeparationVector(NBoundingBox<TDrawable>* other) override
+    Point GetSeparationVector(IBoundingBox* other) override
     {
-        return other->GetSeparationVector(static_cast<BoundingVolume*>(this));
+        return this->GetSeparationVector(other);
     }
 
-    Point GetSeparationVector(NBoundingCircle<TDrawable>* other) override
+    Point GetSeparationVector(IBoundingCircle* other) override
     {
-        Point displacement = other->GetPosition() - this->GetPosition();
+        Point displacement = other->GetPosition() - GetPosition();
         float distance = pnt::length(displacement);
         float radiusSum = other->GetRadius() + GetRadius();
         float penetrationDepth = radiusSum - distance;
@@ -169,15 +173,15 @@ protected:
             return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
 
         if (distance <= std::numeric_limits<float>::epsilon())
-            return { 0.f, (other->GetPosition().y > this->GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
+            return { 0.f, (other->GetPosition().y > GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
 
-        return { 0.f, 0.f };
+        return Point();
     }
 
-    Point GetSeparationVector(NBoundingCapsule<TDrawable>* other) override
+    Point GetSeparationVector(IBoundingCapsule* other) override
     {
-        Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(this->GetPosition());
-        Point displacement = this->GetPosition() - closestPoint;
+        Point closestPoint = other->GetSegment().ClosestPointOnLineSegment(GetPosition());
+        Point displacement = GetPosition() - closestPoint;
         float distance = pnt::length(displacement);
         float radiusSum = GetRadius() + other->GetRadius();
         float penetrationDepth = radiusSum - distance;
@@ -186,13 +190,8 @@ protected:
             return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
 
         if (distance <= std::numeric_limits<float>::epsilon())
-            return { 0.f, (this->GetPosition().y > other->GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
+            return { 0.f, (GetPosition().y > other->GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
 
-        return { 0.f, 0.f };
+        return Point();
     }
-
-private:
-    float m_radius;
-    Point m_center;
-    std::unique_ptr<TDrawable> m_drawable;
 };

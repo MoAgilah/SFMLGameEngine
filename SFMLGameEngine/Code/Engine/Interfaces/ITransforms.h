@@ -29,12 +29,16 @@ class IMoveable
 public:
 	virtual ~IMoveable() = default;
 
-	virtual void SetVelocity(const Point& vel) { m_velocity = vel; }
-	virtual Point GetVelocity() { return m_velocity; }
-
 	virtual void Move(float x, float y) = 0;
 	virtual void Move(const Point& mov) = 0;
-private:
+};
 
-	Point m_velocity;
+// Moveable + velocity
+class IMoveableWithVelocity : public IMoveable
+{
+public:
+	virtual ~IMoveableWithVelocity() = default;
+
+	virtual void SetVelocity(const Point& vel) = 0;
+	virtual Point GetVelocity() const = 0;
 };

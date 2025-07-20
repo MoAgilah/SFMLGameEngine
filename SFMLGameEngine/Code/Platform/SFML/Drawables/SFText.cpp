@@ -31,19 +31,19 @@ SFText::SFText(const NTextConfig& config)
 {
 	auto font = NGameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName);
 	if (font)
-		m_drawable = std::make_shared<sf::Text>(*font);
+		SetDrawable(std::make_shared<sf::Text>(*font));
 	else
 		std::cerr << "Font Error: Could not find font '" << m_config.m_fontName << "'\n";
 
-	m_drawable->setCharacterSize(m_config.m_charSize);
-	m_drawable->setOutlineThickness(m_config.m_charSize / 10.f);
-	m_drawable->setOutlineColor(m_config.m_colour);
+	SetCharSize(m_config.m_charSize);
+	SetOutlineThickness(m_config.m_charSize / 10.f);
+	SetOutlineColour(m_config.m_colour);
 }
 
 void SFText::SetText(const std::string& text)
 {
-	m_drawable->setString(text);
-	m_drawable->setPosition(NSetTextPosition(m_config.m_alignment, m_config.m_position, m_drawable->getLocalBounds()));
+	this->GetPrimaryDrawableAs<sf::Text>()->setString(text);
+	SetPosition(NSetTextPosition(m_config.m_alignment, m_config.m_position, this->GetPrimaryDrawableAs<sf::Text>()->getLocalBounds()));
 }
 
 void SFText::Reset(const std::string& text, std::optional<NTextConfig> config)
@@ -59,15 +59,15 @@ void SFText::Reset(const std::string& text, std::optional<NTextConfig> config)
 
 Point SFText::GetSize()
 {
-	sf::FloatRect bounds = m_drawable->getLocalBounds();
+	sf::FloatRect bounds = this->GetPrimaryDrawableAs<sf::Text>()->getLocalBounds();
 	return Point(bounds.size.x, bounds.size.y);
 }
 
 void SFText::Init()
 {
-	m_drawable->setCharacterSize(m_config.m_charSize);
-	m_drawable->setOutlineThickness(m_config.m_charSize / 10.f);
-	m_drawable->setOutlineColor(m_config.m_colour);
+	SetCharSize(m_config.m_charSize);
+	SetOutlineThickness(m_config.m_charSize / 10.f);
+	SetOutlineColour(m_config.m_colour);
 }
 
 SFAnimatedText::SFAnimatedText(const NTextConfig& config)
@@ -198,7 +198,7 @@ void SFAnimatedText::FadeInAndOutUpdate(float deltaTime)
 
 void SFAnimatedText::FadeInFadeOutRender(IRenderer* renderer)
 {
-	if (!renderer || !m_drawable || !m_textShader)
+	if (!renderer || !this->GetPrimaryDrawableAs<sf::Text>() || !m_textShader)
 		return;
 
 	m_textShader->setUniform("time", m_timer.GetCurrTime());
@@ -207,7 +207,7 @@ void SFAnimatedText::FadeInFadeOutRender(IRenderer* renderer)
 	{
 		auto* sfWindow = static_cast<sf::RenderWindow*>(windowHandle->GetNativeHandle());
 		if (sfWindow)
-			sfWindow->draw(*m_drawable, m_textShader.get());
+			sfWindow->draw(*this->GetPrimaryDrawableAs<sf::Text>(), m_textShader.get());
 	}
 }
 

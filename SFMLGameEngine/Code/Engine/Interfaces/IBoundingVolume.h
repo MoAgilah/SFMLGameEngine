@@ -11,9 +11,9 @@ enum class NDirection { LDIR, RDIR, UDIR, DDIR };
 // Forward declarations
 class IBoundingVolume;
 
-template<typename TDrawable> class NBoundingBox;
-template<typename TDrawable> class NBoundingCircle;
-template<typename TDrawable> class NBoundingCapsule;
+class IBoundingBox;
+class IBoundingCircle;
+class IBoundingCapsule;
 
 class IBoundingVolume
 {
@@ -23,7 +23,19 @@ public:
 
 	virtual ~IBoundingVolume() = default;
 
+    NVolumeType GetType() const { return m_type; }
+
 	virtual void Update(const Point& pos) = 0;
+    virtual void Render(class IRenderer* renderer) = 0;
+
+    virtual Point GetCenter() const = 0;
+    virtual void SetCenter(const Point& center) = 0;
+
+    virtual Point GetPosition() const = 0;
+    virtual void SetPosition(const Point& pos) = 0;
+
+    virtual Point GetScale() const = 0;
+    virtual void SetScale(const Point& scl) = 0;
 
 	virtual bool Intersects(const Point& pnt) const = 0;
 	virtual bool Intersects(IBoundingVolume* volume) = 0;
@@ -31,101 +43,113 @@ public:
 	virtual Point GetSeparationVector(IBoundingVolume* volume) = 0;
 	virtual Point GetPoint(NSide side) = 0;
 
-	NVolumeType GetType() const { return m_type; }
-
 protected:
 	// Double dispatch methods
-	virtual bool Intersects(NBoundingBox<IDrawable>* box) = 0;
-	virtual bool Intersects(NBoundingCircle<IDrawable>* circle) = 0;
-	virtual bool Intersects(NBoundingCapsule<IDrawable>* capsule) = 0;
+	virtual bool Intersects(IBoundingBox* box) = 0;
+	virtual bool Intersects(IBoundingCircle* circle) = 0;
+	virtual bool Intersects(IBoundingCapsule* capsule) = 0;
 
-	virtual bool IntersectsMoving(NBoundingBox<IDrawable>* box, const Point&, const Point&, float&, float&) = 0;
-	virtual bool IntersectsMoving(NBoundingCircle<IDrawable>* circle, const Point&, const Point&, float&, float&) = 0;
-	virtual bool IntersectsMoving(NBoundingCapsule<IDrawable>* capsule, const Point&, const Point&, float&, float&) = 0;
+	virtual bool IntersectsMoving(IBoundingBox* box, const Point&, const Point&, float&, float&) = 0;
+	virtual bool IntersectsMoving(IBoundingCircle* circle, const Point&, const Point&, float&, float&) = 0;
+	virtual bool IntersectsMoving(IBoundingCapsule* capsule, const Point&, const Point&, float&, float&) = 0;
 
-	virtual Point GetSeparationVector(NBoundingBox<IDrawable>* other) = 0;
-	virtual Point GetSeparationVector(NBoundingCircle<IDrawable>* other) = 0;
-	virtual Point GetSeparationVector(NBoundingCapsule<IDrawable>* other) = 0;
+	virtual Point GetSeparationVector(IBoundingBox* other) = 0;
+	virtual Point GetSeparationVector(IBoundingCircle* other) = 0;
+	virtual Point GetSeparationVector(IBoundingCapsule* other) = 0;
 
 protected:
 
 	NVolumeType m_type;
 };
 
-// Templated BoundingVolume with platform-specific drawable
-template<typename TDrawable>
-class NBoundingVolume : public IBoundingVolume, public IDrawableNoUpdate {
+template <typename PlatformType>
+class NBoundingVolume : public virtual IBoundingVolume
+{
 public:
-	explicit NBoundingVolume(NVolumeType type, std::unique_ptr<TDrawable> drawable)
-		: IBoundingVolume(type), m_drawable(std::move(drawable))
-	{
-		ConfigureDrawable();
-	}
+    explicit NBoundingVolume(NVolumeType type) : IBoundingVolume(type) {}
+    virtual ~NBoundingVolume() = default;
 
-	// --- IDrawableNoUpdate interface ---
-	void Render(IRenderer* renderer) override
-	{
-		if (m_drawable)
-			m_drawable->Render(renderer);
-	}
+    void Render(IRenderer* renderer) override
+    {
+        if (m_shape)
+            m_shape->Render(renderer);
+    }
 
-	void SetPosition(const Point& pos) override
-	{
-		if (m_drawable)
-			m_drawable->SetPosition(pos);
-	}
+    Point GetCenter() const override
+    {
+        return m_shape ? m_shape->GetCenter() : Point();
+    }
 
-	Point GetPosition() override
-	{
-		return m_drawable ? m_drawable->GetPosition() : Point();
-	}
+    void SetCenter(const Point& center) override
+    {
+        if (m_shape)
+            m_shape->SetCenter(center);
+    }
 
-	void SetScale(const Point& scale) override
-	{
-		m_scale = scale;
-		if (m_drawable)
-			m_drawable->SetScale(scale);
-	}
+    // Commonly shared methods
+    Point GetPosition() const override
+    {
+        return m_shape ? m_shape->GetPosition() : Point();
+    }
 
-	Point GetScale() override
-	{
-		return m_drawable ? m_drawable->GetScale() : m_scale;
-	}
+    void SetPosition(const Point& pos) override
+    {
+        if (m_shape)
+            m_shape->SetPosition(pos);
+    }
 
-	void SetOrigin(const Point& origin) override
-	{
-		if (m_drawable)
-			m_drawable->SetOrigin(origin);
-	}
+    Point GetScale() const override
+    {
+        return m_shape ? m_shape->GetScale() : Point();
+    }
 
-	Point GetOrigin() override
-	{
-		return m_drawable ? m_drawable->GetOrigin() : Point();
-	}
-
-	Point GetSize() override
-	{
-		return m_drawable ? m_drawable->GetSize() : Point();
-	}
-
-	void SetCenter(const Point& pos) { m_center = pos; }
-	Point GetCenter() { return m_center; }
-
-	TDrawable* GetDrawable() const { return m_drawable.get(); }
-	NVolumeType GetType() const { return m_type; }
+    void SetScale(const Point& scl) override
+    {
+        if (m_shape)
+            m_shape->SetScale(scl);
+    }
 
 protected:
+    std::shared_ptr<PlatformType> m_shape = nullptr;
 
-	void ConfigureDrawable()
-	{
-		if (!m_drawable)
-			return;
+};
 
-		m_drawable->SetScale(m_scale);
-		m_drawable->SetOrigin(m_drawable->GetSize() * 0.5f);
-	}
+class IBoundingBox : public virtual IBoundingVolume {
+public:
+    IBoundingBox() : IBoundingVolume(NVolumeType::Box) {}
+    virtual ~IBoundingBox() = default;
 
-	Point m_scale;
-	Point m_center;
-	std::unique_ptr<TDrawable> m_drawable;
+    virtual const Point& GetMin() const { return m_min; }
+    virtual const Point& GetMax() const { return m_max; }
+    virtual const Point& GetExtents() const { return m_extents; }
+
+protected:
+    Point m_min;
+    Point m_max;
+    Point m_extents;
+};
+
+class IBoundingCircle : public virtual IBoundingVolume {
+public:
+    IBoundingCircle() : IBoundingVolume(NVolumeType::Circle) {}
+    virtual ~IBoundingCircle() = default;
+
+    virtual float GetRadius() const = 0;
+};
+
+class IBoundingCapsule : public virtual IBoundingVolume {
+public:
+    IBoundingCapsule() : IBoundingVolume(NVolumeType::Capsule) {}
+    virtual ~IBoundingCapsule() = default;
+
+    virtual float GetRadius() const { return m_radius; }
+    virtual float GetLength() const { return m_length; }
+    virtual float GetAngle()  const { return m_angle; }
+    virtual const Line& GetSegment() const { return m_segment; }
+
+protected:
+    float m_radius = 0.0f;
+    float m_length = 0.0f;
+    float m_angle = 0.0f;
+    Line  m_segment;
 };

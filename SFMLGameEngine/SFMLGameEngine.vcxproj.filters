@@ -476,6 +476,9 @@
     <ClInclude Include="Code\Engine\Collisions\BoundingCircle.h">
       <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IShape.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\FadeInOutShader.frag">
