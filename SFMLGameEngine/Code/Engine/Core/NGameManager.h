@@ -44,11 +44,11 @@ public:
 	[[nodiscard]] IRenderer* GetRenderer() noexcept { return m_renderer.get(); }
 	[[nodiscard]] World* GetWorld() { return m_world.get(); }
 
-	void InitInputManager(INativeKeyConverter* converter) { m_inputManager = std::make_unique<InputManager>(converter); }
+	void InitInputManager(INativeKeyConverter* converter) { m_inputManager = std::make_shared<InputManager>(converter); }
 
 	// Setters
-	void SetCamera(std::unique_ptr<ICamera> camera) { m_camera = std::move(camera); }
-	void SetRenderer(std::unique_ptr<IRenderer> renderer) { m_renderer = std::move(renderer); }
+	void SetCamera(std::shared_ptr<ICamera> camera) { m_camera = std::move(camera); }
+	void SetRenderer(std::shared_ptr<IRenderer> renderer) { m_renderer = std::move(renderer); }
 
 private:
 	static NGameManager* m_instance;
@@ -60,9 +60,9 @@ private:
 	TextureManager						m_texureManager;
 	NGameStateMgr						m_stateManager;
 
-	std::unique_ptr<ICamera>			m_camera;
-	std::unique_ptr<InputManager>		m_inputManager;
-	std::unique_ptr<IRenderer>			m_renderer;
-	std::unique_ptr<CollisionManager>	m_collisionManager;
-	std::unique_ptr<World>				m_world;
+	std::shared_ptr<ICamera>			m_camera;
+	std::shared_ptr<InputManager>		m_inputManager;
+	std::shared_ptr<IRenderer>			m_renderer;
+	std::shared_ptr<CollisionManager>	m_collisionManager;
+	std::shared_ptr<World>				m_world;
 };

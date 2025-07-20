@@ -9,9 +9,9 @@ NGameManager::NGameManager()
 	: m_timer(300.f)
 {
 	m_instance = this;
-	m_collisionManager = std::make_unique<CollisionManager>();
+	m_collisionManager = std::make_shared<CollisionManager>();
 
-	m_world = std::make_unique<World>();
+	m_world = std::make_shared<World>();
 }
 
 NGameManager::~NGameManager()

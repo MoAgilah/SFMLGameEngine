@@ -1,7 +1,7 @@
 #include "CollisionManager.h"
 
 #include "../Core/Constants.h"
-#include "../Core/GameManager.h"
+#include "../Core/NGameManager.h"
 #include "../../Utilities/Utilities.h"
 #include <algorithm>
 #include <format>
