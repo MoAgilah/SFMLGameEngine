@@ -1,48 +1,12 @@
 #pragma once
 
 #include "SFDrawables.h"
+#include "../../../Engine/Interfaces/IText.h"
 #include "../../../Engine/Core/Timer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 
-enum class NTextAnimType
-{
-	Unassigned, Static, Flashing, Countdown, Custom
-};
-
-enum class NTextAlignment
-{
-	None, LeftHand, Center, RightHand
-};
-
-struct NTextConfig
-{
-	NTextConfig()
-		: m_fontName("Standard"), m_charSize(0), m_position(Point()), m_colour(sf::Color::Black), m_animType(NTextAnimType::Static), m_alignment(NTextAlignment::None)
-	{
-	}
-
-	NTextConfig(const std::string fontName, unsigned int charSize, const Point& position, NTextAnimType textAnimType, sf::Color colour = sf::Color::Black, NTextAlignment alignment = NTextAlignment::Center)
-		: m_fontName(fontName), m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
-	{}
-
-	NTextConfig(const NTextConfig& config)
-		: m_fontName(config.m_fontName), m_charSize(config.m_charSize), m_position(config.m_position), m_colour(config.m_colour), m_animType(config.m_animType), m_alignment(config.m_alignment)
-	{}
-
-	std::string m_fontName;
-	unsigned int m_charSize;
-	Point m_position;
-	sf::Color m_colour;
-	NTextAnimType m_animType;
-	NTextAlignment m_alignment;
-};
-
-Point NCalculateTextOrigin(const sf::FloatRect& bounds);
-
-Point NSetTextPosition(NTextAlignment alignment, const Point& pos, const sf::FloatRect& bounds);
-
-class SFText : public SFDrawables<sf::Text>
+class SFText : public SFDrawables<sf::Text>, public IText
 {
 public:
 	SFText(const NTextConfig& config);
@@ -52,29 +16,23 @@ public:
 
 	Point GetSize() override;
 
-	unsigned int GetCharSize() { return this->GetPrimaryDrawableAs<sf::Text>()->getCharacterSize(); }
-	void SetCharSize(unsigned int charSize) { this->GetPrimaryDrawableAs<sf::Text>()->setCharacterSize(charSize); }
+	unsigned int GetCharSize() override { return this->GetPrimaryDrawableAs<sf::Text>()->getCharacterSize(); }
+	void SetCharSize(unsigned int charSize) override { this->GetPrimaryDrawableAs<sf::Text>()->setCharacterSize(charSize); }
 
-	sf::Color GetOutlineColour() { return this->GetPrimaryDrawableAs<sf::Text>()->getOutlineColor(); }
-	void SetOutlineColour(const sf::Color& colour) { this->GetPrimaryDrawableAs<sf::Text>()->setOutlineColor(colour); }
+	Colour GetOutlineColour() override { return this->GetPrimaryDrawableAs<sf::Text>()->getOutlineColor(); }
+	void SetOutlineColour(const Colour& colour) override { this->GetPrimaryDrawableAs<sf::Text>()->setOutlineColor(colour); }
 
-	sf::Color GetFillColour() { return this->GetPrimaryDrawableAs<sf::Text>()->getFillColor(); }
-	void SetFillColour(const sf::Color& colour) { this->GetPrimaryDrawableAs<sf::Text>()->setFillColor(colour); }
+	Colour GetFillColour() override { return this->GetPrimaryDrawableAs<sf::Text>()->getFillColor(); }
+	void SetFillColour(const Colour& colour) override { this->GetPrimaryDrawableAs<sf::Text>()->setFillColor(colour); }
 
-	float GetOutlineThickness() { return this->GetPrimaryDrawableAs<sf::Text>()->getOutlineThickness(); }
-	void SetOutlineThickness(float thickness) { this->GetPrimaryDrawableAs<sf::Text>()->setOutlineThickness(thickness); }
+	float GetOutlineThickness() override { return this->GetPrimaryDrawableAs<sf::Text>()->getOutlineThickness(); }
+	void SetOutlineThickness(float thickness) override { this->GetPrimaryDrawableAs<sf::Text>()->setOutlineThickness(thickness); }
 
 	void ResetOutlineColour() { SetOutlineColour(m_config.m_colour); }
 
-	bool IsAnimated() { return m_config.m_animType > NTextAnimType::Static; }
-
 private:
 
-	virtual void Init();
-
-protected:
-
-	NTextConfig m_config;
+	void Init() override;
 };
 
 using NUpdateFunc = std::function<void(float)>;

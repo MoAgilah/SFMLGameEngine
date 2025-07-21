@@ -10,7 +10,6 @@ enum class NDirection { LDIR, RDIR, UDIR, DDIR };
 
 // Forward declarations
 class IBoundingVolume;
-
 class IBoundingBox;
 class IBoundingCircle;
 class IBoundingCapsule;

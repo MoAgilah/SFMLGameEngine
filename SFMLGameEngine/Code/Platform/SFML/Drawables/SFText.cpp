@@ -2,32 +2,8 @@
 
 #include "../../../Engine/Core/NGameManager.h"
 
-Point NCalculateTextOrigin(const sf::FloatRect& bounds)
-{
-	return { bounds.position.x + bounds.size.x / 2.f, bounds.position.x + bounds.size.y / 2.f };
-}
-
-Point NSetTextPosition(NTextAlignment alignment, const Point& pos, const sf::FloatRect& bounds)
-{
-	switch (alignment)
-	{
-	case NTextAlignment::LeftHand:
-		return { pos.x, pos.y - bounds.size.y / 2.f };
-	case NTextAlignment::Center:
-		return { pos.x - bounds.size.x / 2.f - bounds.position.x,
-			pos.y - bounds.size.y / 2.f };
-	case NTextAlignment::RightHand:
-		return { pos.x - bounds.size.x - bounds.position.x,
-			pos.y - bounds.size.y / 2.f };
-		break;
-	default:
-		NCalculateTextOrigin(bounds);
-		return pos;
-	}
-}
-
 SFText::SFText(const NTextConfig& config)
-	: m_config(config)
+	: IText(config)
 {
 	auto font = NGameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName);
 	if (font)
@@ -42,8 +18,13 @@ SFText::SFText(const NTextConfig& config)
 
 void SFText::SetText(const std::string& text)
 {
-	this->GetPrimaryDrawableAs<sf::Text>()->setString(text);
-	SetPosition(NSetTextPosition(m_config.m_alignment, m_config.m_position, this->GetPrimaryDrawableAs<sf::Text>()->getLocalBounds()));
+	auto txtObj = this->GetPrimaryDrawableAs<sf::Text>();
+	if (txtObj)
+	{
+		txtObj->setString(text);
+		auto bounds = txtObj->getLocalBounds();
+		SetPosition(NSetTextPosition(m_config.m_alignment, m_config.m_position, bounds.size, bounds.position));
+	}
 }
 
 void SFText::Reset(const std::string& text, std::optional<NTextConfig> config)

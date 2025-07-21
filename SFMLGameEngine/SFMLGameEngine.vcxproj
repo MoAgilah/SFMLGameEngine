@@ -31,6 +31,7 @@
     <ClCompile Include="Code\Engine\Core\Timer.cpp" />
     <ClCompile Include="Code\Engine\Input\InputManager.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IFramework.cpp" />
+    <ClCompile Include="Code\Engine\Interfaces\IText.cpp" />
     <ClCompile Include="Code\Engine\Resources\FontManager.cpp" />
     <ClCompile Include="Code\Engine\Resources\ShaderManager.cpp" />
     <ClCompile Include="Code\Engine\Resources\SoundManager.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Code\Game\Objects\Box.cpp" />
     <ClCompile Include="Code\Game\Objects\Collectables.cpp" />
     <ClCompile Include="Code\Game\Objects\Enemy.cpp" />
+    <ClCompile Include="Code\Game\Objects\NGameObject.cpp" />
     <ClCompile Include="Code\Game\Objects\Object.cpp" />
     <ClCompile Include="Code\Game\Sprite.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFShape.cpp" />
@@ -61,6 +63,7 @@
     <ClCompile Include="Code\Platform\SFML\Renderer\SFCamera.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFRenderer.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFWindow.cpp" />
+    <ClCompile Include="Code\Utilities\Colour.cpp" />
     <ClCompile Include="Code\Utilities\Point.cpp" />
     <ClCompile Include="Code\Utilities\Utilities.cpp" />
   </ItemGroup>
@@ -83,12 +86,14 @@
     <ClInclude Include="Code\Engine\Interfaces\ICamera.h" />
     <ClInclude Include="Code\Engine\Interfaces\IDrawable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IGameObject.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h" />
     <ClInclude Include="Code\Engine\Interfaces\INGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderer.h" />
     <ClInclude Include="Code\Engine\Interfaces\IShape.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IText.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITexture.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITransforms.h" />
     <ClInclude Include="Code\Engine\Interfaces\IUpdatable.h" />
@@ -113,6 +118,7 @@
     <ClInclude Include="Code\Game\Objects\Box.h" />
     <ClInclude Include="Code\Game\Objects\Collectables.h" />
     <ClInclude Include="Code\Game\Objects\Enemy.h" />
+    <ClInclude Include="Code\Game\Objects\NGameObject.h" />
     <ClInclude Include="Code\Game\Objects\Object.h" />
     <ClInclude Include="Code\Game\Sprite.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFDrawables.h" />
@@ -125,6 +131,7 @@
     <ClInclude Include="Code\Platform\SFML\Renderer\SFCamera.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFRenderer.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h" />
+    <ClInclude Include="Code\Utilities\Colour.h" />
     <ClInclude Include="Code\Utilities\DecisionTree.h" />
     <ClInclude Include="Code\Utilities\Point.h" />
     <ClInclude Include="Code\Utilities\ResourceLoader.h" />
