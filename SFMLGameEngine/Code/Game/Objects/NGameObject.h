@@ -6,6 +6,7 @@ class NGameObject : public virtual IGameObject
 {
 public:
 	NGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
+	virtual ~NGameObject();
 
 	virtual void Update(float deltaTime) = 0;
 
@@ -37,7 +38,7 @@ public:
 	void SetPosition(const Point& pos) { m_drawable->SetPosition(pos); }
 	void SetPosition(float x, float y) { m_drawable->SetPosition({ x, y }); }
 	Point GetOrigin() const { return m_drawable->GetOrigin(); }
-	void SetScale(const Point& scale) { m_drawable->SetScale(scale); }
+	void SetScale(const Point& scale);
 	Point GetScale() const { return m_drawable->GetScale(); }
 
 	bool GetInitialDirection() const { return m_spawnData.initialDir; }
@@ -109,12 +110,12 @@ public:
 
 protected:
 
-	bool m_onSlope = false;
-	bool m_shouldSlideLeft = false;
-	bool m_slideLeft = false;
-	bool m_shouldSlideRight = false;
-	bool m_slideRight = false;
 	bool m_onGround = false;
+	bool m_onSlope = false;
+	bool m_slideLeft = false;
+	bool m_slideRight = false;
+	bool m_shouldSlideLeft = false;
+	bool m_shouldSlideRight = false;
 	Point m_velocity;
 	Point m_previousPos;
 };
