@@ -105,7 +105,19 @@ public:
         case NSide::Left:   return Point(m_min.x, this->GetCenter().y);
         case NSide::Right:  return Point(m_max.x, this->GetCenter().y);
         }
-        return Point(0, 0);
+        return Point();
+    }
+
+    Line GetSide(NSide side) override
+    {
+        switch (side)
+        {
+        case Side::Left:    return Line(m_min, Point(m_min.x, m_max.y));
+        case Side::Right:   return Line(Point(m_max.x, m_min.y), m_max);
+        case Side::Top:     return Line(m_min, Point(m_max.x, m_min.y));
+        case Side::Bottom:  return Line(Point(m_min.x, m_max.y), m_max);
+        }
+        return Point();
     }
 
 protected:

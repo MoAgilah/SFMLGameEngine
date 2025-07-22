@@ -294,6 +294,12 @@
     <ClCompile Include="Code\Game\Objects\NGameObject.cpp">
       <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Engine\Collisions\NCollisionManager.cpp">
+      <Filter>Source Files\Code\Engine\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\Interfaces\IGameObject.cpp">
+      <Filter>Source Files\Code\Engine\Interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Camera.h">
@@ -499,6 +505,12 @@
     </ClInclude>
     <ClInclude Include="Code\Game\Objects\NGameObject.h">
       <Filter>Header Files\Code\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\ITile.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Collisions\NCollisionManager.h">
+      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

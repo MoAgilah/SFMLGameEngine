@@ -23,6 +23,7 @@
     <ClCompile Include="Code\Engine\Collisions\BoundingVolume.cpp" />
     <ClCompile Include="Code\Engine\Collisions\CollisionManager.cpp" />
     <ClCompile Include="Code\Engine\Collisions\Grid.cpp" />
+    <ClCompile Include="Code\Engine\Collisions\NCollisionManager.cpp" />
     <ClCompile Include="Code\Engine\Collisions\Tile.cpp" />
     <ClCompile Include="Code\Engine\Core\Constants.cpp" />
     <ClCompile Include="Code\Engine\Core\Framework.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="Code\Engine\Core\Timer.cpp" />
     <ClCompile Include="Code\Engine\Input\InputManager.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IFramework.cpp" />
+    <ClCompile Include="Code\Engine\Interfaces\IGameObject.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IText.cpp" />
     <ClCompile Include="Code\Engine\Resources\FontManager.cpp" />
     <ClCompile Include="Code\Engine\Resources\ShaderManager.cpp" />
@@ -74,6 +76,7 @@
     <ClInclude Include="Code\Engine\Collisions\BoundingVolume.h" />
     <ClInclude Include="Code\Engine\Collisions\CollisionManager.h" />
     <ClInclude Include="Code\Engine\Collisions\Grid.h" />
+    <ClInclude Include="Code\Engine\Collisions\NCollisionManager.h" />
     <ClInclude Include="Code\Engine\Collisions\Tile.h" />
     <ClInclude Include="Code\Engine\Core\Constants.h" />
     <ClInclude Include="Code\Engine\Core\Framework.h" />
@@ -95,6 +98,7 @@
     <ClInclude Include="Code\Engine\Interfaces\IShape.h" />
     <ClInclude Include="Code\Engine\Interfaces\IText.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITexture.h" />
+    <ClInclude Include="Code\Engine\Interfaces\ITile.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITransforms.h" />
     <ClInclude Include="Code\Engine\Interfaces\IUpdatable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IWindow.h" />

@@ -63,7 +63,7 @@ private:
 	bool ResolveObjectToSlopeIncline(DynamicObject* obj, int start, int end);
 	bool ResolveObjectToSlopeDecline(DynamicObject* obj, int start, int end);
 
-	void ResolveObjectToEdgeBounds(DynamicObject* obj);
+	void ResolveObjectToEdgeBounds(DynamicObject* obj) const;
 
 	bool m_visible = false;
 	bool m_hasFont = false;

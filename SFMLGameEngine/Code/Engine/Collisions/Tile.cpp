@@ -272,7 +272,7 @@ bool Tile::ResolveObjectToSlopeTop(DynamicObject* obj)
 	return false;
 }
 
-float GetYOffSet(float pDistX, float lDistY, float slopeY, float currY, float tileHeight)
+static float GetYOffSet(float pDistX, float lDistY, float slopeY, float currY, float tileHeight)
 {
 	auto percent = pDistX / lDistY;
 	auto colHeight = lDistY * percent + slopeY;
@@ -323,7 +323,7 @@ bool Tile::ResolveObjectToSlopeDecline(DynamicObject* obj, int start, int end)
 	return false;
 }
 
-void Tile::ResolveObjectToEdgeBounds(DynamicObject* obj)
+void Tile::ResolveObjectToEdgeBounds(DynamicObject* obj) const
 {
 	if (IsPlayerObject(obj->GetID()))
 		return;

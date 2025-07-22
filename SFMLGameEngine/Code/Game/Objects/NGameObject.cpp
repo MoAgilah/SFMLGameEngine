@@ -6,6 +6,7 @@
 NGameObject::NGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume)
 	: m_drawable(std::move(drawable)), m_volume(std::move(volume))
 {
+	m_objectID = s_objectNum++;
 	SetScale(GameConstants::Scale);
 	//NGameManager::Get()->GetCollisionMgr()->AddCollidable(this);
 }
@@ -87,56 +88,6 @@ bool NDynamicGameObject::Intersects(IDynamicGameObject* obj, float& tFirst, floa
 void NDynamicGameObject::Reset()
 {
 	NGameObject::Reset();
-	SetVelocity(Point());
+	this->SetVelocity(Point());
 	m_onGround = false;
-}
-
-void NDynamicGameObject::SetOnSlope(bool slp)
-{
-	m_onSlope = slp;
-	if (m_onSlope)
-		m_onGround = true;
-}
-
-void NDynamicGameObject::SetShouldSlideLeft(bool left)
-{
-	m_shouldSlideLeft = left;
-	if (m_shouldSlideLeft)
-		m_shouldSlideRight = false;
-}
-
-void NDynamicGameObject::SetSlideLeft(bool left)
-{
-	m_slideLeft = left;
-	if (m_slideLeft)
-		m_slideRight = false;
-}
-
-void NDynamicGameObject::SetShouldSlideRight(bool right)
-{
-	m_shouldSlideRight = right;
-	if (m_shouldSlideRight)
-		m_shouldSlideLeft = false;
-}
-
-void NDynamicGameObject::SetSlideRight(bool right)
-{
-	m_slideRight = right;
-	if (m_slideRight)
-		m_slideLeft = false;
-}
-
-Direction NDynamicGameObject::GetFacingDirection()
-{
-	const Point& vel = m_velocity;
-	if (vel.x == 0.f && vel.y == 0.f)
-		return Direction::DDIR;
-
-	return (std::abs(vel.x) > std::abs(vel.y))
-		? (vel.x < 0 ? Direction::LDIR : Direction::RDIR)
-		: (vel.y < 0 ? Direction::UDIR : Direction::DDIR);
-}
-
-void NDynamicGameObject::CheckForHorizontalBounds(float deltaTime)
-{
 }

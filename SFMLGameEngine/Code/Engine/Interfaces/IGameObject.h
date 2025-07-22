@@ -24,6 +24,8 @@ class IGameObject
 public:
 	virtual ~IGameObject() = 0;
 
+	int GetObjectNum() const { return m_objectID; }
+
 	virtual void Update(float deltaTime) = 0;
 	virtual void Render(IRenderer* renderer) = 0;
 	virtual bool Intersects(IGameObject* obj) = 0;
@@ -36,10 +38,52 @@ public:
 
 	virtual IDrawable* GetDrawable() = 0;
 	virtual IBoundingVolume* GetVolume() = 0;
+
+	virtual bool GetActive() const { return m_active; }
+	void SetActive(bool act) { m_active = act; }
+
+	virtual bool GetDirection() const { return m_direction; }
+	virtual void SetDirection(bool dir) { m_direction = dir; }
+
+protected:
+
+	int m_objectID = 0;
+	static int s_objectNum;
+	bool m_active = false;
+	bool m_direction = true;
 };
 
 class IDynamicGameObject : public virtual IGameObject, public IMoveableWithVelocity
 {
 public:
 	virtual ~IDynamicGameObject() = 0;
+
+	virtual bool GetOnGround() const { return m_onGround; }
+	virtual void SetOnGround(bool grnd) { m_onGround = grnd; }
+
+	virtual bool GetOnSlope() const { return m_onSlope; }
+	virtual void SetOnSlope(bool slp);
+
+	bool GetShouldSlideLeft() const { return m_shouldSlideLeft; }
+	void SetShouldSlideLeft(bool left);
+
+	bool GetSlideLeft() const { return m_slideLeft; }
+	void SetSlideLeft(bool left);
+
+	bool GetShouldSlideRight() const { return m_shouldSlideRight; }
+	void SetShouldSlideRight(bool right);
+
+	bool GetSlideRight() const { return m_slideRight; }
+	void SetSlideRight(bool right);
+
+	Direction GetFacingDirection();
+
+protected:
+
+	bool m_onGround = false;
+	bool m_onSlope = false;
+	bool m_slideLeft = false;
+	bool m_slideRight = false;
+	bool m_shouldSlideLeft = false;
+	bool m_shouldSlideRight = false;
 };

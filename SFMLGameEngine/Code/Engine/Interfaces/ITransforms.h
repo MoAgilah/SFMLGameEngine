@@ -39,6 +39,10 @@ class IMoveableWithVelocity : public IMoveable
 public:
 	virtual ~IMoveableWithVelocity() = default;
 
-	virtual void SetVelocity(const Point& vel) = 0;
-	virtual Point GetVelocity() const = 0;
+	virtual void SetVelocity(const Point& vel) { m_velocity = vel; }
+	virtual Point GetVelocity() const { return m_velocity; }
+
+protected:
+
+	Point m_velocity;
 };

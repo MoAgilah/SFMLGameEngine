@@ -33,8 +33,13 @@ public:
     virtual Point GetPosition() const = 0;
     virtual void SetPosition(const Point& pos) = 0;
 
+    virtual Point GetOrigin() const = 0;
+    virtual void SetOrigin(const Point& scl) = 0;
+
     virtual Point GetScale() const = 0;
     virtual void SetScale(const Point& scl) = 0;
+
+    virtual void* GetNativeShape() = 0;
 
 	virtual bool Intersects(const Point& pnt) const = 0;
 	virtual bool Intersects(IBoundingVolume* volume) = 0;
@@ -97,6 +102,17 @@ public:
             m_shape->SetPosition(pos);
     }
 
+    Point GetOrigin() const override
+    {
+        return m_shape ? m_shape->GetOrigin() : Point();
+    }
+
+    void SetOrigin(const Point& origin) override
+    {
+        if (m_shape)
+            m_shape->SetOrigin(origin);
+    }
+
     Point GetScale() const override
     {
         return m_shape ? m_shape->GetScale() : Point();
@@ -108,9 +124,13 @@ public:
             m_shape->SetScale(scl);
     }
 
-protected:
-    std::shared_ptr<PlatformType> m_shape = nullptr;
+    void* GetNativeShape() override { return static_cast<void*>(m_shape.get()); }
 
+    PlatformType* GetShape() { return m_shape.get(); }
+
+protected:
+
+    std::shared_ptr<PlatformType> m_shape = nullptr;
 };
 
 class IBoundingBox : public virtual IBoundingVolume {
@@ -121,6 +141,7 @@ public:
     virtual const Point& GetMin() const { return m_min; }
     virtual const Point& GetMax() const { return m_max; }
     virtual const Point& GetExtents() const { return m_extents; }
+    virtual Line GetSide(NSide side) = 0;
 
 protected:
     Point m_min;
