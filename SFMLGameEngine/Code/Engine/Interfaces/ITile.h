@@ -4,6 +4,7 @@
 #include "IText.h"
 #include "IBoundingVolume.h"
 #include "IGameObject.h"
+#include "../../Utilities/Colour.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -16,7 +17,7 @@ enum class NTypes
 class ITile
 {
 public:
-	ITile(std::shared_ptr<IDrawable> text, std::shared_ptr<IDrawable> slope, std::shared_ptr<IBoundingBox> aabb)
+	ITile(std::shared_ptr<IBoundingBox> aabb, std::shared_ptr<IDrawable> text, std::shared_ptr<ITriangleShape> slope)
 		: m_text(std::move(text)), m_slope(std::move(slope)), m_aabb(std::move(aabb)) {}
 	virtual ~ITile() = 0;
 
@@ -43,12 +44,12 @@ public:
 	Point GetOrigin() { return m_aabb->GetOrigin(); }
 
 	IBoundingBox* GetBoundingBox() { return m_aabb.get(); }
-	virtual Line GetSlope(int bgn, int end) = 0;
+	virtual Line GetSlope(int bgn, int end) { return m_slope->GetLine(bgn, end); }
 	Line GetEdge() const { return m_edge; }
 
 	float GetTileHeight() { return m_aabb->GetExtents().y * 2; }
-	virtual void SetFillColour(sf::Color col) = 0;
-	virtual void SetOutlineColour(sf::Color col) = 0;
+	virtual void SetFillColour(Colour col) = 0;
+	virtual void SetOutlineColour(Colour col) = 0;
 
 protected:
 
@@ -70,6 +71,6 @@ protected:
 	std::string m_id;
 	Line m_edge;
 	std::shared_ptr<IDrawable> m_text;
-	std::shared_ptr<IDrawable> m_slope;
+	std::shared_ptr<ITriangleShape> m_slope;
 	std::shared_ptr<IBoundingBox> m_aabb;
 };

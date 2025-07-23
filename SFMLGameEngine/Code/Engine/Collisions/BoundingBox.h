@@ -11,6 +11,14 @@ template <typename PlatformType>
 class NBoundingBox : public IBoundingBox, public NBoundingVolume<PlatformType>
 {
 public:
+    NBoundingBox()
+        : IBoundingVolume(NVolumeType::Box)
+        , IBoundingBox()
+        , NBoundingVolume<PlatformType>(NVolumeType::Box)
+    {
+        this->m_shape = std::make_shared<PlatformType>();
+    }
+
     // Only call the virtual base constructor here, not in any parent!
     NBoundingBox(const Point& size, const Point& pos)
         : IBoundingVolume(NVolumeType::Box)
@@ -112,12 +120,12 @@ public:
     {
         switch (side)
         {
-        case Side::Left:    return Line(m_min, Point(m_min.x, m_max.y));
-        case Side::Right:   return Line(Point(m_max.x, m_min.y), m_max);
-        case Side::Top:     return Line(m_min, Point(m_max.x, m_min.y));
-        case Side::Bottom:  return Line(Point(m_min.x, m_max.y), m_max);
+        case NSide::Left:    return Line(m_min, Point(m_min.x, m_max.y));
+        case NSide::Right:   return Line(Point(m_max.x, m_min.y), m_max);
+        case NSide::Top:     return Line(m_min, Point(m_max.x, m_min.y));
+        case NSide::Bottom:  return Line(Point(m_min.x, m_max.y), m_max);
         }
-        return Point();
+        return Line();
     }
 
 protected:

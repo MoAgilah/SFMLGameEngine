@@ -9,6 +9,7 @@
 class SFText : public SFDrawables<sf::Text>, public IText
 {
 public:
+	SFText() {}
 	SFText(const NTextConfig& config);
 
 	virtual void SetText(const std::string& text);

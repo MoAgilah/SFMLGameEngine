@@ -55,7 +55,7 @@ public:
 		m_circle1 = std::make_shared<PlatformCircle>();
 		m_circle2 = std::make_shared<PlatformCircle>();
 		Reset(radius, length, angle);
-		Update(pos)
+		Update(pos);
 	}
 
 	void Reset(float radius, float length, float angle)
@@ -248,7 +248,7 @@ protected:
 
 		capCircle.Update(m_segment.GetMidPoint());
 
-		if (capCircle).IntersectsMoving(circle, va, vb, tfirst, tlast))
+		if (capCircle.IntersectsMoving(circle, va, vb, tfirst, tlast))
 			return true;
 
 		return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);

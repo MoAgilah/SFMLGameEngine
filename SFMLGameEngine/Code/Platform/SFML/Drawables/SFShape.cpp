@@ -3,6 +3,59 @@
 #include "../../../Engine/Core/Constants.h"
 #include <numbers>
 
+SFTriangle::SFTriangle()
+{
+    SetDrawable(std::make_shared<sf::ConvexShape>(3));
+    SetScale(GameConstants::Scale);
+    SetFillColour(sf::Color::Transparent);
+    SetOutlineColour(sf::Color::Red);
+    SetOutlineThickness(2);
+}
+
+SFTriangle::SFTriangle(const std::array<Point, 3>& points, const Point& pos)
+    : SFTriangle()
+{
+    Reset(points);
+    Update(pos);
+}
+
+void SFTriangle::Update(const Point& pos)
+{
+    // unsure as of yet
+}
+
+void SFTriangle::Reset(const std::array<Point, 3>& points)
+{
+    SetPoints(points);
+}
+
+Point SFTriangle::GetPoint(int idx)
+{
+    return Point(GetTriangle()->getPoint(idx));
+}
+
+Line SFTriangle::GetLine(int start, int end)
+{
+    return Line(GetPoint(start), GetPoint(end));
+}
+
+std::array<Point, 3> SFTriangle::GetPoints() const
+{
+    return std::array<Point, 3>{GetPrimaryDrawable()->getPoint(0),
+        GetPrimaryDrawable()->getPoint(1),
+        GetPrimaryDrawable()->getPoint(2)};
+}
+
+void SFTriangle::SetPoints(const std::array<Point, 3>& points)
+{
+    auto drawable = GetPrimaryDrawable();
+    if (drawable)
+    {
+        for (int i = 0; i < 3; i++)
+            drawable->setPoint(i, points[i]);
+    }
+}
+
 SFRect::SFRect()
 {
 	SetDrawable(std::make_shared<sf::RectangleShape>());

@@ -57,6 +57,7 @@
     <ClCompile Include="Code\Game\Objects\NGameObject.cpp" />
     <ClCompile Include="Code\Game\Objects\Object.cpp" />
     <ClCompile Include="Code\Game\Sprite.cpp" />
+    <ClCompile Include="Code\Platform\SFML\Collisions\SFTile.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFShape.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFSprite.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFText.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="Code\Game\Objects\NGameObject.h" />
     <ClInclude Include="Code\Game\Objects\Object.h" />
     <ClInclude Include="Code\Game\Sprite.h" />
+    <ClInclude Include="Code\Platform\SFML\Collisions\SFTile.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFDrawables.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFShape.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFSprite.h" />

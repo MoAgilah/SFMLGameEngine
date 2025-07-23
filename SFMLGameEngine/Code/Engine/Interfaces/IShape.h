@@ -28,6 +28,14 @@ protected:
 	Point m_center;
 };
 
+class IBoxShape
+{
+public:
+	virtual ~IBoxShape() = 0;
+	virtual Point GetSize() = 0;
+	virtual void SetSize(const Point& size) = 0;
+};
+
 class ICircleShape
 {
 public:
@@ -36,7 +44,7 @@ public:
 	virtual void SetRadius(float radius) = 0;
 };
 
-class ICapsuleShape : public IShape
+class ICapsuleShape
 {
 public:
 	virtual ~ICapsuleShape() = default;
@@ -50,4 +58,20 @@ public:
 	virtual void SetAngle(float angle) = 0;
 
 	virtual const Line& GetSegment() const = 0;
+	virtual void SetSegment(const Line& segment) = 0;
+};
+
+class ITriangleShape
+{
+public:
+	virtual ~ITriangleShape() = default;
+
+	virtual Point GetPoint(int idx) = 0;
+	virtual Line GetLine(int start, int end) = 0;
+
+	// Returns the three points of the triangle
+	virtual std::array<Point, 3> GetPoints() const = 0;
+
+	// Sets the three points of the triangle
+	virtual void SetPoints(const std::array<Point, 3>& points) = 0;
 };

@@ -37,6 +37,7 @@ Point NSetTextPosition(NTextAlignment alignment, const Point& textPos, const Poi
 class IText
 {
 public:
+	IText(){}
 	IText(const NTextConfig& config);
 	virtual ~IText() = default;
 

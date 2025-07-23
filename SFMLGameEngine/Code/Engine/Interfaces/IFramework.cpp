@@ -49,7 +49,13 @@ void IFrameWork::PollEvents()
     auto* renderer = m_gameMgr.GetRenderer();
 
     if (renderer)
+    {
         renderer->PollWindowEvents();
+
+        auto* window = renderer->GetWindow();
+        if (window && window->ShouldClose())
+            m_isRunning = false;
+    }
 }
 
 void IFrameWork::Update(float dt)

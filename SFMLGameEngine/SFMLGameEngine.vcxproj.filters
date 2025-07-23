@@ -154,6 +154,12 @@
     <Filter Include="Header Files\Code\Platform\SFML\Engine\Collisions">
       <UniqueIdentifier>{9197141b-3900-4321-b4f4-8f376a3ca8a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Collisions">
+      <UniqueIdentifier>{f22c879c-a919-4a2c-9a9b-b7d9893f2f42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML\Collisions">
+      <UniqueIdentifier>{a729d8b8-a487-4d43-addb-b631f988bc5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Camera.cpp">
@@ -299,6 +305,9 @@
     </ClCompile>
     <ClCompile Include="Code\Engine\Interfaces\IGameObject.cpp">
       <Filter>Source Files\Code\Engine\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\Collisions\SFTile.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\Collisions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +520,9 @@
     </ClInclude>
     <ClInclude Include="Code\Engine\Collisions\NCollisionManager.h">
       <Filter>Header Files\Code\Engine\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Collisions\SFTile.h">
+      <Filter>Header Files\Code\Platform\SFML\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

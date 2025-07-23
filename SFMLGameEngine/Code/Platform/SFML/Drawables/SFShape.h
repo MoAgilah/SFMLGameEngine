@@ -25,8 +25,29 @@ public:
     void SetRotation(float rotation) override { this->GetPrimaryDrawableAs<TShape>()->setRotation(sf::degrees(rotation)); }
 };
 
+class SFTriangle : public SFShape<sf::ConvexShape>, public ITriangleShape
+{
+public:
+    SFTriangle();
+    SFTriangle(const std::array<Point, 3>& points, const Point& pos);
+
+    void Update(const Point& pos) override;
+    void Reset(const std::array<Point, 3>& points);
+
+    sf::ConvexShape* GetTriangle() { return this->GetPrimaryDrawableAs<sf::ConvexShape>(); }
+
+    Point GetPoint(int idx) override;
+    Line GetLine(int start, int end) override;
+
+    // Returns the three points of the triangle
+    std::array<Point, 3> GetPoints() const override;
+
+    // Sets the three points of the triangle
+    void SetPoints(const std::array<Point, 3>& points) override;
+};
+
 // --- Rectangle Shape ---
-class SFRect : public SFShape<sf::RectangleShape>
+class SFRect : public SFShape<sf::RectangleShape>, public IBoxShape
 {
 public:
     SFRect();
@@ -57,7 +78,7 @@ public:
     void SetRadius(float radius) override { GetCircle()->setRadius(radius); }
 };
 
-class SFCapsule : public SFShape<sf::Shape>
+class SFCapsule : public SFShape<sf::Shape>, public ICapsuleShape
 {
 public:
     SFCapsule();
@@ -71,10 +92,17 @@ public:
     sf::CircleShape* GetEndCap1();
     sf::CircleShape* GetEndCap2();
 
-    float GetRadius() const { return m_radius; }
-    float GetLength() const { return m_length; }
-    float GetAngle() const { return m_angle; }
-    const Line& GetSegment() const { return m_segment; }
+    float GetRadius() const override { return m_radius; }
+    void SetRadius(float radius) override { m_radius = radius; }
+
+    float GetLength() const override { return m_length; }
+    void SetLength(float length) override { m_length = length; }
+
+    float GetAngle() const override { return m_angle; }
+    void SetAngle(float angle) override { m_angle = angle; }
+
+    const Line& GetSegment() const override { return m_segment; }
+    void SetSegment(const Line& segment) { m_segment = segment; }
 
 private:
     float m_angle = 0.f;
