@@ -141,6 +141,7 @@
     <ClInclude Include="Code\Utilities\DecisionTree.h" />
     <ClInclude Include="Code\Utilities\Point.h" />
     <ClInclude Include="Code\Utilities\ResourceLoader.h" />
+    <ClInclude Include="Code\Utilities\Traits.h" />
     <ClInclude Include="Code\Utilities\Utilities.h" />
   </ItemGroup>
   <ItemGroup>

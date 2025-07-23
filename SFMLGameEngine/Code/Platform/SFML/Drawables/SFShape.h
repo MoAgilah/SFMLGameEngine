@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFDrawables.h"
+#include "../../../Utilities/Traits.h"
 #include "../../../Utilities/Utilities.h"
 #include "../../../Engine/Interfaces/IShape.h"
 #include <SFML/Graphics.hpp>
@@ -109,4 +110,11 @@ private:
     float m_radius = 0.f;
     float m_length = 0.f;
     Line m_segment;
+};
+
+template <>
+struct CapsuleTraits<SFCapsule>
+{
+    using CircleType = SFCircle;
+    using BoxType = SFRect;
 };

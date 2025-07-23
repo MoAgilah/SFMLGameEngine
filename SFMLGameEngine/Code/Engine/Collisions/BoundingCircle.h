@@ -8,6 +8,14 @@ template <typename PlatformType>
 class NBoundingCircle : public IBoundingCircle, public NBoundingVolume<PlatformType>
 {
 public:
+    NBoundingCircle()
+        : IBoundingVolume(NVolumeType::Circle)
+        , IBoundingCircle()
+        , NBoundingVolume<PlatformType>(NVolumeType::Circle)
+    {
+        this->m_shape = std::make_shared<PlatformType>();
+    }
+
     NBoundingCircle(float radius, const Point& pos)
         : IBoundingVolume(NVolumeType::Circle)
         , IBoundingCircle()

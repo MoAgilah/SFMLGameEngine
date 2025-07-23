@@ -4,7 +4,7 @@
 #include "../Interfaces/IBoundingVolume.h"
 #include <type_traits>
 
-template <typename PlatformBox, typename PlatformCircle>
+template <typename PlatformShape>
 class NBoundingCapsule;
 
 template <typename PlatformType>
@@ -30,14 +30,18 @@ public:
         Update(pos);
     }
 
-    template <typename PlatformBox, typename PlatformCircle>
-    NBoundingBox(const NBoundingCapsule<PlatformBox, PlatformCircle>* capsule)
-        : IBoundingBox(), NBoundingVolume<PlatformType>(NVolumeType::Box)
+    template <typename PlatformShape>
+    NBoundingBox(const NBoundingCapsule<PlatformShape>* capsule)
+        : IBoundingBox()
+        , NBoundingVolume<PlatformType>(NVolumeType::Box)
     {
-        static_assert(std::is_same_v<PlatformType, PlatformBox>,
-            "PlatformType and PlatformBox must be the same type!");
+        using PlatformBox = typename CapsuleTraits<PlatformShape>::BoxType;
 
-        this->m_shape = std::make_unique<PlatformType>();
+        static_assert(std::is_same_v<PlatformType, PlatformBox>,
+            "PlatformType and CapsuleTraits<PlatformShape>::BoxType must match!");
+
+        this->m_shape = std::make_shared<PlatformType>();
+
         const float radius = capsule->GetRadius();
         const auto& seg = capsule->GetSegment();
 
@@ -49,7 +53,6 @@ public:
         Reset({ maxX - minX, maxY - minY });
         Update(seg.GetMidPoint());
     }
-
 
     void Reset(const Point& size)
     {

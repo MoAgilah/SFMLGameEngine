@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../Interfaces/IBoundingVolume.h"
 #include "CollisionManager.h"
+#include "../Interfaces/IBoundingVolume.h"
+#include "../../Utilities/Traits.h"
 #include <numbers>
 
 // Forward declarations
@@ -11,114 +12,39 @@ class NBoundingBox;
 template <typename PlatformCircle>
 class NBoundingCircle;
 
-// Function to calculate the four corners of a rotated rectangle
-void NCalculateRotatedRectangleCorners(Point corners[4], const Point& centre, const Point& size, float angle)
-{
-	// Convert the angle from degrees to radians
-	float radians = angle * std::numbers::pi_v<float> / 180.0f;
-
-	// Precompute sine and cosine of the angle
-	float cosTheta = cos(radians);
-	float sinTheta = sin(radians);
-
-	// Half dimensions
-	float halfWidth = size.x / 2.0f;
-	float halfHeight = size.y / 2.0f;
-
-	// Relative corners before rotation
-	Point relativeCorners[4] =
-	{
-		{ -halfWidth, -halfHeight }, // Bottom-left
-		{  halfWidth, -halfHeight }, // Bottom-right
-		{  halfWidth,  halfHeight }, // Top-right
-		{ -halfWidth,  halfHeight }  // Top-left
-	};
-
-	// Compute rotated corners
-	for (int i = 0; i < 4; ++i)
-	{
-		corners[i].x = centre.x + relativeCorners[i].x * cosTheta - relativeCorners[i].y * sinTheta;
-		corners[i].y = centre.y + relativeCorners[i].x * sinTheta + relativeCorners[i].y * cosTheta;
-	}
-}
-
-template <typename PlatformBox, typename PlatformCircle>
-class NBoundingCapsule : public IBoundingCapsule, public NBoundingVolume<PlatformBox>
+template <typename PlatformShape>
+class NBoundingCapsule : public IBoundingCapsule, public NBoundingVolume<PlatformShape>
 {
 public:
+	using PlatformCircle = typename CapsuleTraits<PlatformShape>::CircleType;
+	using PlatformBox = typename CapsuleTraits<PlatformShape>::BoxType;
+
 	NBoundingCapsule(float radius, float length, float angle, const Point& pos)
 		: IBoundingVolume(NVolumeType::Capsule)
 		, IBoundingCapsule()
-		, NBoundingVolume<PlatformBox>(NVolumeType::Capsule)
+		, NBoundingVolume<PlatformShape>(NVolumeType::Capsule)
 	{
-		this->m_shape = std::make_shared<PlatformBox>();
-		m_circle1 = std::make_shared<PlatformCircle>();
-		m_circle2 = std::make_shared<PlatformCircle>();
+		this->m_shape = std::make_shared<PlatformShape>();
 		Reset(radius, length, angle);
 		Update(pos);
 	}
 
 	void Reset(float radius, float length, float angle)
 	{
-		const auto scale = this->GetScale();
-		m_length = length * scale.y;
-		m_radius = radius * scale.x;
-		m_angle = angle;
-
 		if (this->m_shape)
-		{
-			this->m_shape->SetSize(Point{ radius * 2.f, length });
-			this->m_shape->SetOrigin(Point{ radius, length / 2.f });
-			this->m_shape->SetRotation(angle);
-		}
-		if (m_circle1)
-		{
-			m_circle1->SetRadius(radius);
-			m_circle1->SetOrigin(Point{ radius, radius });
-		}
-		if (m_circle2)
-		{
-			m_circle2->SetRadius(radius);
-			m_circle2->SetOrigin(Point{ radius, radius });
-		}
+			this->m_shape->Reset(radius, length, angle);
 	}
 
 	void Update(const Point& pos) override
 	{
 		if (this->m_shape)
-		{
-			this->m_shape->SetPosition(pos);
-			this->m_center = pos;
-
-			Point corners[4];
-			Point size = this->m_shape->GetSize();
-			Point scale = this->m_shape->GetScale();
-			size.x *= scale.x;
-			size.y *= scale.y;
-
-			NCalculateRotatedRectangleCorners(corners, pos, size, m_angle);
-
-			Point end1 = Line(corners[3], corners[2]).GetMidPoint(); // top
-			Point end2 = Line(corners[0], corners[1]).GetMidPoint(); // bottom
-
-			if (m_circle1)
-				m_circle1->SetPosition(end1);
-			if (m_circle2)
-				m_circle2->SetPosition(end2);
-
-			m_segment.start = end1;
-			m_segment.end = end2;
-		}
+			this->m_shape->Update(pos);
 	}
 
 	void Render(IRenderer* renderer) override
 	{
 		if (this->m_shape)
 			this->m_shape->Render(renderer);
-		if (m_circle1)
-			m_circle1->Render(renderer);
-		if (m_circle2)
-			m_circle2->Render(renderer);
 	}
 
 	bool Intersects(const Point& pnt) const override
@@ -160,10 +86,6 @@ public:
 	{
 		if (this->m_shape)
 			this->m_shape->SetScale(scale);
-		if (m_circle1)
-			m_circle1->SetScale(scale);
-		if (m_circle2)
-			m_circle2->SetScale(scale);
 
 		Reset(m_radius, m_length, m_angle);
 	}
@@ -252,9 +174,10 @@ protected:
 			return true;
 
 		return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);
+		return false;
 	}
 
-	bool IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+	bool IntersectsMoving(IBoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
 		NBoundingCircle<PlatformCircle> endpoint1(m_radius, m_segment.start);
 		NBoundingCircle<PlatformCircle> endpoint2(m_radius, m_segment.end);
@@ -309,9 +232,4 @@ protected:
 
 		return Point();
 	}
-
-private:
-
-	std::shared_ptr<PlatformCircle> m_circle1;
-	std::shared_ptr<PlatformCircle> m_circle2;
 };
