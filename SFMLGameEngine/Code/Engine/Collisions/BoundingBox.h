@@ -65,13 +65,27 @@ public:
     void Update(const Point& pos) override
     {
         this->m_shape->Update(pos);
-        m_min = this->GetCenter() - m_extents;
-        m_max = this->GetCenter() + m_extents;
+        auto center = NBoundingVolume<PlatformType>::GetCenter();
+        m_min = center - m_extents;
+        m_max = center + m_extents;
     }
 
+    void Render(IRenderer* r) override { NBoundingVolume<PlatformType>::Render(r); }
+    void* GetNativeShape() override { return NBoundingVolume<PlatformType>::GetNativeShape(); }
+
+    Point GetCenter() const override { return NBoundingVolume<PlatformType>::GetCenter(); }
+    void SetCenter(const Point& c) override { NBoundingVolume<PlatformType>::SetCenter(c); }
+
+    Point GetPosition() const override { return NBoundingVolume<PlatformType>::GetPosition(); }
+    void SetPosition(const Point& p) override { NBoundingVolume<PlatformType>::SetPosition(p); }
+
+    Point GetOrigin() const override { return NBoundingVolume<PlatformType>::GetOrigin(); }
+    void SetOrigin(const Point& o) override { NBoundingVolume<PlatformType>::SetOrigin(o); }
+
+    Point GetScale() const override { return NBoundingVolume<PlatformType>::GetScale(); }
     void SetScale(const Point& scale) override
     {
-        this->SetScale(scale);
+        NBoundingVolume<PlatformType>::SetScale(scale);
         if (this->m_shape)
             Reset(this->m_shape->GetSize());
     }
@@ -111,11 +125,12 @@ public:
 
     Point GetPoint(NSide side) override
     {
+        auto center = NBoundingVolume<PlatformType>::GetCenter();
         switch (side) {
-        case NSide::Top:    return Point(this->GetCenter().x, m_min.y);
-        case NSide::Bottom: return Point(this->GetCenter().x, m_max.y);
-        case NSide::Left:   return Point(m_min.x, this->GetCenter().y);
-        case NSide::Right:  return Point(m_max.x, this->GetCenter().y);
+        case NSide::Top:    return Point(center.x, m_min.y);
+        case NSide::Bottom: return Point(center.x, m_max.y);
+        case NSide::Left:   return Point(m_min.x, center.y);
+        case NSide::Right:  return Point(m_max.x, center.y);
         }
         return Point();
     }

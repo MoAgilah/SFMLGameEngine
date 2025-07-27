@@ -36,27 +36,39 @@ public:
         this->m_shape->Update(pos);
     }
 
+    void Render(IRenderer* r) override { NBoundingVolume<PlatformType>::Render(r); }
+    void* GetNativeShape() override { return NBoundingVolume<PlatformType>::GetNativeShape(); }
+
+    Point GetCenter() const override { return NBoundingVolume<PlatformType>::GetCenter(); }
+    void SetCenter(const Point& c) override { NBoundingVolume<PlatformType>::SetCenter(c); }
+
+    Point GetPosition() const override { return NBoundingVolume<PlatformType>::GetPosition(); }
+    void SetPosition(const Point& p) override { NBoundingVolume<PlatformType>::SetPosition(p); }
+
+    Point GetOrigin() const override { return NBoundingVolume<PlatformType>::GetOrigin(); }
+    void SetOrigin(const Point& o) override { NBoundingVolume<PlatformType>::SetOrigin(o); }
+
+    Point GetScale() const override { return NBoundingVolume<PlatformType>::GetScale(); }
+    void SetScale(const Point& scale) override
+    {
+        NBoundingVolume<PlatformType>::SetScale(scale);
+        if (this->m_shape)
+            Reset(this->m_shape->GetRadius());
+    }
+
     float GetRadius() const override
     {
         ICircleShape* radiusShape = dynamic_cast<ICircleShape*>(this->m_shape.get());
         if (radiusShape)
-            return radiusShape->GetRadius() * this->GetScale().x;
-
+            return radiusShape->GetRadius() * NBoundingVolume<PlatformType>::GetScale().x;
         return 0.f;
-    }
-
-    void SetScale(const Point& scale) override
-    {
-        this->SetScale(scale);
-        if (this->m_shape)
-            Reset(this->m_shape->GetRadius());
     }
 
     bool Intersects(const Point& pnt) const override
     {
         // get distance between the point and circle's center
         // using the Pythagorean Theorem
-        Point dist = pnt - this->GetCenter();
+        Point dist = pnt - NBoundingVolume<PlatformType>::GetCenter();;
 
         float distance = pnt::length(dist);
 
@@ -82,11 +94,13 @@ public:
 
     Point GetPoint(NSide side) override
     {
+        auto center = NBoundingVolume<PlatformType>::GetCenter();
+        auto radius = GetRadius();
         switch (side) {
-        case NSide::Left:   return this->GetCenter() - Point(this->GetRadius(), 0);
-        case NSide::Right:  return this->GetCenter() + Point(this->GetRadius(), 0);
-        case NSide::Top:    return this->GetCenter() - Point(0, this->GetRadius());
-        case NSide::Bottom: return this->GetCenter() + Point(0, this->GetRadius());
+        case NSide::Left:   return center - Point(radius, 0);
+        case NSide::Right:  return center + Point(radius, 0);
+        case NSide::Top:    return center - Point(0, radius);
+        case NSide::Bottom: return center + Point(0, radius);
         }
         return {};
     }

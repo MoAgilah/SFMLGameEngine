@@ -60,6 +60,25 @@ public:
 			this->m_shape->Render(renderer);
 	}
 
+	void* GetNativeShape() override { return NBoundingVolume<PlatformShape>::GetNativeShape(); }
+
+	Point GetCenter() const override { return NBoundingVolume<PlatformShape>::GetCenter(); }
+	void SetCenter(const Point& c) override { NBoundingVolume<PlatformShape>::SetCenter(c); }
+
+	Point GetPosition() const override { return NBoundingVolume<PlatformShape>::GetPosition(); }
+	void SetPosition(const Point& p) override { NBoundingVolume<PlatformShape>::SetPosition(p); }
+
+	Point GetOrigin() const override { return NBoundingVolume<PlatformShape>::GetOrigin(); }
+	void SetOrigin(const Point& o) override { NBoundingVolume<PlatformShape>::SetOrigin(o); }
+
+	Point GetScale() const override { return NBoundingVolume<PlatformShape>::GetScale(); }
+	void SetScale(const Point& scale) override
+	{
+		NBoundingVolume<PlatformShape>::SetScale(scale);
+		if (this->m_shape)
+			Reset(m_radius, m_length, m_angle);
+	}
+
 	bool Intersects(const Point& pnt) const override
 	{
 		auto clsPnt = m_segment.ClosestPointOnLineSegment(pnt);
@@ -83,24 +102,16 @@ public:
 	{
 		return this->GetSeparationVector(other);
 	}
-
 	Point GetPoint(NSide side) override
 	{
+		auto center = NBoundingVolume<PlatformShape>::GetCenter();
 		switch (side) {
 		case NSide::Top:    return this->GetSegment().start;
 		case NSide::Bottom: return this->GetSegment().end;
-		case NSide::Left:   return this->GetCenter() - Point(this->GetLength() * 0.5f, 0);
-		case NSide::Right:  return this->GetCenter() + Point(this->GetLength() * 0.5f, 0);
+		case NSide::Left:   return center - Point(this->GetLength() * 0.5f, 0);
+		case NSide::Right:  return center + Point(this->GetLength() * 0.5f, 0);
 		}
-		return this->GetCenter();
-	}
-
-	void SetScale(const Point& scale) override
-	{
-		if (this->m_shape)
-			this->m_shape->SetScale(scale);
-
-		Reset(m_radius, m_length, m_angle);
+		return center;
 	}
 
 protected:
