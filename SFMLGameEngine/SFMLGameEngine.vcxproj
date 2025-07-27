@@ -57,6 +57,7 @@
     <ClCompile Include="Code\Game\Objects\NGameObject.cpp" />
     <ClCompile Include="Code\Game\Objects\Object.cpp" />
     <ClCompile Include="Code\Game\Sprite.cpp" />
+    <ClCompile Include="Code\Platform\SFML\Collisions\SFGrid.cpp" />
     <ClCompile Include="Code\Platform\SFML\Collisions\SFTile.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFShape.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFSprite.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameObject.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IGrid.h" />
     <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h" />
     <ClInclude Include="Code\Engine\Interfaces\INGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h" />
@@ -126,6 +128,7 @@
     <ClInclude Include="Code\Game\Objects\NGameObject.h" />
     <ClInclude Include="Code\Game\Objects\Object.h" />
     <ClInclude Include="Code\Game\Sprite.h" />
+    <ClInclude Include="Code\Platform\SFML\Collisions\SFGrid.h" />
     <ClInclude Include="Code\Platform\SFML\Collisions\SFTile.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFDrawables.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFShape.h" />

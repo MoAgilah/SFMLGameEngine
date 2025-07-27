@@ -45,7 +45,14 @@ public:
 	Point GetOrigin() { return m_aabb->GetOrigin(); }
 
 	IBoundingBox* GetBoundingBox() { return m_aabb.get(); }
+
+	virtual void SetSlope(std::shared_ptr<ITriangleShape> slope)
+	{
+		m_slope = std::move(slope);
+	}
+
 	virtual Line GetSlope(int bgn, int end) { return m_slope->GetLine(bgn, end); }
+
 	Line GetEdge() const { return m_edge; }
 
 	float GetTileHeight() { return m_aabb->GetExtents().y * 2; }

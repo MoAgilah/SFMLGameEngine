@@ -24,7 +24,9 @@ class IGameObject
 public:
 	virtual ~IGameObject() = 0;
 
+	std::string GetID() { return m_typeID; }
 	int GetObjectNum() const { return m_objectID; }
+	virtual bool IsDynamicObject() { return false; }
 
 	virtual void Update(float deltaTime) = 0;
 	virtual void Render(IRenderer* renderer) = 0;
@@ -49,6 +51,7 @@ protected:
 
 	int m_objectID = 0;
 	static int s_objectNum;
+	std::string m_typeID;
 	bool m_active = false;
 	bool m_direction = true;
 };
@@ -57,6 +60,8 @@ class IDynamicGameObject : public virtual IGameObject, public IMoveableWithVeloc
 {
 public:
 	virtual ~IDynamicGameObject() = 0;
+
+	bool IsDynamicObject() override { return true; }
 
 	virtual bool GetOnGround() const { return m_onGround; }
 	virtual void SetOnGround(bool grnd) { m_onGround = grnd; }

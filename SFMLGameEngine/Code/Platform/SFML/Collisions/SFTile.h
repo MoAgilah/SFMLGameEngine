@@ -13,6 +13,8 @@ public:
 	void Render(IRenderer* renderer) override;
 	void ResolveCollision(IDynamicGameObject* obj) override;
 
+	void SetPosition(const Point& pos) override;
+
 	void SetFillColour(Colour col) override;
 	void SetOutlineColour(Colour col) override;
 

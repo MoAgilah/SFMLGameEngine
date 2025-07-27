@@ -185,6 +185,45 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 	}
 }
 
+void SFTile::SetPosition(const Point& pos)
+{
+	m_aabb->Update(pos);
+
+	switch (m_type)
+	{
+	case NTypes::DIAGU:
+	{
+		auto slope = std::make_shared<SFTriangle>();
+		std::array<Point, 3> points;
+		points[0] = m_aabb->GetPosition() + Point(-m_aabb->GetExtents().x, m_aabb->GetExtents().y);
+		points[1] = m_aabb->GetPosition() + Point(m_aabb->GetExtents().x, -m_aabb->GetExtents().y);
+		points[2] = m_aabb->GetPosition() + m_aabb->GetExtents();
+		slope->SetFillColour(sf::Color::Yellow);
+		SetSlope(slope);
+	}
+		break;
+	case NTypes::DIAGD:
+	{
+		auto slope = std::make_shared<SFTriangle>();
+		std::array<Point, 3> points;
+		points[0] = m_aabb->GetPosition() - m_aabb->GetExtents();
+		points[1] = m_aabb->GetPosition() + m_aabb->GetExtents();
+		points[2] = m_aabb->GetPosition() - Point(m_aabb->GetExtents().x, -m_aabb->GetExtents().y);
+		slope->SetFillColour(sf::Color::Yellow);
+		SetSlope(slope);
+	}
+		break;
+	case NTypes::LCRN:
+		m_edge.start = m_aabb->GetMin() + Point(m_aabb->GetExtents().x * 2, 0);
+		m_edge.end = m_edge.start - Point(0, GetTileHeight());
+		break;
+	case NTypes::RCRN:
+		m_edge.start = m_aabb->GetMin();
+		m_edge.end = m_edge.start - Point(0, GetTileHeight());
+		break;
+	}
+}
+
 void SFTile::SetFillColour(Colour col)
 {
 	auto sfAABB = dynamic_cast<NBoundingBox<SFRect>*>(m_aabb.get());

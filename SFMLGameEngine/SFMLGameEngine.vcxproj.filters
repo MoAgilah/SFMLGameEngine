@@ -309,6 +309,9 @@
     <ClCompile Include="Code\Platform\SFML\Collisions\SFTile.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\Collisions\SFGrid.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\Collisions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Camera.h">
@@ -526,6 +529,12 @@
     </ClInclude>
     <ClInclude Include="Code\Utilities\Traits.h">
       <Filter>Header Files\Code\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IGrid.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Collisions\SFGrid.h">
+      <Filter>Header Files\Code\Platform\SFML\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
