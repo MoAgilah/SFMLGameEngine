@@ -924,7 +924,8 @@ bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle, const Point& va, 
 	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
 		return true;
 
-	return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);
+	return false;
+	//return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);
 }
 
 bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)

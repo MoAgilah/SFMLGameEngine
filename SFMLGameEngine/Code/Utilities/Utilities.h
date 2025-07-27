@@ -17,7 +17,7 @@ namespace obj
 	bool IsCollectableObject(const std::string& texID);
 }
 
-class BoundingCircle;
+class IBoundingCircle;
 
 struct Line
 {
@@ -34,7 +34,7 @@ struct Line
 	bool IsPointAboveLine(const Point& pnt) const;
 	bool IntersectsPoint(const Point& pnt) const;
 
-	bool IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) const;
+	bool IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) const;
 
 	float DistX() const { return end.x - start.x; }
 	float DistY() const { return end.y - start.y; }

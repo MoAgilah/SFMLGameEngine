@@ -12,6 +12,9 @@ class NBoundingBox;
 template <typename PlatformCircle>
 class NBoundingCircle;
 
+template <typename PlatformCapsule>
+class NBoundingCapsule;
+
 template <typename PlatformShape>
 class NBoundingCapsule : public IBoundingCapsule, public NBoundingVolume<PlatformShape>
 {
@@ -27,6 +30,16 @@ public:
 		this->m_shape = std::make_shared<PlatformShape>();
 		Reset(radius, length, angle);
 		Update(pos);
+	}
+
+	NBoundingCapsule(float radius, const Line& segment)
+		: IBoundingVolume(NVolumeType::Capsule)
+		, IBoundingCapsule()
+		, NBoundingVolume<PlatformShape>(NVolumeType::Capsule)
+	{
+		this->m_shape = std::make_shared<PlatformShape>();
+		Reset(m_radius, pnt::distance(segment.start, segment.end), m_angle);
+		Update(segment.GetMidPoint());
 	}
 
 	void Reset(float radius, float length, float angle)
@@ -51,35 +64,35 @@ public:
 	{
 		auto clsPnt = m_segment.ClosestPointOnLineSegment(pnt);
 
-		NBoundingCircle<PlatformCircle> circle(m_radius, clsPnt);
+		NBoundingCircle<SFCircle> circle(m_radius, clsPnt);
 
 		return circle.Intersects(pnt);
 	}
 
-	bool Intersects(BoundingVolume* other)
+	bool Intersects(IBoundingVolume* other) override
 	{
-		return other->Intersects(this);
+		return this->Intersects(other);
 	}
 
-	bool IntersectsMoving(BoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
+	bool IntersectsMoving(IBoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
-		return other->IntersectsMoving(this, va, vb, tfirst, tlast);
+		return this->IntersectsMoving(other, va, vb, tfirst, tlast);
 	}
 
-	Point GetSeparationVector(BoundingVolume* other) override
+	Point GetSeparationVector(IBoundingVolume* other) override
 	{
-		return other->GetSeparationVector(this);
+		return this->GetSeparationVector(other);
 	}
 
 	Point GetPoint(NSide side) override
 	{
 		switch (side) {
-		case NSide::Top:    return m_segment.start;
-		case NSide::Bottom: return m_segment.end;
-		case NSide::Left:   return this->m_center - Point(m_length * 0.5f, 0);
-		case NSide::Right:  return this->m_center + Point(m_length * 0.5f, 0);
+		case NSide::Top:    return this->GetSegment().start;
+		case NSide::Bottom: return this->GetSegment().end;
+		case NSide::Left:   return this->GetCenter() - Point(this->GetLength() * 0.5f, 0);
+		case NSide::Right:  return this->GetCenter() + Point(this->GetLength() * 0.5f, 0);
 		}
-		return this->m_center;
+		return this->GetCenter();
 	}
 
 	void SetScale(const Point& scale) override
@@ -105,7 +118,7 @@ protected:
 		float distStart = m_segment.SqDistPointSegment(closestToStart);
 		float distEnd = m_segment.SqDistPointSegment(closestToEnd);
 
-		float radSq = m_radius * m_radius;
+		float radSq = this->GetRadius() * this->GetRadius();
 
 		// Check if the distances are less than or equal to the capsule's radius squared
 		if (distStart <= radSq || distEnd <= radSq)
@@ -119,7 +132,7 @@ protected:
 
 	bool Intersects(IBoundingCircle* circle) override
 	{
-		float r = circle->GetRadius() + m_radius;
+		float r = circle->GetRadius() + this->GetRadius();
 
 		float dist2 = m_segment.SqDistPointSegment(circle->GetCenter());
 
@@ -128,14 +141,14 @@ protected:
 
 	bool Intersects(IBoundingCapsule* capsule) override
 	{
-		float combinedRadiusSquared = (m_radius + capsule->m_radius) * (m_radius + capsule->m_radius);
+		float combinedRadiusSquared = (this->GetRadius() + capsule->GetRadius()) * (this->GetRadius() + capsule->GetRadius());
 
 		// Compute the shortest distance squared between the two line segments
 		float distanceSquared = std::min({
-			capsule->m_segment.SqDistPointSegment(m_segment.start),
-			capsule->m_segment.SqDistPointSegment(m_segment.end),
-			m_segment.SqDistPointSegment(capsule->m_segment.start),
-			m_segment.SqDistPointSegment(capsule->m_segment.end)
+			capsule->GetSegment().SqDistPointSegment(this->GetSegment().start),
+			capsule->GetSegment().SqDistPointSegment(this->GetSegment().end),
+			GetSegment().SqDistPointSegment(capsule->GetSegment().start),
+			GetSegment().SqDistPointSegment(capsule->GetSegment().end)
 			});
 
 		// Check if the distance is within the combined radii
@@ -145,36 +158,35 @@ protected:
 	bool IntersectsMoving(IBoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
 		NBoundingCircle<PlatformCircle> circle(m_radius, m_segment.start);
-		if (circle.IntersectsMoving(box, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&circle)->IntersectsMoving(static_cast<IBoundingVolume*>(box), va, vb, tfirst, tlast))
 			return true;
 
 		circle.Update(m_segment.end);
-		if (circle.IntersectsMoving(box, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&circle)->IntersectsMoving(static_cast<IBoundingVolume*>(box), va, vb, tfirst, tlast))
 			return true;
 
 		NBoundingBox<PlatformBox> capBox(this);
-		return capBox.IntersectsMoving(box, va, vb, tfirst, tlast);
+		return static_cast<IBoundingVolume*>(&capBox)->IntersectsMoving(static_cast<IBoundingVolume*>(box), va, vb, tfirst, tlast);
 	}
 
 	bool IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
 		// check the capsule spherical ends
 		NBoundingCircle<PlatformCircle> capCircle(circle->GetRadius(), m_segment.start);
-		if (capCircle.IntersectsMoving(circle, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<IBoundingVolume*>(circle), va, vb, tfirst, tlast))
 			return true;
 
 		capCircle.Update(m_segment.end);
 
-		if (capCircle.IntersectsMoving(circle, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<IBoundingVolume*>(circle), va, vb, tfirst, tlast))
 			return true;
 
 		capCircle.Update(m_segment.GetMidPoint());
 
-		if (capCircle.IntersectsMoving(circle, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<IBoundingVolume*>(circle), va, vb, tfirst, tlast))
 			return true;
 
 		return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);
-		return false;
 	}
 
 	bool IntersectsMoving(IBoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
@@ -185,32 +197,32 @@ protected:
 		NBoundingCircle<PlatformCircle> otherEndpoint1(m_radius, m_segment.start);
 		NBoundingCircle<PlatformCircle> otherEndpoint2(m_radius, m_segment.end);
 
-		if (endpoint1.IntersectsMoving(&otherEndpoint2, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&endpoint1)->IntersectsMoving(static_cast<IBoundingVolume*>(&otherEndpoint2), va, vb, tfirst, tlast))
 			return true;
 
-		if (endpoint2.IntersectsMoving(&otherEndpoint1, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&endpoint2)->IntersectsMoving(static_cast<IBoundingVolume*>(&otherEndpoint1), va, vb, tfirst, tlast))
 			return true;
 
-		if (endpoint2.IntersectsMoving(&otherEndpoint2, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&endpoint2)->IntersectsMoving(static_cast<IBoundingVolume*>(&otherEndpoint2), va, vb, tfirst, tlast))
 			return true;
 
-		if (endpoint1.IntersectsMoving(&otherEndpoint1, va, vb, tfirst, tlast))
+		if (static_cast<IBoundingVolume*>(&endpoint1)->IntersectsMoving(static_cast<IBoundingVolume*>(&otherEndpoint1), va, vb, tfirst, tlast))
 			return true;
 
 		NBoundingBox<PlatformBox> box1 = NBoundingBox<PlatformBox>(this);
-		NBoundingBox<PlatformBox> box2 = NBoundingBox<PlatformBox>(capsule);
+		NBoundingBox<PlatformBox> box2 = NBoundingBox<PlatformBox>(static_cast<NBoundingCapsule<PlatformShape>*>(capsule));
 
-		return box1.IntersectsMoving(&box2, va, vb, tfirst, tlast);
+		return static_cast<IBoundingVolume*>(&box1)->IntersectsMoving(static_cast<IBoundingVolume*>(&box2), va, vb, tfirst, tlast);
 	}
 
-	Point GetSeparationVector(IBoundingBox* other) override
+	Point GetSeparationVector(IBoundingBox* box) override
 	{
-		return other->GetSeparationVector(this);
+		return box->GetSeparationVector(static_cast<IBoundingVolume*>(this));
 	}
 
-	Point GetSeparationVector(IBoundingCircle* other) override
+	Point GetSeparationVector(IBoundingCircle* circle) override
 	{
-		return other->GetSeparationVector(this);
+		return circle->GetSeparationVector(static_cast<IBoundingVolume*>(this));
 	}
 
 	Point GetSeparationVector(IBoundingCapsule* other) override

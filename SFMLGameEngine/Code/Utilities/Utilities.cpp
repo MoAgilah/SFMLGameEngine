@@ -1,6 +1,6 @@
 #include "Utilities.h"
 
-#include "../Engine/Collisions/BoundingVolume.h"
+#include "../Engine/Interfaces/IBoundingVolume.h"
 #include <array>
 #include <numbers>
 
@@ -117,7 +117,7 @@ bool Line::IntersectsPoint(const Point& pnt) const
 	return d1 + d2 >= lineLen - buffer && d1 + d2 <= lineLen + buffer;
 }
 
-bool Line::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) const
+bool Line::IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) const
 {
 	// Get relative velocity vector
 	Point relativeVelocity = vb - va;

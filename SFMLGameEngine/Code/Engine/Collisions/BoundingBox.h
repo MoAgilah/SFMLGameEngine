@@ -32,7 +32,8 @@ public:
 
     template <typename PlatformShape>
     NBoundingBox(const NBoundingCapsule<PlatformShape>* capsule)
-        : IBoundingBox()
+        : IBoundingVolume(NVolumeType::Box)
+        , IBoundingBox()
         , NBoundingVolume<PlatformType>(NVolumeType::Box)
     {
         using PlatformBox = typename CapsuleTraits<PlatformShape>::BoxType;

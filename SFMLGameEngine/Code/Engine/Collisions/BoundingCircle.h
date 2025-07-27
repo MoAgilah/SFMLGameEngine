@@ -95,7 +95,7 @@ protected:
 
     bool Intersects(IBoundingBox* box) override
     {
-        return this->Intersects(box);
+        return box->Intersects(static_cast<IBoundingVolume*>(this));
     }
 
     bool Intersects(IBoundingCircle* circle) override
@@ -120,7 +120,7 @@ protected:
 
     bool IntersectsMoving(IBoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
-        return this->IntersectsMoving(box, va, vb, tfirst, tlast);
+        return box->IntersectsMoving(static_cast<IBoundingVolume*>(this), va, vb, tfirst, tlast);
     }
 
     bool IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
@@ -162,12 +162,12 @@ protected:
 
     bool IntersectsMoving(IBoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
-        return this->IntersectsMoving(capsule, va, vb, tfirst, tlast);
+        return capsule->IntersectsMoving(static_cast<IBoundingVolume*>(this), va, vb, tfirst, tlast);
     }
 
-    Point GetSeparationVector(IBoundingBox* other) override
+    Point GetSeparationVector(IBoundingBox* box) override
     {
-        return this->GetSeparationVector(other);
+        return box->GetSeparationVector(static_cast<IBoundingVolume*>(this));
     }
 
     Point GetSeparationVector(IBoundingCircle* other) override

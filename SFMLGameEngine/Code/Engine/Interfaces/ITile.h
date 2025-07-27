@@ -17,6 +17,7 @@ enum class NTypes
 class ITile
 {
 public:
+	ITile() {}
 	ITile(std::shared_ptr<IBoundingBox> aabb, std::shared_ptr<IDrawable> text, std::shared_ptr<ITriangleShape> slope)
 		: m_text(std::move(text)), m_slope(std::move(slope)), m_aabb(std::move(aabb)) {}
 	virtual ~ITile() = 0;

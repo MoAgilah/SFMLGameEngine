@@ -8,13 +8,11 @@
 
 SFTile::SFTile()
 	: ITile(std::make_shared<NBoundingBox<SFRect>>(), nullptr, nullptr)
-{
-}
+{}
 
 SFTile::SFTile(int gX, int gY, sf::Font* font)
 	: ITile(std::make_shared<NBoundingBox<SFRect>>(), std::make_shared<SFText>(), nullptr)
-{
-}
+{}
 
 void SFTile::Render(IRenderer* renderer)
 {
@@ -69,13 +67,13 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 	{
 		if (dir == Direction::DDIR || dir == Direction::LDIR || dir == Direction::RDIR)
 		{
-			/*NBoundingCapsule<SFRect, SFCircle> capsule(6, tileTopEdge);
-			BoundingCircle circle(4, obj->GetVolume()->GetPoint(NSide::Bottom));
-			if (capsule.Intersects(static_cast<BoundingVolume*>(&circle)))
+			NBoundingCapsule<SFCapsule> capsule(6, tileTopEdge);
+			NBoundingCircle<SFCircle> circle(4, obj->GetVolume()->GetPoint(NSide::Bottom));
+			if (capsule.Intersects(static_cast<IBoundingVolume*>(&circle)))
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 					ResolveObjectToBoxTop(obj);
-			}*/
+			}
 		}
 		return;
 	}
