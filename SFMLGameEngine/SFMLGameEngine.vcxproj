@@ -90,14 +90,17 @@
     <ClInclude Include="Code\Engine\Interfaces\IBoundingVolume.h" />
     <ClInclude Include="Code\Engine\Interfaces\ICamera.h" />
     <ClInclude Include="Code\Engine\Interfaces\IDrawable.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IFont.h" />
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameObject.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGrid.h" />
     <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IMusic.h" />
     <ClInclude Include="Code\Engine\Interfaces\INGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderer.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IShader.h" />
     <ClInclude Include="Code\Engine\Interfaces\IShape.h" />
     <ClInclude Include="Code\Engine\Interfaces\IText.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITexture.h" />
@@ -131,6 +134,7 @@
     <ClInclude Include="Code\Platform\SFML\Collisions\SFGrid.h" />
     <ClInclude Include="Code\Platform\SFML\Collisions\SFTile.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFDrawables.h" />
+    <ClInclude Include="Code\Platform\SFML\Drawables\SFFont.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFShape.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFSprite.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFText.h" />
@@ -140,8 +144,10 @@
     <ClInclude Include="Code\Platform\SFML\Renderer\SFCamera.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFRenderer.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h" />
+    <ClInclude Include="Code\Platform\SFML\Resource\SFShader.h" />
     <ClInclude Include="Code\Utilities\Colour.h" />
     <ClInclude Include="Code\Utilities\DecisionTree.h" />
+    <ClInclude Include="Code\Utilities\Defines.h" />
     <ClInclude Include="Code\Utilities\Point.h" />
     <ClInclude Include="Code\Utilities\ResourceLoader.h" />
     <ClInclude Include="Code\Utilities\Traits.h" />

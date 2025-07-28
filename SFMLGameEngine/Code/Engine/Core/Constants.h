@@ -1,8 +1,20 @@
 #pragma once
 
+#include "../../Utilities/Traits.h"
 #include "../../Utilities/Point.h"
-#include <SFML/Graphics.hpp>
+#include "../../Utilities/Colour.h"
 #include <string>
+
+#if USE_SFML
+
+#include "../../Platform/SFML/Drawables/SFFont.h"
+#include "../../Platform/SFML/Resource/SFShader.h"
+
+using ActiveFontTrait = FontTrait<SFFont>;
+using ActiveShaderTrait = ShaderTrait<SFShader>;
+
+#endif
+
 
 class GameConstants
 {
@@ -10,12 +22,11 @@ public:
 	static void Init();
 
 	static bool DRender;
-	static bool SFMLUsage;
 	static bool GameIsReady;
 	static float FPS;
 	static float Gravity;
 	static float ObjectSpeed;
-	static sf::Color WindowColour;
+	static Colour WindowColour;
 	static Point ScreenDim;
 	static Point Scale;
 	static std::string WindowTitle;

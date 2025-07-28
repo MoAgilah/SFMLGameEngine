@@ -160,6 +160,9 @@
     <Filter Include="Source Files\Code\Platforms\SFML\Collisions">
       <UniqueIdentifier>{a729d8b8-a487-4d43-addb-b631f988bc5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\Resource">
+      <UniqueIdentifier>{baac3b46-b344-4a79-86c5-c64422b4db16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Camera.cpp">
@@ -535,6 +538,24 @@
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Collisions\SFGrid.h">
       <Filter>Header Files\Code\Platform\SFML\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IFont.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Drawables\SFFont.h">
+      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities\Defines.h">
+      <Filter>Header Files\Code\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IMusic.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IShader.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Resource\SFShader.h">
+      <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

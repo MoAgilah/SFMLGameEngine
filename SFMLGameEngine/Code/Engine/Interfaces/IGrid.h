@@ -50,13 +50,13 @@ protected:
 	template<typename TileType>
 	void Init(const std::string& fontName, const std::string& tileFilePaths)
 	{
-		const auto font = NGameManager::Get()->GetFontMgr().GetFont(fontName);
+		auto font = dynamic_cast<SFFont*>(NGameManager::Get()->GetFontMgr().GetFont(fontName));
 		m_grid.reserve(m_rows * m_columns);
 
 		for (int y = 0; y < m_rows; ++y)
 		{
 			for (int x = 0; x < m_columns; ++x)
-				m_grid.emplace_back(std::make_shared<TileType>(x, y, font));
+				m_grid.emplace_back(std::make_shared<TileType>(x, y, &font->GetNativeFont()));
 		}
 
 		if (!m_grid.empty())

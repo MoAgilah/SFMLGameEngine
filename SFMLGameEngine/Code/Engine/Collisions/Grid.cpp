@@ -11,13 +11,14 @@
 Grid::Grid(int rows, int columns, const std::string & tileFilePaths)
 	: m_rows(rows), m_columns(columns)
 {
-	const auto font = NGameManager::Get()->GetFontMgr().GetFont("Arial");
+	const auto font = dynamic_cast<SFFont*>(NGameManager::Get()->GetFontMgr().GetFont("Arial"));
+
 	m_grid.reserve(m_rows * m_columns);
 
 	for (int y = 0; y < m_rows; ++y)
 	{
 		for (int x = 0; x < m_columns; ++x)
-			m_grid.emplace_back(std::make_shared<Tile>(x, y, font));
+			m_grid.emplace_back(std::make_shared<Tile>(x, y, &font->GetNativeFont()));
 	}
 
 	if (!m_grid.empty())

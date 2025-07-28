@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../Engine/Core/Constants.h"
+#include "../Engine/Interfaces/IFont.h"
+#include "../Engine/Interfaces/IShader.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <algorithm>
@@ -51,19 +54,20 @@ void ResourceLoader<T>::LoadResources(const fs::path& path)
 
 // Specialisation for sf::Font
 template<>
-inline void ResourceLoader<sf::Font>::LoadResources(const fs::path& path)
+inline void ResourceLoader<IFont>::LoadResources(const fs::path& path)
 {
-	if (!fs::exists(path) || !fs::is_directory(path)) return;
-
 	for (const auto& entry : fs::directory_iterator(path))
 	{
-		auto font = std::make_unique<sf::Font>();
-		if (!font->openFromFile(entry.path().string()))
+		auto font = ActiveFontTrait::Create();
+
+		if (!font->LoadFromFile(entry.path().string()))
 		{
 			std::cerr << "Failed to load font: " << entry.path() << "\n";
 			continue;
 		}
-		m_resources.emplace(entry.path().filename().replace_extension().string(), std::move(font));
+
+		m_resources.emplace(entry.path().filename().replace_extension().string(),
+			std::move(font));
 	}
 }
 
@@ -87,31 +91,16 @@ inline void ResourceLoader<sf::Music>::LoadResources(const fs::path& path)
 
 // Specialisation for sf::Shader
 template<>
-inline void ResourceLoader<sf::Shader>::LoadResources(const fs::path& path)
+inline void ResourceLoader<IShader>::LoadResources(const fs::path& path)
 {
-	auto ShaderTypeFromExtension = [](std::string ext) -> std::optional<sf::Shader::Type>
-		{
-		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-		if (ext == "vert")
-			return sf::Shader::Type::Vertex;
-		if (ext == "frag")
-			return sf::Shader::Type::Fragment;
-		if (ext == "geom")
-			return sf::Shader::Type::Geometry;
-
-		return std::nullopt;
-		};
 
 	if (!fs::exists(path) || !fs::is_directory(path))
 		return;
 
 	for (const auto& entry : fs::directory_iterator(path))
 	{
-		auto type = ShaderTypeFromExtension(entry.path().extension().string().substr(1));
-		if (!type) continue;
-
-		auto shader = std::make_unique<sf::Shader>();
-		if (!shader->loadFromFile(entry.path().string(), *type))
+		auto shader = ActiveShaderTrait::Create();
+		if (!shader->LoadFromFile(entry.path().string()))
 		{
 			std::cerr << "Failed to load shader: " << entry.path() << "\n";
 			continue;

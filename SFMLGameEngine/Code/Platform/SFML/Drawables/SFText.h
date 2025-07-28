@@ -81,7 +81,7 @@ private:
 	NUpdateFunc m_updateFunc;
 	NRenderFunc m_renderFunc;
 	std::string m_countdownMsg;
-	std::shared_ptr<sf::Shader> m_textShader;
+	sf::Shader* m_textShader;
 };
 
 void InitFlashingText(SFAnimatedText* txtObj, const std::string& text, bool loop = true, std::optional<NTextConfig> config = std::nullopt);

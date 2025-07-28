@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Interfaces/IFont.h"
 #include "../../Utilities/ResourceLoader.h"
 
 class FontManager
@@ -8,10 +9,10 @@ public:
 	FontManager();
 	~FontManager() = default;
 
-	sf::Font* GetFont(const std::string& name);
+	IFont* GetFont(const std::string& name);
 	void AddFonts(const fs::path& path);
 
 private:
 
-	ResourceLoader<sf::Font> m_loader;
+	ResourceLoader<IFont> m_loader;
 };

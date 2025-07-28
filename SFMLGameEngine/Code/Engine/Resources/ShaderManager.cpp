@@ -6,7 +6,7 @@ ShaderManager::ShaderManager()
 	: m_loader(GameConstants::ShaderFilePaths)
 {}
 
-sf::Shader* ShaderManager::GetShader(const std::string& name)
+IShader* ShaderManager::GetShader(const std::string& name)
 {
 	return m_loader.GetResource(name);
 }

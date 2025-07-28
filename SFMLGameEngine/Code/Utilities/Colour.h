@@ -1,8 +1,7 @@
 #pragma once
 
+#include "Defines.h"
 #include <cstdint>
-
-#define USE_SFML 1
 
 #if USE_SFML
 #include <SFML/Graphics/Color.hpp>

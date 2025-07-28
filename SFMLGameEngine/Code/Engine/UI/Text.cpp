@@ -27,7 +27,7 @@ Point SetTextPosition(TextAlignment alignment, const Point& pos, const sf::Float
 }
 
 Text::Text(const TextConfig& config)
-	: m_config(config), m_text(*GameManager::Get()->GetFontMgr().GetFont(config.m_fontName))
+	: m_config(config), m_text(dynamic_cast<SFFont*>(GameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName))->GetNativeFont())
 {
 }
 
@@ -103,7 +103,7 @@ AnimatedText::AnimatedText(const TextConfig& config)
 	{
 	case Flashing:
 	case Countdown:
-		m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
+		m_textShader = nullptr;
 		break;
 	}
 }
@@ -169,8 +169,8 @@ void AnimatedText::InitCountdownText(int startFrom, const std::string& countDown
 
 void AnimatedText::InitCustomTextAnim(const std::string& text, UpdateFunc updator, RenderFunc rendaror, const std::string& shaderName, std::optional<TextConfig> config)
 {
-	if (!shaderName.empty())
-		m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader(shaderName));
+	/*if (!shaderName.empty())
+		m_textShader.reset(GameManager::Get()->GetShaderMgr().GetShader(shaderName));*/
 
 	if (config)
 		m_config = *config;

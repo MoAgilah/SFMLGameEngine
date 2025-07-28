@@ -1,13 +1,16 @@
 #include "SFText.h"
 
+#include "SFFont.h"
+#include "../Resource/SFShader.h"
 #include "../../../Engine/Core/NGameManager.h"
 
 SFText::SFText(const NTextConfig& config)
 	: IText(config)
 {
-	auto font = NGameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName);
+	auto font = dynamic_cast<SFFont*>(NGameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName));
+
 	if (font)
-		SetDrawable(std::make_shared<sf::Text>(*font));
+		SetDrawable(std::make_shared<sf::Text>(font->GetNativeFont()));
 	else
 		std::cerr << "Font Error: Could not find font '" << m_config.m_fontName << "'\n";
 
@@ -58,11 +61,13 @@ SFAnimatedText::SFAnimatedText(const NTextConfig& config)
 	{
 	case NTextAnimType::Flashing:
 	case NTextAnimType::Countdown:
-		auto* shader = NGameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader");
+	{
+		auto shader = dynamic_cast<SFShader*>(NGameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
 		if (shader)
-			m_textShader.reset(shader);
+			m_textShader = &shader->GetNativeShader();
 		else
 			std::cerr << "Shader Error: 'FadeInOutShader' not found\n";
+	}
 		break;
 	}
 }
@@ -188,7 +193,7 @@ void SFAnimatedText::FadeInFadeOutRender(IRenderer* renderer)
 	{
 		auto* sfWindow = static_cast<sf::RenderWindow*>(windowHandle->GetNativeHandle());
 		if (sfWindow)
-			sfWindow->draw(*this->GetPrimaryDrawableAs<sf::Text>(), m_textShader.get());
+			sfWindow->draw(*this->GetPrimaryDrawableAs<sf::Text>(), m_textShader);
 	}
 }
 
