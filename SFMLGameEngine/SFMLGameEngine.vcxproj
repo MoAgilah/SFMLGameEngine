@@ -62,7 +62,6 @@
     <ClCompile Include="Code\Platform\SFML\Drawables\SFShape.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFSprite.cpp" />
     <ClCompile Include="Code\Platform\SFML\Drawables\SFText.cpp" />
-    <ClCompile Include="Code\Platform\SFML\Drawables\SFTexture.cpp" />
     <ClCompile Include="Code\Platform\SFML\Engine\Core\SFFramework.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFCamera.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFRenderer.cpp" />
@@ -134,17 +133,17 @@
     <ClInclude Include="Code\Platform\SFML\Collisions\SFGrid.h" />
     <ClInclude Include="Code\Platform\SFML\Collisions\SFTile.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFDrawables.h" />
-    <ClInclude Include="Code\Platform\SFML\Drawables\SFFont.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFShape.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFSprite.h" />
     <ClInclude Include="Code\Platform\SFML\Drawables\SFText.h" />
-    <ClInclude Include="Code\Platform\SFML\Drawables\SFTexture.h" />
     <ClInclude Include="Code\Platform\SFML\Engine\Core\SFFramework.h" />
     <ClInclude Include="Code\Platform\SFML\Engine\Input\SFKeyConverter.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFCamera.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFRenderer.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h" />
+    <ClInclude Include="Code\Platform\SFML\Resource\SFFont.h" />
     <ClInclude Include="Code\Platform\SFML\Resource\SFShader.h" />
+    <ClInclude Include="Code\Platform\SFML\Resource\SFTexture.h" />
     <ClInclude Include="Code\Utilities\Colour.h" />
     <ClInclude Include="Code\Utilities\DecisionTree.h" />
     <ClInclude Include="Code\Utilities\Defines.h" />

@@ -13,7 +13,7 @@ void SFSprite::SetTexture(const std::string& texId)
 
 	try
 	{
-		SetDrawable(std::make_shared<sf::Sprite>(*NGameManager::Get()->GetTextureMgr().GetTexture(m_texID)));
+		SetDrawable(std::make_shared<sf::Sprite>(dynamic_cast<SFTexture*>(NGameManager::Get()->GetTextureMgr().GetTexture(m_texID))->GetNativeTexture()));
 	}
 	catch (const std::invalid_argument& e)
 	{

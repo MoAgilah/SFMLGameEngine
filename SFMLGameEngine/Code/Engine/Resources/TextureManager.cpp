@@ -7,7 +7,7 @@ TextureManager::TextureManager()
 {
 }
 
-sf::Texture* TextureManager::GetTexture(const std::string& name)
+ITexture* TextureManager::GetTexture(const std::string& name)
 {
 	return m_loader.GetResource(name);
 }

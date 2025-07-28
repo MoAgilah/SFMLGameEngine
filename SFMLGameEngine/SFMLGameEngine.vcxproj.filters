@@ -276,9 +276,6 @@
     <ClCompile Include="Code\Platform\SFML\Drawables\SFText.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Platform\SFML\Drawables\SFTexture.cpp">
-      <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Platform\SFML\Renderer\SFCamera.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Renderer</Filter>
     </ClCompile>
@@ -461,9 +458,6 @@
     <ClInclude Include="Code\Platform\SFML\Drawables\SFText.h">
       <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Platform\SFML\Drawables\SFTexture.h">
-      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Renderer\SFCamera.h">
       <Filter>Header Files\Code\Platform\SFML\Renderer</Filter>
     </ClInclude>
@@ -542,9 +536,6 @@
     <ClInclude Include="Code\Engine\Interfaces\IFont.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Platform\SFML\Drawables\SFFont.h">
-      <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utilities\Defines.h">
       <Filter>Header Files\Code\Utilities</Filter>
     </ClInclude>
@@ -555,6 +546,12 @@
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Resource\SFShader.h">
+      <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Resource\SFTexture.h">
+      <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Resource\SFFont.h">
       <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
     </ClInclude>
   </ItemGroup>

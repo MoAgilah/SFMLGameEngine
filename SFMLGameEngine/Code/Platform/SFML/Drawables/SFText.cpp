@@ -1,6 +1,6 @@
 #include "SFText.h"
 
-#include "SFFont.h"
+#include "../Resource/SFFont.h"
 #include "../Resource/SFShader.h"
 #include "../../../Engine/Core/NGameManager.h"
 
@@ -55,7 +55,7 @@ void SFText::Init()
 }
 
 SFAnimatedText::SFAnimatedText(const NTextConfig& config)
-	: SFText(config), m_timer(1.f)
+	: SFText(config), m_timer(1.f), m_textShader(nullptr)
 {
 	switch (m_config.m_animType)
 	{

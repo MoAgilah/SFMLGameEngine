@@ -1,5 +1,6 @@
 #include "Sprite.h"
 
+#include "../Platform/SFML/Resource/SFTexture.h"
 #include "../Engine/Core/Constants.h"
 #include "../Engine/Core/GameManager.h"
 #include <format>
@@ -16,7 +17,7 @@ void Sprite::SetTexture(const std::string& texId)
 
 	try
 	{
-		m_sprite = std::make_unique<sf::Sprite>(*GameManager::Get()->GetTextureMgr().GetTexture(m_texID));
+		m_sprite = std::make_unique<sf::Sprite>(dynamic_cast<SFTexture*>(GameManager::Get()->GetTextureMgr().GetTexture(m_texID))->GetNativeTexture());
 	}
 	catch (const std::invalid_argument& e)
 	{
