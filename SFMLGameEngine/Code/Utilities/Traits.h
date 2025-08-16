@@ -11,3 +11,9 @@ struct ShaderTrait;
 
 template <typename TTexture>
 struct TextureTrait;
+
+template <typename TMusic>
+struct MusicTrait;
+
+template <typename TSound>
+struct SoundTrait;

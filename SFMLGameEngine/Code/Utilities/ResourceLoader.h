@@ -3,8 +3,9 @@
 #include "../Engine/Core/Constants.h"
 #include "../Engine/Interfaces/IFont.h"
 #include "../Engine/Interfaces/IShader.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "../Engine/Interfaces/IMusic.h"
+#include "../Engine/Interfaces/ITexture.h"
+#include "../Engine/Interfaces/ISound.h"
 #include <algorithm>
 #include <iostream>
 #include <filesystem>
@@ -71,16 +72,16 @@ inline void ResourceLoader<IFont>::LoadResources(const fs::path& path)
 	}
 }
 
-// Specialisation for sf::Music
 template<>
-inline void ResourceLoader<sf::Music>::LoadResources(const fs::path& path)
+inline void ResourceLoader<IMusic>::LoadResources(const fs::path& path)
 {
 	if (!fs::exists(path) || !fs::is_directory(path)) return;
 
 	for (const auto& entry : fs::directory_iterator(path))
 	{
-		auto music = std::make_unique<sf::Music>();
-		if (!music->openFromFile(entry.path().string()))
+		auto music = ActiveMusicTrait::Create();
+
+		if (!music->LoadFromFile(entry.path().string()))
 		{
 			std::cerr << "Failed to load music: " << entry.path() << "\n";
 			continue;
@@ -89,7 +90,24 @@ inline void ResourceLoader<sf::Music>::LoadResources(const fs::path& path)
 	}
 }
 
-// Specialisation for IShader
+template<>
+inline void ResourceLoader<ISound>::LoadResources(const fs::path& path)
+{
+	if (!fs::exists(path) || !fs::is_directory(path)) return;
+
+	for (const auto& entry : fs::directory_iterator(path))
+	{
+		auto sound = ActiveSoundTrait::Create();
+
+		if (!sound->LoadFromFile(entry.path().string()))
+		{
+			std::cerr << "Failed to load music: " << entry.path() << "\n";
+			continue;
+		}
+		m_resources.emplace(entry.path().filename().replace_extension().string(), std::move(sound));
+	}
+}
+
 template<>
 inline void ResourceLoader<IShader>::LoadResources(const fs::path& path)
 {
@@ -109,7 +127,6 @@ inline void ResourceLoader<IShader>::LoadResources(const fs::path& path)
 	}
 }
 
-// Specialisation for ITexture
 template<>
 inline void ResourceLoader<ITexture>::LoadResources(const fs::path& path)
 {

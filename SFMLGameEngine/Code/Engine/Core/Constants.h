@@ -10,10 +10,14 @@
 #include "../../Platform/SFML/Resource/SFFont.h"
 #include "../../Platform/SFML/Resource/SFShader.h"
 #include "../../Platform/SFML/Resource/SFTexture.h"
+#include "../../Platform/SFML/Resource/SFMusic.h"
+#include "../../Platform/SFML/Resource/SFSound.h"
 
 using ActiveFontTrait = FontTrait<SFFont>;
 using ActiveShaderTrait = ShaderTrait<SFShader>;
 using ActiveTextureTrait = TextureTrait<SFTexture>;
+using ActiveMusicTrait = MusicTrait<SFMusic>;
+using ActiveSoundTrait = SoundTrait<SFSound>;
 
 #endif
 

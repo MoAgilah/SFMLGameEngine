@@ -101,6 +101,7 @@
     <ClInclude Include="Code\Engine\Interfaces\IRenderer.h" />
     <ClInclude Include="Code\Engine\Interfaces\IShader.h" />
     <ClInclude Include="Code\Engine\Interfaces\IShape.h" />
+    <ClInclude Include="Code\Engine\Interfaces\ISound.h" />
     <ClInclude Include="Code\Engine\Interfaces\IText.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITexture.h" />
     <ClInclude Include="Code\Engine\Interfaces\ITile.h" />
@@ -142,7 +143,9 @@
     <ClInclude Include="Code\Platform\SFML\Renderer\SFRenderer.h" />
     <ClInclude Include="Code\Platform\SFML\Renderer\SFWindow.h" />
     <ClInclude Include="Code\Platform\SFML\Resource\SFFont.h" />
+    <ClInclude Include="Code\Platform\SFML\Resource\SFMusic.h" />
     <ClInclude Include="Code\Platform\SFML\Resource\SFShader.h" />
+    <ClInclude Include="Code\Platform\SFML\Resource\SFSound.h" />
     <ClInclude Include="Code\Platform\SFML\Resource\SFTexture.h" />
     <ClInclude Include="Code\Utilities\Colour.h" />
     <ClInclude Include="Code\Utilities\DecisionTree.h" />

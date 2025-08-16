@@ -554,6 +554,15 @@
     <ClInclude Include="Code\Platform\SFML\Resource\SFFont.h">
       <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Resource\SFMusic.h">
+      <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\ISound.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\Resource\SFSound.h">
+      <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\FadeInOutShader.frag">

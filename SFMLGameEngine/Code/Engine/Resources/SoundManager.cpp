@@ -7,12 +7,12 @@ SoundManager::SoundManager()
 	m_musicLoader(GameConstants::MusicFilePaths)
 {}
 
-sf::SoundBuffer* SoundManager::GetSound(const std::string& name)
+ISound* SoundManager::GetSound(const std::string& name)
 {
 	return m_soundLoader.GetResource(name);
 }
 
-sf::Music* SoundManager::GetMusic(const std::string& name)
+IMusic* SoundManager::GetMusic(const std::string& name)
 {
 	return m_musicLoader.GetResource(name);
 }

@@ -2,10 +2,10 @@
 
 #include <string>
 
-class IMusic
+class ISound
 {
 public:
-    virtual ~IMusic() = default;
+    virtual ~ISound() = default;
 
     // Load a music stream from a file
     virtual bool LoadFromFile(const std::string& filepath) = 0;
