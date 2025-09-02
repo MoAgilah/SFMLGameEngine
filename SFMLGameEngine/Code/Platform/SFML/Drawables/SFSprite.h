@@ -1,10 +1,11 @@
 #pragma once
 
 #include "SFDrawables.h"
+#include "../../../Engine/Interfaces/ISprite.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 
-class SFSprite : public SFDrawables<sf::Sprite>
+class SFSprite : public SFDrawables<sf::Sprite>, public ISprite
 {
 public:
 	SFSprite() = default;
@@ -14,15 +15,16 @@ public:
 
 	void SetTexture(const std::string& texId);
 
-	void Update(float dt);
+	void Update(float dt) override;
+	void Render(IRenderer* renderer) override;
 
 	sf::Sprite* GetSprite() { return this->GetPrimaryDrawableAs<sf::Sprite>(); }
 
-	void Move(float x, float y);
-	void Move(const Point& mov);
+	void Move(float x, float y) override;
+	void Move(const Point& mov) override;
 
-	sf::Vector2u GetTextureSize() const { return this->GetPrimaryDrawableAs<sf::Sprite>()->getTexture().getSize(); }
-	void SetTextureRect(const sf::IntRect& rect) { this->GetPrimaryDrawableAs<sf::Sprite>()->setTextureRect(rect); }
+	sf::Vector2u GetTextureSize() const override { return this->GetPrimaryDrawableAs<sf::Sprite>()->getTexture().getSize(); }
+	void SetTextureRect(const sf::IntRect& rect) override { this->GetPrimaryDrawableAs<sf::Sprite>()->setTextureRect(rect); }
 
 private:
 

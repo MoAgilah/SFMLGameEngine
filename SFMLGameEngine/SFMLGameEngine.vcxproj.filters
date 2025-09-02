@@ -563,6 +563,9 @@
     <ClInclude Include="Code\Platform\SFML\Resource\SFSound.h">
       <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\ISprite.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\FadeInOutShader.frag">

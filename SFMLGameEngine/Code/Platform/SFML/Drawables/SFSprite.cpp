@@ -29,6 +29,11 @@ void SFSprite::Update(float dt)
 	// does nothing
 }
 
+void SFSprite::Render(IRenderer* renderer)
+{
+	SFDrawables<sf::Sprite>::Render(renderer);
+}
+
 void SFSprite::Move(float x, float y)
 {
 	Move(Point(x, y));
