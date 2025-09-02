@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IRenderer.h"
 #include "../../Utilities/Colour.h"
 #include "../../Utilities/Point.h"
 #include "../../Utilities/Utilities.h"
@@ -8,6 +9,9 @@ class IShape
 {
 public:
 	virtual ~IShape() = default;
+
+	virtual void Update(const Point& pos) = 0;
+	virtual void Render(IRenderer* renderer) = 0;
 
 	const Point& GetCenter() { return m_center; }
 	void SetCenter(const Point& center) { m_center = center; }
@@ -32,6 +36,9 @@ class IBoxShape
 {
 public:
 	virtual ~IBoxShape() = 0;
+
+	virtual void Render(IRenderer* renderer) = 0;
+
 	virtual Point GetSize() = 0;
 	virtual void SetSize(const Point& size) = 0;
 };
@@ -40,6 +47,9 @@ class ICircleShape
 {
 public:
 	virtual ~ICircleShape() = default;
+
+	virtual void Render(IRenderer* renderer) = 0;
+
 	virtual float GetRadius() = 0;
 	virtual void SetRadius(float radius) = 0;
 };
@@ -48,6 +58,9 @@ class ICapsuleShape
 {
 public:
 	virtual ~ICapsuleShape() = default;
+
+	virtual void Render(IRenderer* renderer) = 0;
+
 	virtual float GetRadius() const = 0;
 	virtual void SetRadius(float radius) = 0;
 
@@ -65,6 +78,8 @@ class ITriangleShape
 {
 public:
 	virtual ~ITriangleShape() = default;
+
+	virtual void Render(IRenderer* renderer) = 0;
 
 	virtual Point GetPoint(int idx) = 0;
 	virtual Line GetLine(int start, int end) = 0;

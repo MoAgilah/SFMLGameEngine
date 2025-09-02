@@ -312,6 +312,9 @@
     <ClCompile Include="Code\Platform\SFML\Collisions\SFGrid.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Engine\Interfaces\IMenu.cpp">
+      <Filter>Source Files\Code\Engine\Interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Camera.h">
@@ -564,6 +567,18 @@
       <Filter>Header Files\Code\Platform\SFML\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\ISprite.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IMenu.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IMenuCursor.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IMenuItem.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IPaginatedMenu.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
   </ItemGroup>

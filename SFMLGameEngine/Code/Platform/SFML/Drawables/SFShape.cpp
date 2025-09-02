@@ -24,6 +24,11 @@ void SFTriangle::Update(const Point& pos)
     // unsure as of yet
 }
 
+void SFTriangle::Render(IRenderer* renderer)
+{
+    SFDrawables<sf::ConvexShape>::Render(renderer);
+}
+
 void SFTriangle::Reset(const std::array<Point, 3>& points)
 {
     SetPoints(points);
@@ -78,6 +83,11 @@ void SFRect::Update(const Point& pos)
 	this->SetCenter(GetPosition());
 }
 
+void SFRect::Render(IRenderer* renderer)
+{
+    SFDrawables<sf::RectangleShape>::Render(renderer);
+}
+
 void SFRect::Reset(const Point& size)
 {
 	SetSize(size);
@@ -104,6 +114,11 @@ void SFCircle::Update(const Point& pos)
 {
 	SetPosition(pos);
 	this->SetCenter(GetPosition());
+}
+
+void SFCircle::Render(IRenderer* renderer)
+{
+    SFDrawables<sf::CircleShape>::Render(renderer);
 }
 
 void SFCircle::Reset(float radius)
@@ -194,6 +209,30 @@ void SFCapsule::Update(const Point& pos)
 
    m_segment.start = end1;
    m_segment.end = end2;
+}
+
+void SFCapsule::Render(IRenderer* renderer)
+{
+    SFDrawables<sf::Shape>::Render(renderer);
+
+    if (auto* windowHandle = renderer->GetWindow())
+    {
+        auto* sfWindow = static_cast<sf::RenderWindow*>(windowHandle->GetNativeHandle());
+        if (sfWindow)
+        {
+            auto endCap1 = GetEndCap1();
+            if (endCap1)
+            {
+                sfWindow->draw(*endCap1);
+            }
+
+            auto endCap2 = GetEndCap2();
+            if (endCap2)
+            {
+                sfWindow->draw(*endCap2);
+            }
+        }
+    }
 }
 
 void SFCapsule::Reset(float radius, float length, float angle)

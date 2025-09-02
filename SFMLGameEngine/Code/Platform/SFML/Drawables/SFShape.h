@@ -12,7 +12,6 @@ class SFShape : public SFDrawables<TShape>, public IShape, public IMoveable
 public:
     void Move(float x, float y) override { this->Move(Point(x, y)); }
     void Move(const Point& pos) override { this->SetPosition(this->GetPosition() + pos); }
-    virtual void Update(const Point& pos) = 0;
 
     Colour GetFillColour() override { return this->GetPrimaryDrawableAs<TShape>()->getFillColor(); }
     void SetFillColour(const Colour& col) override { this->GetPrimaryDrawableAs<TShape>()->setFillColor(col); }
@@ -33,6 +32,8 @@ public:
     SFTriangle(const std::array<Point, 3>& points, const Point& pos);
 
     void Update(const Point& pos) override;
+    void Render(IRenderer* renderer) override;
+
     void Reset(const std::array<Point, 3>& points);
 
     sf::ConvexShape* GetTriangle() { return this->GetPrimaryDrawableAs<sf::ConvexShape>(); }
@@ -55,6 +56,8 @@ public:
     SFRect(const Point& size, const Point& pos);
 
     void Update(const Point& pos) override;
+    void Render(IRenderer* renderer) override;
+
     void Reset(const Point& size);
 
     sf::RectangleShape* GetRect() { return this->GetPrimaryDrawableAs<sf::RectangleShape>(); }
@@ -71,6 +74,8 @@ public:
     SFCircle(float radius, const Point& pos);
 
     void Update(const Point& pos) override;
+    void Render(IRenderer* renderer) override;
+
     void Reset(float radius);
 
     sf::CircleShape* GetCircle() { return this->GetPrimaryDrawableAs<sf::CircleShape>(); }
@@ -86,6 +91,8 @@ public:
     SFCapsule(float radius, float length, float angle, const Point& pos);
 
     void Update(const Point& pos) override;
+    void Render(IRenderer* renderer) override;
+
     void Reset(float radius, float length, float angle);
 
     // Getters for native drawables

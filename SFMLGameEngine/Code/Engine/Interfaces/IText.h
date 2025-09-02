@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IRenderer.h"
 #include "../../Utilities/Colour.h"
 #include "../../Utilities/Point.h"
 #include <string>
@@ -40,6 +41,9 @@ public:
 	IText(){}
 	IText(const NTextConfig& config);
 	virtual ~IText() = default;
+
+	virtual void Update(float deltaTime) = 0;
+	virtual void Render(IRenderer* renderer) = 0;
 
 	virtual unsigned int GetCharSize() = 0;
 	virtual void SetCharSize(unsigned int charSize) = 0;

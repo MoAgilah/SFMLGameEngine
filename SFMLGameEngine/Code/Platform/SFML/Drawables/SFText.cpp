@@ -19,6 +19,16 @@ SFText::SFText(const NTextConfig& config)
 	SetOutlineColour(m_config.m_colour);
 }
 
+void SFText::Update(float deltaTime)
+{
+	SFDrawables<sf::Text>::Update(deltaTime);
+}
+
+void SFText::Render(IRenderer* renderer)
+{
+	SFDrawables<sf::Text>::Render(renderer);
+}
+
 void SFText::SetText(const std::string& text)
 {
 	auto txtObj = this->GetPrimaryDrawableAs<sf::Text>();

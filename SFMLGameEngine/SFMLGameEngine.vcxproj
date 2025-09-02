@@ -33,6 +33,7 @@
     <ClCompile Include="Code\Engine\Input\InputManager.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IFramework.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IGameObject.cpp" />
+    <ClCompile Include="Code\Engine\Interfaces\IMenu.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IText.cpp" />
     <ClCompile Include="Code\Engine\Resources\FontManager.cpp" />
     <ClCompile Include="Code\Engine\Resources\ShaderManager.cpp" />
@@ -95,8 +96,12 @@
     <ClInclude Include="Code\Engine\Interfaces\IGameState.h" />
     <ClInclude Include="Code\Engine\Interfaces\IGrid.h" />
     <ClInclude Include="Code\Engine\Interfaces\IKeyConverter.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IMenu.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IMenuCursor.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IMenuItem.h" />
     <ClInclude Include="Code\Engine\Interfaces\IMusic.h" />
     <ClInclude Include="Code\Engine\Interfaces\INGameState.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IPaginatedMenu.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IRenderer.h" />
     <ClInclude Include="Code\Engine\Interfaces\IShader.h" />

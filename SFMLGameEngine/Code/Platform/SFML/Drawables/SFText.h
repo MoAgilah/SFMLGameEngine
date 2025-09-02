@@ -12,6 +12,9 @@ public:
 	SFText() {}
 	SFText(const NTextConfig& config);
 
+	void Update(float deltaTime) override;
+	void Render(IRenderer* renderer) override;
+
 	virtual void SetText(const std::string& text);
 	virtual void Reset(const std::string& text, std::optional<NTextConfig> config = std::nullopt);
 
