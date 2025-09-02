@@ -1,5 +1,10 @@
 #include "IMenu.h"
 
+IMenu::IMenu(float outlineThickness, const Point& dimensions, const NMenuPositionData& menuPositionData)
+	: m_outlineThickness(outlineThickness), m_dimensions(dimensions), m_menuPositionData(menuPositionData), m_menuNavigation(KeyCode::Up, KeyCode::Down)
+{
+}
+
 void IMenu::Update(float dt)
 {
 	ProcessInput();

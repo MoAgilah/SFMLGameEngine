@@ -43,6 +43,7 @@ struct NMenuPositionData
 class IMenu
 {
 public:
+	IMenu(float outlineThickness, const Point& dimensions, const NMenuPositionData& menuPositionData);
 	virtual ~IMenu() = default;
 
 	virtual void Update(float dt);

@@ -163,6 +163,12 @@
     <Filter Include="Header Files\Code\Platform\SFML\Resource">
       <UniqueIdentifier>{baac3b46-b344-4a79-86c5-c64422b4db16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Code\Platform\SFML\UI">
+      <UniqueIdentifier>{7cbacfea-9ac4-43c5-80a4-eccac5b9eeb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code\Platforms\SFML\UI">
+      <UniqueIdentifier>{f99ef3ec-bc64-4d33-8b46-73db098dcf74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Camera.cpp">
@@ -314,6 +320,15 @@
     </ClCompile>
     <ClCompile Include="Code\Engine\Interfaces\IMenu.cpp">
       <Filter>Source Files\Code\Engine\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\UI\SFMenu.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\UI\SFMenuCursor.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\UI\SFMenuItem.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -580,6 +595,15 @@
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\IPaginatedMenu.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\UI\SFMenu.h">
+      <Filter>Header Files\Code\Platform\SFML\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\UI\SFMenuCursor.h">
+      <Filter>Header Files\Code\Platform\SFML\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\UI\SFMenuItem.h">
+      <Filter>Header Files\Code\Platform\SFML\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

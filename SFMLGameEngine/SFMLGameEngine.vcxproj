@@ -67,6 +67,9 @@
     <ClCompile Include="Code\Platform\SFML\Renderer\SFCamera.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFRenderer.cpp" />
     <ClCompile Include="Code\Platform\SFML\Renderer\SFWindow.cpp" />
+    <ClCompile Include="Code\Platform\SFML\UI\SFMenu.cpp" />
+    <ClCompile Include="Code\Platform\SFML\UI\SFMenuCursor.cpp" />
+    <ClCompile Include="Code\Platform\SFML\UI\SFMenuItem.cpp" />
     <ClCompile Include="Code\Utilities\Colour.cpp" />
     <ClCompile Include="Code\Utilities\Point.cpp" />
     <ClCompile Include="Code\Utilities\Utilities.cpp" />
@@ -153,6 +156,9 @@
     <ClInclude Include="Code\Platform\SFML\Resource\SFShader.h" />
     <ClInclude Include="Code\Platform\SFML\Resource\SFSound.h" />
     <ClInclude Include="Code\Platform\SFML\Resource\SFTexture.h" />
+    <ClInclude Include="Code\Platform\SFML\UI\SFMenu.h" />
+    <ClInclude Include="Code\Platform\SFML\UI\SFMenuCursor.h" />
+    <ClInclude Include="Code\Platform\SFML\UI\SFMenuItem.h" />
     <ClInclude Include="Code\Utilities\Colour.h" />
     <ClInclude Include="Code\Utilities\DecisionTree.h" />
     <ClInclude Include="Code\Utilities\Defines.h" />

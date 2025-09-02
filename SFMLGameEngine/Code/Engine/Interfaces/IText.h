@@ -58,6 +58,7 @@ public:
 	virtual void SetOutlineThickness(float thickness) = 0;
 
 	bool IsAnimated() { return m_config.m_animType > NTextAnimType::Static; }
+	const Colour& GetDefaultColour() { return m_config.m_colour; }
 
 private:
 
