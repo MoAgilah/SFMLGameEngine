@@ -20,7 +20,7 @@ public:
 	Menu* GetMenuByNumber(int menuNumer);
 	Menu* GetCurrentMenu() { return GetMenuByNumber(m_currentMenuNum); }
 
-private:
+protected:
 
 	unsigned int m_currentMenuNum = 0;
 	unsigned int m_previousMenuNum = -1;

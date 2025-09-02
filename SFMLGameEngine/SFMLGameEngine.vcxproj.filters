@@ -330,6 +330,9 @@
     <ClCompile Include="Code\Platform\SFML\UI\SFMenuItem.cpp">
       <Filter>Source Files\Code\Platforms\SFML\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Platform\SFML\UI\SFPaginatedMenu.cpp">
+      <Filter>Source Files\Code\Platforms\SFML\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Camera.h">
@@ -603,6 +606,9 @@
       <Filter>Header Files\Code\Platform\SFML\UI</Filter>
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\UI\SFMenuItem.h">
+      <Filter>Header Files\Code\Platform\SFML\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Platform\SFML\UI\SFPaginatedMenu.h">
       <Filter>Header Files\Code\Platform\SFML\UI</Filter>
     </ClInclude>
   </ItemGroup>
