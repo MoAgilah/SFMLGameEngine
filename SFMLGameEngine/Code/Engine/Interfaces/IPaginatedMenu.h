@@ -24,6 +24,8 @@ public:
 		m_menuPages[m_currentMenuNum]->Render(renderer);
 	}
 
+	int GetCurrentMenuNumber() { return m_currentMenuNum; }
+
 	void SetCurrentMenuNumber(int menuNo)
 	{
 		if (menuNo >= 0 && menuNo < m_menuPages.size())

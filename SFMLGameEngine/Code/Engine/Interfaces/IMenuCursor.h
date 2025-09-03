@@ -13,7 +13,7 @@ public:
 		: m_cursor(spr), m_menuNav(menuNav)
 	{}
 
-	virtual ~IMenuCursor() = 0;
+	virtual ~IMenuCursor() = default;
 
 	virtual void Update(float deltaTime)
 	{

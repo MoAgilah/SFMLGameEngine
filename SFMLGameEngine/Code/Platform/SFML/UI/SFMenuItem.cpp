@@ -5,6 +5,13 @@
 SFMenuItem::SFMenuItem(const Point& menuSize, float outlineThickness)
 {
 	m_cellSpace = std::make_shared<SFRect>(menuSize, Point());
+	auto rect = dynamic_cast<SFRect*>(m_cellSpace.get());
+	if (rect)
+	{
+		rect->SetOrigin(Point(rect->GetSize()) / 2.f);
+		rect->SetOutlineThickness(outlineThickness);
+		rect->SetOutlineColour(sf::Color::Green);
+	}
 }
 
 Point SFMenuItem::GetPosition() const

@@ -35,7 +35,7 @@ protected:
 class IBoxShape
 {
 public:
-	virtual ~IBoxShape() = 0;
+	virtual ~IBoxShape() = default;
 
 	virtual void Render(IRenderer* renderer) = 0;
 
