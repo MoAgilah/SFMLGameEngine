@@ -6,7 +6,7 @@
 #include "../Drawables/SFSprite.h"
 #include "../Drawables/SFText.h"
 
-SFMenu::SFMenu(const Point& menuSize, float outlineThickness, const Point& dimensions, const NMenuPositionData& menuPositionData)
+SFMenu::SFMenu(const Point& menuSize, float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData)
 	: IMenu(outlineThickness, dimensions, menuPositionData)
 {
 	m_menuSpace = std::make_shared<SFRect>(menuSize, Point());
@@ -31,13 +31,13 @@ void SFMenu::BuildMenuSpace()
 
 		switch (m_menuPositionData.m_positionMode)
 		{
-		case NMenuPositionMode::Centered:
+		case MenuPositionMode::Centered:
 		{
 			// Center menu at m_centerPoint
 			rect->SetPosition(*(m_menuPositionData.m_centerPoint));
 			break;
 		}
-		case NMenuPositionMode::Anchored:
+		case MenuPositionMode::Anchored:
 		{
 			// Compute border area from anchor bounds (like screen size)
 			Point border = (*(m_menuPositionData.m_anchorBounds) - rect->GetSize()) / 2.f;

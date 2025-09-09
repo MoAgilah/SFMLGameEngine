@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IWindow.h"
-#include "../../Game/Objects/Object.h"
 #include "../../Utilities/Point.h"
 #include <memory>
 

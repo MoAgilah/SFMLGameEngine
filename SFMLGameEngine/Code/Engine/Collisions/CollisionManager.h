@@ -1,57 +1,59 @@
 #pragma once
 
-#include "BoundingVolume.h"
-#include "Grid.h"
-#include "Tile.h"
-#include <SFML/Graphics.hpp>
+#include <memory>
+#include <vector>
+#include <string>
+#include <limits>
 
-class Enemy;
-class Object;
-class DynamicObject;
+class IGrid;
+class ITile;
+class IRenderer;
+class IGameObject;
+class IDynamicGameObject;
 
 class CollisionManager
 {
 public:
-	CollisionManager(int rows = 0, int columns = 0, const std::string& tileFilePaths = GameConstants::TileFilePaths);
+	CollisionManager(std::shared_ptr<IGrid> grid);
 	~CollisionManager() = default;
 
-	void ProcessCollisions(Object* object);
-	void Render(sf::RenderWindow& window);
+	void ProcessCollisions(IGameObject* object);
+	void Render(IRenderer* renderer);
 
-	void AddCollidable(Object* ngo);
-	void RemoveCollidable(Object* ngo);
+	void AddCollidable(IGameObject* ngo) { m_collidables.emplace_back(ngo); }
+	void RemoveCollidable(IGameObject* ngo);
+
 	void RemoveLastAdded();
+	IGameObject* GetLastAdded();
 
-	Object* GetLastAdded();
-
-	Tile* GetTile(int x, int y);
-	std::vector<std::shared_ptr<Tile>> GetGrid();
-	std::vector<Object*> GetCollidables();
+	ITile* GetTile(int x, int y);
+	std::vector<std::shared_ptr<ITile>> GetGrid();
+	std::vector<std::shared_ptr<IGameObject>> GetCollidables();
 
 	static std::vector<std::string> s_canCollideWithTile;
 	inline static const float EPSILON = std::numeric_limits<float>::epsilon() * 100;
 	inline static const float BUFFER = 0.01f;
 
-private:
+protected:
 
 	bool CanCollideWithTile(const std::string& texID);
-	void SortCollidedTiles(std::vector<std::shared_ptr<Tile>> collidedWith);
+	void SortCollidedTiles(std::vector<std::shared_ptr<ITile>> collidedWith);
 
-	void DynamicObjectToTileCollisions(DynamicObject* obj);
+	void DynamicObjectToTileCollisions(IDynamicGameObject* obj);
 
-	void ObjectToObjectCollisions(Object* obj1, Object* obj2);
+	void ObjectToObjectCollisions(IGameObject* obj1, IGameObject* obj2);
 
-	void DynamicObjectToObjectCollisions(DynamicObject* obj1, Object* obj2);
+	void DynamicObjectToObjectCollisions(IDynamicGameObject* obj1, IGameObject* obj2);
 
-	void DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2);
+	void DynamicObjectToDynamicObjectCollisions(IDynamicGameObject* obj1, IDynamicGameObject* obj2);
 
-	virtual void ObjectToObjectResolution(Object* obj1, Object* obj2);
+	virtual void ObjectToObjectResolution(IGameObject* obj1, IGameObject* obj2);
 
-	virtual void DynamicObjectToObjectResolution(DynamicObject* obj1, Object* obj2, float time);
+	virtual void DynamicObjectToObjectResolution(IDynamicGameObject* obj1, IGameObject* obj2, float time);
 
-	virtual void DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2, float time);
+	virtual void DynamicObjectToDynamicObjectResolution(IDynamicGameObject* obj1, IDynamicGameObject* obj2, float time);
 
-	Grid m_grid;
-	std::vector<Object*> m_collidables;
-	std::vector<std::shared_ptr<Tile>> m_tiles;
+	std::shared_ptr<IGrid> m_grid;
+	std::vector<std::shared_ptr<ITile>> m_tiles;
+	std::vector< std::shared_ptr<IGameObject>> m_collidables;
 };

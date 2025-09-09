@@ -4,7 +4,7 @@
 #include "../../Utilities/Utilities.h"
 #include <memory>
 
-enum class NVolumeType { None, Box, Circle, Capsule };
+enum class VolumeType { None, Box, Circle, Capsule };
 enum class NSide { Left, Right, Top, Bottom };
 enum class NDirection { LDIR, RDIR, UDIR, DDIR };
 
@@ -17,12 +17,12 @@ class IBoundingCapsule;
 class IBoundingVolume
 {
 public:
-	IBoundingVolume(NVolumeType type)
+	IBoundingVolume(VolumeType type)
 		: m_type(type) {}
 
 	virtual ~IBoundingVolume() = default;
 
-    NVolumeType GetType() const { return m_type; }
+    VolumeType GetType() const { return m_type; }
 
 	virtual void Update(const Point& pos) = 0;
     virtual void Render(class IRenderer* renderer) = 0;
@@ -63,15 +63,15 @@ protected:
 
 protected:
 
-	NVolumeType m_type;
+	VolumeType m_type;
 };
 
 template <typename PlatformType>
-class NBoundingVolume : public virtual IBoundingVolume
+class BoundingVolume : public virtual IBoundingVolume
 {
 public:
-    explicit NBoundingVolume(NVolumeType type) : IBoundingVolume(type) {}
-    virtual ~NBoundingVolume() = default;
+    explicit BoundingVolume(VolumeType type) : IBoundingVolume(type) {}
+    virtual ~BoundingVolume() = default;
 
     void Render(IRenderer* renderer) override
     {
@@ -128,43 +128,6 @@ public:
 
     PlatformType* GetShape() { return m_shape.get(); }
 
-    bool Intersects(IBoundingVolume* v) override
-    {
-        switch (v->GetType())
-        {
-        case NVolumeType::Box:      if (auto* p = dynamic_cast<IBoundingBox*>(v))     return Intersects(p); break;
-        case NVolumeType::Circle:   if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return Intersects(p); break;
-        case NVolumeType::Capsule:  if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return Intersects(p); break;
-        default: break;
-        }
-        return false;
-    }
-
-    bool IntersectsMoving(IBoundingVolume* v, const Point& va, const Point& vb,
-        float& tfirst, float& tlast) override
-    {
-        switch (v->GetType())
-        {
-        case NVolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return IntersectsMoving(p, va, vb, tfirst, tlast); break;
-        case NVolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return IntersectsMoving(p, va, vb, tfirst, tlast); break;
-        case NVolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return IntersectsMoving(p, va, vb, tfirst, tlast); break;
-        default: break;
-        }
-        return false;
-    }
-
-    Point GetSeparationVector(IBoundingVolume* v) override
-    {
-        switch (v->GetType()) {
-        case NVolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return GetSeparationVector(p); break;
-        case NVolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return GetSeparationVector(p); break;
-        case NVolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return GetSeparationVector(p); break;
-        default: break;
-        }
-        return {};
-    }
-
-
 protected:
 
     std::shared_ptr<PlatformType> m_shape = nullptr;
@@ -172,7 +135,7 @@ protected:
 
 class IBoundingBox : public virtual IBoundingVolume {
 public:
-    IBoundingBox() : IBoundingVolume(NVolumeType::Box) {}
+    IBoundingBox() : IBoundingVolume(VolumeType::Box) {}
     virtual ~IBoundingBox() = default;
 
     virtual const Point& GetMin() const { return m_min; }
@@ -189,7 +152,7 @@ protected:
 
 class IBoundingCircle : public virtual IBoundingVolume {
 public:
-    IBoundingCircle() : IBoundingVolume(NVolumeType::Circle) {}
+    IBoundingCircle() : IBoundingVolume(VolumeType::Circle) {}
     virtual ~IBoundingCircle() = default;
 
     virtual float GetRadius() const = 0;
@@ -197,7 +160,7 @@ public:
 
 class IBoundingCapsule : public virtual IBoundingVolume {
 public:
-    IBoundingCapsule() : IBoundingVolume(NVolumeType::Capsule) {}
+    IBoundingCapsule() : IBoundingVolume(VolumeType::Capsule) {}
     virtual ~IBoundingCapsule() = default;
 
     virtual float GetRadius() const = 0;

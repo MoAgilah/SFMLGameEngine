@@ -11,9 +11,7 @@ class IMenuItem
 public:
 	IMenuItem()
 		: m_menuSlotNumber(-1), m_textElement(nullptr), m_spriteElement(nullptr)
-	{
-
-	}
+	{}
 	virtual ~IMenuItem() = default;
 
 	virtual void Update(float deltaTime)

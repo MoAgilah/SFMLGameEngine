@@ -37,13 +37,13 @@ void IDynamicGameObject::SetSlideRight(bool right)
 		m_slideLeft = false;
 }
 
-Direction IDynamicGameObject::GetFacingDirection()
+NDirection IDynamicGameObject::GetFacingDirection()
 {
 	const Point& vel = m_velocity;
 	if (vel.x == 0.f && vel.y == 0.f)
-		return Direction::DDIR;
+		return NDirection::DDIR;
 
 	return (std::abs(vel.x) > std::abs(vel.y))
-		? (vel.x < 0 ? Direction::LDIR : Direction::RDIR)
-		: (vel.y < 0 ? Direction::UDIR : Direction::DDIR);
+		? (vel.x < 0 ? NDirection::LDIR : NDirection::RDIR)
+		: (vel.y < 0 ? NDirection::UDIR : NDirection::DDIR);
 }

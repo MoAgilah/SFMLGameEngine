@@ -1,6 +1,6 @@
 #include "MenuNavigation.h"
 
-#include "../Core/NGameManager.h"
+#include "../Core/GameManager.h"
 
 MenuNav::MenuNav(KeyCode ascKey, KeyCode desKey)
 	: m_ascKey(ascKey), m_desKey(desKey)
@@ -9,7 +9,7 @@ MenuNav::MenuNav(KeyCode ascKey, KeyCode desKey)
 
 void MenuNav::HandleNavigation()
 {
-	auto inputManager = NGameManager::Get()->GetInputManager();
+	auto inputManager = GameManager::Get()->GetInputManager();
 
 	if (inputManager)
 	{

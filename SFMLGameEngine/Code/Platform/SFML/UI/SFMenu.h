@@ -6,7 +6,7 @@
 class SFMenu : public IMenu
 {
 public:
-	SFMenu(const Point& menuSize, float outlineThickness, const Point& dimensions, const NMenuPositionData& menuPositionData);
+	SFMenu(const Point& menuSize, float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData);
 	~SFMenu() = default;
 
 	void AddCursor(ISprite* spr, const MenuNav& menuNav);

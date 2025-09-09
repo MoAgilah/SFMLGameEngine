@@ -1,7 +1,7 @@
 #include "IScene.h"
 
 #include "../Core/Constants.h"
-#include "../Core/NGameManager.h"
+#include "../Core/GameManager.h"
 
 void IScene::Update(float deltaTime)
 {
@@ -58,7 +58,7 @@ void IScene::ResetScene()
 
 void IScene::CheckIsInView()
 {
-	auto camera = NGameManager::Get()->GetCamera();
+	auto camera = GameManager::Get()->GetCamera();
 
 	for (auto& [_, enemy] : m_enemies)
 		enemy->SetActive(camera->IsInView(enemy->GetVolume()));
@@ -67,7 +67,7 @@ void IScene::CheckIsInView()
 		object->SetActive(camera->IsInView(object->GetVolume()));
 }
 
-NGameObject* IScene::GetObjectByName(const std::string& name)
+GameObject* IScene::GetObjectByName(const std::string& name)
 {
 	auto it = m_objects.find(name);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/NGameManager.h"
+#include "../Core/GameManager.h"
 
 class IFrameWork
 {
@@ -20,5 +20,5 @@ public:
 protected:
 
     bool m_isRunning = true;
-    NGameManager m_gameMgr;
+    GameManager m_gameMgr;
 };

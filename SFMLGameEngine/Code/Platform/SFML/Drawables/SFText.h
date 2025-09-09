@@ -5,6 +5,7 @@
 #include "../../../Engine/Core/Timer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <functional>
 
 class SFText : public SFDrawables<sf::Text>, public IText
 {

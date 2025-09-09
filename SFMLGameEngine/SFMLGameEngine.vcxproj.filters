@@ -94,26 +94,14 @@
     <Filter Include="Header Files\Code\Engine\Input">
       <UniqueIdentifier>{35f29a1d-a29d-494b-9810-e19277b71de7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Code\Engine\UI">
-      <UniqueIdentifier>{c9807a80-4b3f-4f9f-ab07-4f7533c1d5f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\Engine\World">
-      <UniqueIdentifier>{d901adc0-2862-427f-8d25-96d9550528c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Code\Engine\States">
       <UniqueIdentifier>{46937f6a-6606-4f3d-bc7b-4557fad4c5cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Code\Engine\Resources">
       <UniqueIdentifier>{c916c8c5-2627-4025-a627-9b4a7598e3f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Code\Engine\UI">
-      <UniqueIdentifier>{db6f3370-caf7-48e3-994e-335dd2a09aca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Code\Engine\Resources">
       <UniqueIdentifier>{896a991f-1432-4588-876a-72f21d75e379}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Code\Engine\World">
-      <UniqueIdentifier>{c2bb42fc-5cd5-45e0-afa9-15c3a163bcdd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Code\Engine\States">
       <UniqueIdentifier>{7a11cb52-1b5f-49a2-8655-c95dc5ed576b}</UniqueIdentifier>
@@ -145,9 +133,6 @@
     <Filter Include="Header Files\Code\Platform\SFML\Engine\Input">
       <UniqueIdentifier>{e83cd684-923d-45f0-9ead-288780aa22e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Code\Platform\SFML\Engine\Collisions">
-      <UniqueIdentifier>{9197141b-3900-4321-b4f4-8f376a3ca8a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Code\Platform\SFML\Collisions">
       <UniqueIdentifier>{f22c879c-a919-4a2c-9a9b-b7d9893f2f42}</UniqueIdentifier>
     </Filter>
@@ -163,11 +148,14 @@
     <Filter Include="Source Files\Code\Platforms\SFML\UI">
       <UniqueIdentifier>{f99ef3ec-bc64-4d33-8b46-73db098dcf74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Code\Engine\UI">
+      <UniqueIdentifier>{6b0547bb-df32-4cd9-8d69-bc752984199a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code\Engine\UI">
+      <UniqueIdentifier>{771acd44-fefe-4b27-9c38-148bcf0e48cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\Game\Camera.cpp">
-      <Filter>Source Files\Code\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Utilities\Point.cpp">
       <Filter>Source Files\Code\Utilities</Filter>
     </ClCompile>
@@ -177,29 +165,11 @@
     <ClCompile Include="Code\Engine\Core\Constants.cpp">
       <Filter>Source Files\Code\Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Engine\Core\Framework.cpp">
-      <Filter>Source Files\Code\Engine\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Engine\Core\GameManager.cpp">
-      <Filter>Source Files\Code\Engine\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\Core\NGameManager.cpp">
       <Filter>Source Files\Code\Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Code\Engine\Core\Timer.cpp">
       <Filter>Source Files\Code\Engine\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\Collisions\BoundingVolume.cpp">
-      <Filter>Source Files\Code\Engine\Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\Collisions\CollisionManager.cpp">
-      <Filter>Source Files\Code\Engine\Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\Collisions\Grid.cpp">
-      <Filter>Source Files\Code\Engine\Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\Collisions\Tile.cpp">
-      <Filter>Source Files\Code\Engine\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Code\Engine\Interfaces\IFramework.cpp">
       <Filter>Source Files\Code\Engine\Interfaces</Filter>
@@ -219,39 +189,6 @@
     <ClCompile Include="Code\Engine\Resources\TextureManager.cpp">
       <Filter>Source Files\Code\Engine\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Engine\UI\Menu.cpp">
-      <Filter>Source Files\Code\Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\UI\MenuCursor.cpp">
-      <Filter>Source Files\Code\Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\UI\MenuItem.cpp">
-      <Filter>Source Files\Code\Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\UI\MenuNavigation.cpp">
-      <Filter>Source Files\Code\Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\UI\PaginatedMenu.cpp">
-      <Filter>Source Files\Code\Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\UI\Text.cpp">
-      <Filter>Source Files\Code\Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\World\World.cpp">
-      <Filter>Source Files\Code\Engine\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\States\DebugState.cpp">
-      <Filter>Source Files\Code\Engine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\States\GameStateMgr.cpp">
-      <Filter>Source Files\Code\Engine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\States\LoadingState.cpp">
-      <Filter>Source Files\Code\Engine\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Engine\States\MainMenuState.cpp">
-      <Filter>Source Files\Code\Engine\States</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Game\Objects\Box.cpp">
       <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
@@ -260,12 +197,6 @@
     </ClCompile>
     <ClCompile Include="Code\Game\Objects\Enemy.cpp">
       <Filter>Source Files\Code\Game\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Objects\Object.cpp">
-      <Filter>Source Files\Code\Game\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Sprite.cpp">
-      <Filter>Source Files\Code\Game</Filter>
     </ClCompile>
     <ClCompile Include="Code\Platform\SFML\Drawables\SFShape.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Drawables</Filter>
@@ -288,7 +219,7 @@
     <ClCompile Include="Code\Platform\SFML\Engine\Core\SFFramework.cpp">
       <Filter>Source Files\Code\Platforms\SFML\Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Engine\States\NGameStateMgr.cpp">
+    <ClCompile Include="Code\Engine\States\GameStateMgr.cpp">
       <Filter>Source Files\Code\Engine\States</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utilities\Colour.cpp">
@@ -297,10 +228,10 @@
     <ClCompile Include="Code\Engine\Interfaces\IText.cpp">
       <Filter>Source Files\Code\Engine\Interfaces</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Game\Objects\NGameObject.cpp">
+    <ClCompile Include="Code\Game\Objects\GameObject.cpp">
       <Filter>Source Files\Code\Game\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Engine\Collisions\NCollisionManager.cpp">
+    <ClCompile Include="Code\Engine\Collisions\CollisionManager.cpp">
       <Filter>Source Files\Code\Engine\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Code\Engine\Interfaces\IGameObject.cpp">
@@ -330,11 +261,11 @@
     <ClCompile Include="Code\Engine\Interfaces\IScene.cpp">
       <Filter>Source Files\Code\Engine\Interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Engine\UI\MenuNavigation.cpp">
+      <Filter>Source Files\Code\Engine\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\Game\Camera.h">
-      <Filter>Header Files\Code\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utilities\Point.h">
       <Filter>Header Files\Code\Utilities</Filter>
     </ClInclude>
@@ -356,31 +287,13 @@
     <ClInclude Include="Code\Engine\Core\GameManager.h">
       <Filter>Header Files\Code\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Engine\Core\NGameManager.h">
-      <Filter>Header Files\Code\Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Engine\Core\Timer.h">
       <Filter>Header Files\Code\Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\Collisions\BoundingVolume.h">
-      <Filter>Header Files\Code\Engine\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\Collisions\CollisionManager.h">
-      <Filter>Header Files\Code\Engine\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\Collisions\Grid.h">
-      <Filter>Header Files\Code\Engine\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\Collisions\Tile.h">
-      <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\ICamera.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\IFramework.h">
-      <Filter>Header Files\Code\Engine\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\Interfaces\IGameState.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\IRenderable.h">
@@ -416,39 +329,6 @@
     <ClInclude Include="Code\Engine\Resources\TextureManager.h">
       <Filter>Header Files\Code\Engine\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Engine\UI\Menu.h">
-      <Filter>Header Files\Code\Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\UI\MenuCursor.h">
-      <Filter>Header Files\Code\Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\UI\MenuItem.h">
-      <Filter>Header Files\Code\Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\UI\MenuNavigation.h">
-      <Filter>Header Files\Code\Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\UI\PaginatedMenu.h">
-      <Filter>Header Files\Code\Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\UI\Text.h">
-      <Filter>Header Files\Code\Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\World\World.h">
-      <Filter>Header Files\Code\Engine\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\States\DebugState.h">
-      <Filter>Header Files\Code\Engine\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\States\GameStateMgr.h">
-      <Filter>Header Files\Code\Engine\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\States\LoadingState.h">
-      <Filter>Header Files\Code\Engine\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Engine\States\MainMenuState.h">
-      <Filter>Header Files\Code\Engine\States</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Game\Objects\Box.h">
       <Filter>Header Files\Code\Game\Objects</Filter>
     </ClInclude>
@@ -457,12 +337,6 @@
     </ClInclude>
     <ClInclude Include="Code\Game\Objects\Enemy.h">
       <Filter>Header Files\Code\Game\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Objects\Object.h">
-      <Filter>Header Files\Code\Game\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Sprite.h">
-      <Filter>Header Files\Code\Game</Filter>
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Drawables\SFDrawables.h">
       <Filter>Header Files\Code\Platform\SFML\Drawables</Filter>
@@ -488,10 +362,10 @@
     <ClInclude Include="Code\Platform\SFML\Engine\Core\SFFramework.h">
       <Filter>Header Files\Code\Platform\SFML\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Engine\Interfaces\INGameState.h">
+    <ClInclude Include="Code\Engine\Interfaces\IGameState.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Engine\States\NGameStateMgr.h">
+    <ClInclude Include="Code\Engine\States\GameStateMgr.h">
       <Filter>Header Files\Code\Engine\States</Filter>
     </ClInclude>
     <ClInclude Include="Code\Engine\Input\KeyCode.h">
@@ -530,13 +404,13 @@
     <ClInclude Include="Code\Engine\Interfaces\IGameObject.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Game\Objects\NGameObject.h">
+    <ClInclude Include="Code\Game\Objects\GameObject.h">
       <Filter>Header Files\Code\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\ITile.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Engine\Collisions\NCollisionManager.h">
+    <ClInclude Include="Code\Engine\Collisions\CollisionManager.h">
       <Filter>Header Files\Code\Engine\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\Collisions\SFTile.h">
@@ -610,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="Code\Engine\Interfaces\IScene.h">
       <Filter>Header Files\Code\Engine\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\UI\MenuNavigation.h">
+      <Filter>Header Files\Code\Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

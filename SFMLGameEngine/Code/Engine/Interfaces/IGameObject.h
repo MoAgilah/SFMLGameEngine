@@ -81,7 +81,7 @@ public:
 	bool GetSlideRight() const { return m_slideRight; }
 	void SetSlideRight(bool right);
 
-	Direction GetFacingDirection();
+	NDirection GetFacingDirection();
 
 protected:
 

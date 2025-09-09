@@ -1,7 +1,7 @@
 #include "SFWindow.h"
 
 #include "../../../Engine/Core/Constants.h"
-#include "../../../Engine/Core/NGameManager.h"
+#include "../../../Engine/Core/GameManager.h"
 
 
 bool SFWindow::Create(const Point& screemDims, const std::string& title)
@@ -27,11 +27,11 @@ void SFWindow::PollEvents()
 				if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 					Close();
 
-				NGameManager::Get()->GetInputManager()->ProcessPlatformKeyPress(const_cast<sf::Keyboard::Key*>(&keyPressed->code));
+				GameManager::Get()->GetInputManager()->ProcessPlatformKeyPress(const_cast<sf::Keyboard::Key*>(&keyPressed->code));
 			}
 			else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
 			{
-				NGameManager::Get()->GetInputManager()->ProcessPlatformKeyRelease(const_cast<sf::Keyboard::Key*>(&keyReleased->code));
+				GameManager::Get()->GetInputManager()->ProcessPlatformKeyRelease(const_cast<sf::Keyboard::Key*>(&keyReleased->code));
 			}
 		}
 	}

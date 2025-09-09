@@ -11,19 +11,19 @@
 #include <tuple>
 #include <vector>
 
-enum NMenuPositionMode
+enum MenuPositionMode
 {
 	Centered,
 	Anchored
 };
 
-struct NMenuPositionData
+struct MenuPositionData
 {
-	NMenuPositionMode m_positionMode;
+	MenuPositionMode m_positionMode;
 	std::optional<Point> m_centerPoint;
 	std::optional<Point> m_anchorBounds;
 
-	NMenuPositionData(NMenuPositionMode positionMode, const Point& centerOrAnchor)
+	MenuPositionData(MenuPositionMode positionMode, const Point& centerOrAnchor)
 		: m_positionMode(positionMode)
 	{
 		switch (m_positionMode)
@@ -43,7 +43,7 @@ struct NMenuPositionData
 class IMenu
 {
 public:
-	IMenu(float outlineThickness, const Point& dimensions, const NMenuPositionData& menuPositionData);
+	IMenu(float outlineThickness, const Point& dimensions, const MenuPositionData& menuPositionData);
 	virtual ~IMenu() = default;
 
 	virtual void Update(float dt);
@@ -82,7 +82,7 @@ protected:
 	unsigned int m_prevCellNumber = -1;
 	MenuNav m_menuNavigation;
 	std::shared_ptr<IBoxShape> m_menuSpace;
-	NMenuPositionData m_menuPositionData;
+	MenuPositionData m_menuPositionData;
 	std::optional<Colour> m_passiveColour;
 	std::vector<std::shared_ptr<IBoxShape>> m_columns;
 	std::vector<std::vector<std::shared_ptr<IMenuItem>>> m_rows;

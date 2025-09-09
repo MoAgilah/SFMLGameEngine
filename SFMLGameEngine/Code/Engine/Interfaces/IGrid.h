@@ -2,7 +2,7 @@
 
 #include "ITile.h"
 #include "IRenderer.h"
-#include "../Core/NGameManager.h"
+#include "../Core/GameManager.h"
 #include <format>
 #include <fstream>
 #include <sstream>

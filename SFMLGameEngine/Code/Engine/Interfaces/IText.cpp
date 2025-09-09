@@ -1,10 +1,10 @@
 #include "IText.h"
 
 NTextConfig::NTextConfig()
-	: m_fontName("Standard"), m_charSize(0), m_position(Point()), m_colour(Colour::Black), m_animType(NTextAnimType::Static), m_alignment(NTextAlignment::None)
+	: m_fontName("Standard"), m_charSize(0), m_position(Point()), m_colour(Colour::Black), m_animType(TextAnimType::Static), m_alignment(TextAlignment::None)
 {}
 
-NTextConfig::NTextConfig(const std::string fontName, unsigned int charSize, const Point& position, NTextAnimType textAnimType, Colour colour, NTextAlignment alignment)
+NTextConfig::NTextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, Colour colour, TextAlignment alignment)
 	: m_fontName(fontName), m_charSize(charSize), m_position(position), m_colour(colour), m_animType(textAnimType), m_alignment(alignment)
 {}
 
@@ -17,16 +17,16 @@ Point NCalculateTextOrigin(const Point& boundsSize, const Point& boundsPos)
 	return { boundsPos.x + boundsSize.x / 2.f, boundsPos.x + boundsSize.y / 2.f };
 }
 
-Point NSetTextPosition(NTextAlignment alignment, const Point& textPos, const Point& boundsSize, const Point& boundsPos)
+Point NSetTextPosition(TextAlignment alignment, const Point& textPos, const Point& boundsSize, const Point& boundsPos)
 {
 	switch (alignment)
 	{
-	case NTextAlignment::LeftHand:
+	case TextAlignment::LeftHand:
 		return { textPos.x, textPos.y - boundsSize.y / 2.f };
-	case NTextAlignment::Center:
+	case TextAlignment::Center:
 		return { textPos.x - boundsSize.x / 2.f - boundsPos.x,
 			textPos.y - boundsSize.y / 2.f };
-	case NTextAlignment::RightHand:
+	case TextAlignment::RightHand:
 		return { textPos.x - boundsSize.x - boundsPos.x,
 			textPos.y - boundsSize.y / 2.f };
 		break;

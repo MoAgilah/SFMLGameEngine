@@ -23,5 +23,5 @@ public:
 
 private:
     sf::View m_camera;
-    std::shared_ptr<NBoundingBox<SFRect>> m_viewBox;
+    std::shared_ptr<BoundingBox<SFRect>> m_viewBox;
 };

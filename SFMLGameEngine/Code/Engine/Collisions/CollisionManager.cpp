@@ -1,39 +1,68 @@
 #include "CollisionManager.h"
 
-#include "../Core/Constants.h"
-#include "../Core/NGameManager.h"
-#include "../../Utilities/Utilities.h"
-#include <algorithm>
-#include <format>
+#include "../Interfaces/IGrid.h"
+#include "../Interfaces/ITile.h"
+#include "../Interfaces/IGameObject.h"
+#include "../Interfaces/IRenderer.h"
 
-using namespace obj;
+#include <algorithm>
+#include <ranges>
+#include <utility>
 
 std::vector<std::string> CollisionManager::s_canCollideWithTile = {};
 
-CollisionManager::CollisionManager(int rows, int columns, const std::string& tileFilePaths)
-	: m_grid(rows, columns, tileFilePaths)
+CollisionManager::CollisionManager(std::shared_ptr<IGrid> grid)
+	: m_grid(std::move(grid))
 {
-	for (auto& tile : m_grid.GetGrid())
+	if (m_grid)
 	{
-		if (tile->GetType() != Types::EMPTY)
-			m_tiles.push_back(tile);
+		for (auto& tile : m_grid->GetGrid())
+		{
+			if (tile->GetType() != Types::EMPTY)
+				m_tiles.push_back(tile);
+		}
 	}
 }
 
-void CollisionManager::AddCollidable(Object* go)
+void CollisionManager::ProcessCollisions(IGameObject* gobj)
 {
-	m_collidables.push_back(go);
-}
-
-void CollisionManager::RemoveCollidable(Object* ngo)
-{
-	if (!ngo)
+	if (!gobj)
 		return;
 
-	auto it = std::remove(m_collidables.begin(), m_collidables.end(), ngo);
+	if (CanCollideWithTile(gobj->GetID()))
+	{
+		if (auto* dynObj = dynamic_cast<IDynamicGameObject*>(gobj))
+			DynamicObjectToTileCollisions(dynObj);
+	}
 
-	if (it != m_collidables.end())
-		m_collidables.erase(it, m_collidables.end());
+	for (auto collidable : m_collidables)
+	{
+		if (!collidable || !collidable->GetActive())
+			continue;
+
+		if (gobj->GetObjectNum() == collidable->GetObjectNum())
+			continue;
+
+		ObjectToObjectCollisions(gobj, collidable.get());
+	}
+}
+
+void CollisionManager::Render(IRenderer* renderer)
+{
+	if (m_grid)
+		m_grid->Render(renderer);
+}
+
+void CollisionManager::RemoveCollidable(IGameObject* ngo)
+{
+	// Use remove_if and compare underlying raw pointers
+	m_collidables.erase(
+		std::remove_if(m_collidables.begin(), m_collidables.end(),
+			[ngo](const std::shared_ptr<IGameObject>& ptr)
+			{
+				return ptr.get() == ngo;
+			}),
+		m_collidables.end());
 }
 
 void CollisionManager::RemoveLastAdded()
@@ -42,50 +71,25 @@ void CollisionManager::RemoveLastAdded()
 		m_collidables.pop_back();
 }
 
-Object* CollisionManager::GetLastAdded()
+IGameObject* CollisionManager::GetLastAdded()
 {
-	return m_collidables.empty() ? nullptr : m_collidables.back();
+	return m_collidables.empty() ? nullptr : m_collidables.back().get();
 }
 
-void CollisionManager::Render(sf::RenderWindow& window)
+ITile* CollisionManager::GetTile(int x, int y)
 {
-	m_grid.Render(window);
+	return m_grid->GetTile(x, y);
 }
 
-void CollisionManager::ProcessCollisions(Object* gobj)
+std::vector<std::shared_ptr<ITile>> CollisionManager::GetGrid()
 {
-	if (!gobj)
-		return;
+	if (m_grid)
+		return m_grid->GetGrid();
 
-	if (CanCollideWithTile(gobj->GetID()))
-	{
-		if (auto* dynObj = dynamic_cast<DynamicObject*>(gobj))
-			DynamicObjectToTileCollisions(dynObj);
-	}
-
-	for (Object* collidable : m_collidables)
-	{
-		if (!collidable || !collidable->GetActive())
-			continue;
-
-		if (gobj->GetObjectNum() == collidable->GetObjectNum())
-			continue;
-
-		ObjectToObjectCollisions(gobj, collidable);
-	}
+	return {};
 }
 
-Tile* CollisionManager::GetTile(int x, int y)
-{
-	return m_grid.GetTile(x, y);
-}
-
-std::vector<std::shared_ptr<Tile>> CollisionManager::GetGrid()
-{
-	return m_grid.GetGrid();
-}
-
-std::vector<Object*> CollisionManager::GetCollidables()
+std::vector<std::shared_ptr<IGameObject>> CollisionManager::GetCollidables()
 {
 	return m_collidables;
 }
@@ -95,9 +99,9 @@ bool CollisionManager::CanCollideWithTile(const std::string& texID)
 	return std::find(s_canCollideWithTile.begin(), s_canCollideWithTile.end(), texID) != s_canCollideWithTile.end();
 }
 
-void CollisionManager::SortCollidedTiles(std::vector<std::shared_ptr<Tile>> collidedWith)
+void CollisionManager::SortCollidedTiles(std::vector<std::shared_ptr<ITile>> collidedWith)
 {
-	std::ranges::sort(collidedWith, [](const std::shared_ptr<Tile>& a, const std::shared_ptr<Tile>& b)
+	std::ranges::sort(collidedWith, [](const auto& a, const auto& b)
 		{
 			if (a->GetColNum() == b->GetColNum())
 				return a->GetRowNum() < b->GetRowNum();
@@ -106,18 +110,18 @@ void CollisionManager::SortCollidedTiles(std::vector<std::shared_ptr<Tile>> coll
 		});
 }
 
-void CollisionManager::DynamicObjectToTileCollisions(DynamicObject* obj)
+void CollisionManager::DynamicObjectToTileCollisions(IDynamicGameObject* obj)
 {
 	if (!obj)
 		return;
 
-	std::vector<std::shared_ptr<Tile>> collidedWith;
+	std::vector<std::shared_ptr<ITile>> collidedWith;
 	for (const auto& tile : m_tiles)
 	{
 		if (!tile->GetActive())
 			continue;
 
-		if (tile->GetBoundingBox()->Intersects(obj->GetColVolume()))
+		if (tile->GetBoundingBox()->Intersects(obj->GetVolume()))
 			collidedWith.push_back(tile);
 	}
 
@@ -134,7 +138,7 @@ void CollisionManager::DynamicObjectToTileCollisions(DynamicObject* obj)
 	}
 }
 
-void CollisionManager::ObjectToObjectCollisions(Object* obj1, Object* obj2)
+void CollisionManager::ObjectToObjectCollisions(IGameObject* obj1, IGameObject* obj2)
 {
 	if (!obj1 || !obj2)
 		return;
@@ -145,16 +149,16 @@ void CollisionManager::ObjectToObjectCollisions(Object* obj1, Object* obj2)
 	if (isDyn1 && isDyn2)
 	{
 		DynamicObjectToDynamicObjectCollisions(
-			dynamic_cast<DynamicObject*>(obj1),
-			dynamic_cast<DynamicObject*>(obj2));
+			dynamic_cast<IDynamicGameObject*>(obj1),
+			dynamic_cast<IDynamicGameObject*>(obj2));
 	}
 	else if (isDyn1)
 	{
-		DynamicObjectToObjectCollisions(dynamic_cast<DynamicObject*>(obj1), obj2);
+		DynamicObjectToObjectCollisions(dynamic_cast<IDynamicGameObject*>(obj1), obj2);
 	}
 	else if (isDyn2)
 	{
-		DynamicObjectToObjectCollisions(dynamic_cast<DynamicObject*>(obj2), obj1);
+		DynamicObjectToObjectCollisions(dynamic_cast<IDynamicGameObject*>(obj2), obj1);
 	}
 	else
 	{
@@ -163,7 +167,7 @@ void CollisionManager::ObjectToObjectCollisions(Object* obj1, Object* obj2)
 	}
 }
 
-void CollisionManager::DynamicObjectToObjectCollisions(DynamicObject* obj1, Object* obj2)
+void CollisionManager::DynamicObjectToObjectCollisions(IDynamicGameObject* obj1, IGameObject* obj2)
 {
 	if (!obj1 || !obj2)
 		return;
@@ -173,7 +177,7 @@ void CollisionManager::DynamicObjectToObjectCollisions(DynamicObject* obj1, Obje
 		DynamicObjectToObjectResolution(obj1, obj2, tFirst);
 }
 
-void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj1, DynamicObject* obj2)
+void CollisionManager::DynamicObjectToDynamicObjectCollisions(IDynamicGameObject* obj1, IDynamicGameObject* obj2)
 {
 	if (!obj1 || !obj2)
 		return;
@@ -183,17 +187,17 @@ void CollisionManager::DynamicObjectToDynamicObjectCollisions(DynamicObject* obj
 		DynamicObjectToDynamicObjectResolution(obj1, obj2, tFirst);
 }
 
-void CollisionManager::ObjectToObjectResolution(Object* obj1, Object* obj2)
+void CollisionManager::ObjectToObjectResolution(IGameObject* obj1, IGameObject* obj2)
 {
 	// Custom logic placeholder
 }
 
-void CollisionManager::DynamicObjectToObjectResolution(DynamicObject* obj1, Object* obj2, float time)
+void CollisionManager::DynamicObjectToObjectResolution(IDynamicGameObject* obj1, IGameObject* obj2, float time)
 {
 	// Custom logic placeholder
 }
 
-void CollisionManager::DynamicObjectToDynamicObjectResolution(DynamicObject* obj1, DynamicObject* obj2, float time)
+void CollisionManager::DynamicObjectToDynamicObjectResolution(IDynamicGameObject* obj1, IDynamicGameObject* obj2, float time)
 {
 	// Custom logic placeholder
 }

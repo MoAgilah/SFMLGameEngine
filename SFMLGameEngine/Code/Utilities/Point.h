@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-class BoundingCircle;
-class BoundingCapsule;
+class IBoundingCircle;
+class IBoundingCapsule;
 
 class Point
 {
@@ -39,8 +39,8 @@ public:
 
 	Point Clamp(const Point& p1, const Point& p2) const;
 
-	bool MovingPointIntersects(BoundingCircle* circle, const Point& v, float& tfirst, float& tlast);
-	bool MovingPointIntersects(BoundingCapsule* circle, const Point& v, float& tfirst, float& tlast);
+	bool MovingPointIntersects(IBoundingCircle* circle, const Point& v, float& tfirst, float& tlast);
+	bool MovingPointIntersects(IBoundingCapsule* circle, const Point& v, float& tfirst, float& tlast);
 
 	float x;
 	float y;

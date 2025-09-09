@@ -1,6 +1,6 @@
 #include "Point.h"
 
-#include "../Engine/Collisions/BoundingVolume.h"
+#include "../Engine/Interfaces/IBoundingVolume.h"
 #include <stdexcept>
 
 Point::Point()
@@ -156,7 +156,7 @@ Point Point::Clamp(const Point& p1, const Point& p2) const
 	return { std::max(p1.x, std::min(p2.x, x)), std::max(p1.y, std::min(p2.y, y)) };
 }
 
-bool Point::MovingPointIntersects(BoundingCircle* circle, const Point& v, float& tfirst, float& tlast)
+bool Point::MovingPointIntersects(IBoundingCircle* circle, const Point& v, float& tfirst, float& tlast)
 {
 	// Compute the vector from the sphere center to the starting point.
 	Point m = (*this) - circle->GetCenter();
@@ -174,7 +174,7 @@ bool Point::MovingPointIntersects(BoundingCircle* circle, const Point& v, float&
 	return true;
 }
 
-bool Point::MovingPointIntersects(BoundingCapsule* cap, const Point& v, float& tfirst, float& tlast)
+bool Point::MovingPointIntersects(IBoundingCapsule* cap, const Point& v, float& tfirst, float& tlast)
 {
 	Line seg = cap->GetSegment();
 	// Compute the normalized axis direction of the segment.

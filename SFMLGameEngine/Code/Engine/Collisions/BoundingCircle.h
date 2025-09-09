@@ -1,26 +1,28 @@
 #pragma once
 
-#include "NCollisionManager.h"
+#include "CollisionManager.h"
 #include "../Interfaces/IShape.h"
 #include "../Interfaces/IBoundingVolume.h"
 #include "../../Utilities/Traits.h"
 
+#include "BoundingBox.h"
+
 template <typename PlatformCircle>
-class NBoundingCircle : public IBoundingCircle, public NBoundingVolume<PlatformCircle>
+class BoundingCircle : public IBoundingCircle, public BoundingVolume<PlatformCircle>
 {
 public:
-    NBoundingCircle()
-        : IBoundingVolume(NVolumeType::Circle)
+    BoundingCircle()
+        : IBoundingVolume(VolumeType::Circle)
         , IBoundingCircle()
-        , NBoundingVolume<PlatformCircle>(NVolumeType::Circle)
+        , BoundingVolume<PlatformCircle>(VolumeType::Circle)
     {
         this->m_shape = std::make_shared<PlatformCircle>();
     }
 
-    NBoundingCircle(float radius, const Point& pos)
-        : IBoundingVolume(NVolumeType::Circle)
+    BoundingCircle(float radius, const Point& pos)
+        : IBoundingVolume(VolumeType::Circle)
         , IBoundingCircle()
-        , NBoundingVolume<PlatformCircle>(NVolumeType::Circle)
+        , BoundingVolume<PlatformCircle>(VolumeType::Circle)
     {
         this->m_shape = std::make_shared<PlatformCircle>();
         Reset(radius);
@@ -37,22 +39,22 @@ public:
         this->m_shape->Update(pos);
     }
 
-    void Render(IRenderer* r) override { NBoundingVolume<PlatformCircle>::Render(r); }
-    void* GetNativeShape() override { return NBoundingVolume<PlatformCircle>::GetNativeShape(); }
+    void Render(IRenderer* r) override { BoundingVolume<PlatformCircle>::Render(r); }
+    void* GetNativeShape() override { return BoundingVolume<PlatformCircle>::GetNativeShape(); }
 
-    Point GetCenter() const override { return NBoundingVolume<PlatformCircle>::GetCenter(); }
-    void SetCenter(const Point& c) override { NBoundingVolume<PlatformCircle>::SetCenter(c); }
+    Point GetCenter() const override { return BoundingVolume<PlatformCircle>::GetCenter(); }
+    void SetCenter(const Point& c) override { BoundingVolume<PlatformCircle>::SetCenter(c); }
 
-    Point GetPosition() const override { return NBoundingVolume<PlatformCircle>::GetPosition(); }
-    void SetPosition(const Point& p) override { NBoundingVolume<PlatformCircle>::SetPosition(p); }
+    Point GetPosition() const override { return BoundingVolume<PlatformCircle>::GetPosition(); }
+    void SetPosition(const Point& p) override { BoundingVolume<PlatformCircle>::SetPosition(p); }
 
-    Point GetOrigin() const override { return NBoundingVolume<PlatformCircle>::GetOrigin(); }
-    void SetOrigin(const Point& o) override { NBoundingVolume<PlatformCircle>::SetOrigin(o); }
+    Point GetOrigin() const override { return BoundingVolume<PlatformCircle>::GetOrigin(); }
+    void SetOrigin(const Point& o) override { BoundingVolume<PlatformCircle>::SetOrigin(o); }
 
-    Point GetScale() const override { return NBoundingVolume<PlatformCircle>::GetScale(); }
+    Point GetScale() const override { return BoundingVolume<PlatformCircle>::GetScale(); }
     void SetScale(const Point& scale) override
     {
-        NBoundingVolume<PlatformCircle>::SetScale(scale);
+        BoundingVolume<PlatformCircle>::SetScale(scale);
         if (this->m_shape)
             Reset(this->m_shape->GetRadius());
     }
@@ -61,7 +63,7 @@ public:
     {
         ICircleShape* radiusShape = dynamic_cast<ICircleShape*>(this->m_shape.get());
         if (radiusShape)
-            return radiusShape->GetRadius() * NBoundingVolume<PlatformCircle>::GetScale().x;
+            return radiusShape->GetRadius() * BoundingVolume<PlatformCircle>::GetScale().x;
         return 0.f;
     }
 
@@ -69,7 +71,7 @@ public:
     {
         // get distance between the point and circle's center
         // using the Pythagorean Theorem
-        Point dist = pnt - NBoundingVolume<PlatformCircle>::GetCenter();;
+        Point dist = pnt - BoundingVolume<PlatformCircle>::GetCenter();;
 
         float distance = pnt::length(dist);
 
@@ -78,9 +80,46 @@ public:
         return distance <= this->GetRadius();
     }
 
+    bool Intersects(IBoundingVolume* v) override
+    {
+        switch (v->GetType())
+        {
+        case VolumeType::Box:      if (auto* p = dynamic_cast<IBoundingBox*>(v))     return Intersects(p); break;
+        case VolumeType::Circle:   if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return Intersects(p); break;
+        case VolumeType::Capsule:  if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return Intersects(p); break;
+        default: break;
+        }
+        return false;
+    }
+
+    bool IntersectsMoving(IBoundingVolume* v, const Point& va, const Point& vb,
+        float& tfirst, float& tlast) override
+    {
+        switch (v->GetType())
+        {
+        case VolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+        case VolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+        case VolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+        default: break;
+        }
+        return false;
+    }
+
+    Point GetSeparationVector(IBoundingVolume* v) override
+    {
+        switch (v->GetType()) {
+        case VolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return GetSeparationVector(p); break;
+        case VolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return GetSeparationVector(p); break;
+        case VolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return GetSeparationVector(p); break;
+        default: break;
+        }
+        return {};
+    }
+
+
     Point GetPoint(NSide side) override
     {
-        auto center = NBoundingVolume<PlatformCircle>::GetCenter();
+        auto center = BoundingVolume<PlatformCircle>::GetCenter();
         auto radius = GetRadius();
         switch (side) {
         case NSide::Left:   return center - Point(radius, 0);
@@ -131,13 +170,13 @@ protected:
         Point v = vb - va; // Relative motion
         float a = pnt::dot(v, v);
 
-        if (a < NCollisionManager::EPSILON) return false; // No relative motion
+        if (a < CollisionManager::EPSILON) return false; // No relative motion
 
         float b = pnt::dot(v, s);
         if (b >= 0.0f) return false; // Moving away
 
         float c = pnt::dot(s, s) - r * r;
-        if (c < -NCollisionManager::EPSILON) // Initial overlap case
+        if (c < -CollisionManager::EPSILON) // Initial overlap case
         {
             tfirst = tlast = 0.0f;
             return true;
@@ -178,10 +217,10 @@ protected:
         float penetrationDepth = radiusSum - distance;
 
         if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
-            return pnt::Normalize(displacement) * (penetrationDepth + NCollisionManager::BUFFER);
+            return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
 
         if (distance <= std::numeric_limits<float>::epsilon())
-            return { 0.f, (other->GetPosition().y > GetPosition().y ? 1.f : -1.f) * (radiusSum + NCollisionManager::BUFFER) };
+            return { 0.f, (other->GetPosition().y > GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
 
         return Point();
     }
@@ -195,10 +234,10 @@ protected:
         float penetrationDepth = radiusSum - distance;
 
         if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
-            return pnt::Normalize(displacement) * (penetrationDepth + NCollisionManager::BUFFER);
+            return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
 
         if (distance <= std::numeric_limits<float>::epsilon())
-            return { 0.f, (GetPosition().y > other->GetPosition().y ? 1.f : -1.f) * (radiusSum + NCollisionManager::BUFFER) };
+            return { 0.f, (GetPosition().y > other->GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
 
         return Point();
     }

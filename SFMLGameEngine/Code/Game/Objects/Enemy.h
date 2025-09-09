@@ -1,12 +1,12 @@
 #pragma once
 
-#include "NGameObject.h"
+#include "GameObject.h"
 #include "../../Engine/Core/Timer.h"
 #include <SFML/Graphics.hpp>
 
 class Player;
 
-class Enemy : public NDynamicGameObject
+class Enemy : public DynamicGameObject
 {
 public:
 	Enemy(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume, int maxLives = 1);

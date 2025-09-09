@@ -1,9 +1,9 @@
 #include "Enemy.h"
 
-#include "../../Engine/Core/NGameManager.h"
+#include "../../Engine/Core/GameManager.h"
 
 Enemy::Enemy(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume, int maxLives)
-    : NDynamicGameObject(drawable, volume), m_numLives(maxLives), m_maxLives(maxLives),
+    : DynamicGameObject(drawable, volume), m_numLives(maxLives), m_maxLives(maxLives),
     m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
 {
 }
@@ -35,7 +35,7 @@ void Enemy::Update(float deltaTime)
             if (m_resetTimer.CheckEnd())
             {
                 // need to make generic
-                /*if (NGameManager::Get()->GetCamera()->CheckVerticalBounds(GetBoundingBox()))
+                /*if (GameManager::Get()->GetCamera()->CheckVerticalBounds(GetBoundingBox()))
                     Reset();*/
             }
         }
@@ -44,7 +44,7 @@ void Enemy::Update(float deltaTime)
 
 void Enemy::Reset()
 {
-    NDynamicGameObject::Reset();
+    DynamicGameObject::Reset();
 
     m_isAlive = true;
     m_numLives = m_maxLives;

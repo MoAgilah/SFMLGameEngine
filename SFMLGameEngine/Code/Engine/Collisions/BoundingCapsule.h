@@ -2,7 +2,7 @@
 
 #include "BoundingBox.h"
 #include "BoundingCircle.h"
-#include "NCollisionManager.h"
+#include "CollisionManager.h"
 #include "../Interfaces/IShape.h"
 #include "../Interfaces/IBoundingVolume.h"
 #include "../../Utilities/Traits.h"
@@ -10,35 +10,35 @@
 #include <algorithm>
 
 template <typename PlatformCapsule>
-class NBoundingCapsule : public IBoundingCapsule, public NBoundingVolume<PlatformCapsule>
+class BoundingCapsule : public IBoundingCapsule, public BoundingVolume<PlatformCapsule>
 {
 public:
 	using PlatformCircle = typename CapsuleTraits<PlatformCapsule>::CircleType;
 	using PlatformBox = typename CapsuleTraits<PlatformCapsule>::BoxType;
 
-	NBoundingCapsule(float radius, float length, float angle, const Point& pos)
-		: IBoundingVolume(NVolumeType::Capsule)
+	BoundingCapsule(float radius, float length, float angle, const Point& pos)
+		: IBoundingVolume(VolumeType::Capsule)
 		, IBoundingCapsule()
-		, NBoundingVolume<PlatformCapsule>(NVolumeType::Capsule)
+		, BoundingVolume<PlatformCapsule>(VolumeType::Capsule)
 	{
 		this->m_shape = std::make_shared<PlatformCapsule>();
 		Reset(radius, length, angle);
 		Update(pos);
 	}
 
-	NBoundingCapsule(float radius, const Line& segment)
-		: IBoundingVolume(NVolumeType::Capsule)
+	BoundingCapsule(float radius, const Line& segment)
+		: IBoundingVolume(VolumeType::Capsule)
 		, IBoundingCapsule()
-		, NBoundingVolume<PlatformCapsule>(NVolumeType::Capsule)
+		, BoundingVolume<PlatformCapsule>(VolumeType::Capsule)
 	{
 		this->m_shape = std::make_shared<PlatformCapsule>();
 		Reset(radius, pnt::distance(segment.start, segment.end), segment.CalculateAngle());
 		Update(segment.GetMidPoint());
 	}
 
-	NBoundingBox<PlatformBox> ToBoundingBox() const
+	BoundingBox<PlatformBox> ToBoundingBox() const
 	{
-		NBoundingBox<PlatformBox> out;
+		BoundingBox<PlatformBox> out;
 		const float r = GetRadius();
 		const auto& seg = GetSegment();
 
@@ -70,21 +70,21 @@ public:
 			this->m_shape->Render(renderer);
 	}
 
-	void* GetNativeShape() override { return NBoundingVolume<PlatformCapsule>::GetNativeShape(); }
+	void* GetNativeShape() override { return BoundingVolume<PlatformCapsule>::GetNativeShape(); }
 
-	Point GetCenter() const override { return NBoundingVolume<PlatformCapsule>::GetCenter(); }
-	void SetCenter(const Point& c) override { NBoundingVolume<PlatformCapsule>::SetCenter(c); }
+	Point GetCenter() const override { return BoundingVolume<PlatformCapsule>::GetCenter(); }
+	void SetCenter(const Point& c) override { BoundingVolume<PlatformCapsule>::SetCenter(c); }
 
-	Point GetPosition() const override { return NBoundingVolume<PlatformCapsule>::GetPosition(); }
-	void SetPosition(const Point& p) override { NBoundingVolume<PlatformCapsule>::SetPosition(p); }
+	Point GetPosition() const override { return BoundingVolume<PlatformCapsule>::GetPosition(); }
+	void SetPosition(const Point& p) override { BoundingVolume<PlatformCapsule>::SetPosition(p); }
 
-	Point GetOrigin() const override { return NBoundingVolume<PlatformCapsule>::GetOrigin(); }
-	void SetOrigin(const Point& o) override { NBoundingVolume<PlatformCapsule>::SetOrigin(o); }
+	Point GetOrigin() const override { return BoundingVolume<PlatformCapsule>::GetOrigin(); }
+	void SetOrigin(const Point& o) override { BoundingVolume<PlatformCapsule>::SetOrigin(o); }
 
-	Point GetScale() const override { return NBoundingVolume<PlatformCapsule>::GetScale(); }
+	Point GetScale() const override { return BoundingVolume<PlatformCapsule>::GetScale(); }
 	void SetScale(const Point& scale) override
 	{
-		NBoundingVolume<PlatformCapsule>::SetScale(scale);
+		BoundingVolume<PlatformCapsule>::SetScale(scale);
 		if (this->m_shape)
 			Reset(GetRadius(), GetLength(), GetAngle());
 	}
@@ -125,14 +125,51 @@ public:
 	{
 		auto clsPnt = GetSegment().ClosestPointOnLineSegment(pnt);
 
-		NBoundingCircle<PlatformCircle> circle{ GetRadius(), clsPnt };
+		BoundingCircle<PlatformCircle> circle{ GetRadius(), clsPnt };
 
 		return circle.Intersects(pnt);
 	}
 
+	bool Intersects(IBoundingVolume* v) override
+	{
+		switch (v->GetType())
+		{
+		case VolumeType::Box:      if (auto* p = dynamic_cast<IBoundingBox*>(v))     return Intersects(p); break;
+		case VolumeType::Circle:   if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return Intersects(p); break;
+		case VolumeType::Capsule:  if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return Intersects(p); break;
+		default: break;
+		}
+		return false;
+	}
+
+	bool IntersectsMoving(IBoundingVolume* v, const Point& va, const Point& vb,
+		float& tfirst, float& tlast) override
+	{
+		switch (v->GetType())
+		{
+		case VolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+		case VolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+		case VolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+		default: break;
+		}
+		return false;
+	}
+
+	Point GetSeparationVector(IBoundingVolume* v) override
+	{
+		switch (v->GetType()) {
+		case VolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return GetSeparationVector(p); break;
+		case VolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return GetSeparationVector(p); break;
+		case VolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return GetSeparationVector(p); break;
+		default: break;
+		}
+		return {};
+	}
+
+
 	Point GetPoint(NSide side) override
 	{
-		auto center = NBoundingVolume<PlatformCapsule>::GetCenter();
+		auto center = BoundingVolume<PlatformCapsule>::GetCenter();
 		switch (side) {
 		case NSide::Top:    return this->GetSegment().start;
 		case NSide::Bottom: return this->GetSegment().end;
@@ -196,7 +233,7 @@ protected:
 
 	bool IntersectsMoving(IBoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
-		NBoundingCircle<PlatformCircle> circle{ GetRadius(), GetSegment().start };
+		BoundingCircle<PlatformCircle> circle{ GetRadius(), GetSegment().start };
 		if (static_cast<IBoundingVolume*>(&circle)->IntersectsMoving(static_cast<IBoundingVolume*>(box), va, vb, tfirst, tlast))
 			return true;
 
@@ -212,7 +249,7 @@ protected:
 	bool IntersectsMoving(IBoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
 		// check the capsule spherical ends
-		NBoundingCircle<PlatformCircle> capCircle{ circle->GetRadius(), GetSegment().start };
+		BoundingCircle<PlatformCircle> capCircle{ circle->GetRadius(), GetSegment().start };
 
 		IBoundingVolume* cc = &capCircle;
 
@@ -234,11 +271,11 @@ protected:
 
 	bool IntersectsMoving(IBoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast) override
 	{
-		NBoundingCircle<PlatformCircle> endpoint1{ GetRadius(), GetSegment().start };
-		NBoundingCircle<PlatformCircle> endpoint2{ GetRadius(), GetSegment().end };
+		BoundingCircle<PlatformCircle> endpoint1{ GetRadius(), GetSegment().start };
+		BoundingCircle<PlatformCircle> endpoint2{ GetRadius(), GetSegment().end };
 
-		NBoundingCircle<PlatformCircle> otherEndpoint1{ capsule->GetRadius(), capsule->GetSegment().start };
-		NBoundingCircle<PlatformCircle> otherEndpoint2{ capsule->GetRadius(), capsule->GetSegment().end };
+		BoundingCircle<PlatformCircle> otherEndpoint1{ capsule->GetRadius(), capsule->GetSegment().start };
+		BoundingCircle<PlatformCircle> otherEndpoint2{ capsule->GetRadius(), capsule->GetSegment().end };
 
 		IBoundingVolume* e1 = &endpoint1;
 		IBoundingVolume* e2 = &endpoint2;
@@ -257,8 +294,8 @@ protected:
 		if (e1->IntersectsMoving(o1, va, vb, tfirst, tlast))
 			return true;
 
-		NBoundingBox<PlatformBox> box1 = this->ToBoundingBox();
-		NBoundingBox<PlatformBox> box2 = static_cast<NBoundingCapsule<PlatformCapsule>*>(capsule)->ToBoundingBox();
+		BoundingBox<PlatformBox> box1 = this->ToBoundingBox();
+		BoundingBox<PlatformBox> box2 = static_cast<BoundingCapsule<PlatformCapsule>*>(capsule)->ToBoundingBox();
 
 		IBoundingVolume* b1 = &box1;
 		IBoundingVolume* b2 = &box2;
@@ -288,10 +325,10 @@ protected:
 		float penetrationDepth = radiusSum - distance;
 
 		if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
-			return pnt::Normalize(displacement) * (penetrationDepth + NCollisionManager::BUFFER);
+			return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
 
 		if (distance <= std::numeric_limits<float>::epsilon())
-			return { 0.f, (other->GetPosition().y > this->GetPosition().y ? 1.f : -1.f) * (radiusSum + NCollisionManager::BUFFER) };
+			return { 0.f, (other->GetPosition().y > this->GetPosition().y ? 1.f : -1.f) * (radiusSum + CollisionManager::BUFFER) };
 
 		return Point();
 	}

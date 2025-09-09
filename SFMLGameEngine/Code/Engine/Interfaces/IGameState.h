@@ -9,7 +9,8 @@ class IGameState
 public:
     explicit IGameState(GameManager* gameMgr)
         : m_gameMgr(gameMgr)
-    {}
+    {
+    }
 
     virtual ~IGameState() = default;
 

@@ -5,12 +5,12 @@
 #include "../../Utilities/Point.h"
 #include <string>
 
-enum class NTextAnimType
+enum class TextAnimType
 {
 	Unassigned, Static, Flashing, Countdown, Custom
 };
 
-enum class NTextAlignment
+enum class TextAlignment
 {
 	None, LeftHand, Center, RightHand
 };
@@ -19,7 +19,7 @@ struct NTextConfig
 {
 	NTextConfig();
 
-	NTextConfig(const std::string fontName, unsigned int charSize, const Point& position, NTextAnimType textAnimType, Colour colour = Colour::Black, NTextAlignment alignment = NTextAlignment::Center);
+	NTextConfig(const std::string fontName, unsigned int charSize, const Point& position, TextAnimType textAnimType, Colour colour = Colour::Black, TextAlignment alignment = TextAlignment::Center);
 
 	NTextConfig(const NTextConfig& config);
 
@@ -27,13 +27,13 @@ struct NTextConfig
 	unsigned int m_charSize;
 	Point m_position;
 	Colour m_colour;
-	NTextAnimType m_animType;
-	NTextAlignment m_alignment;
+	TextAnimType m_animType;
+	TextAlignment m_alignment;
 };
 
 Point NCalculateTextOrigin(const Point& boundsSize, const Point& boundsPos);
 
-Point NSetTextPosition(NTextAlignment alignment, const Point& textPos, const Point& boundsSize, const Point& boundsPos);
+Point NSetTextPosition(TextAlignment alignment, const Point& textPos, const Point& boundsSize, const Point& boundsPos);
 
 class IText
 {
@@ -57,7 +57,7 @@ public:
 	virtual float GetOutlineThickness() = 0;
 	virtual void SetOutlineThickness(float thickness) = 0;
 
-	bool IsAnimated() { return m_config.m_animType > NTextAnimType::Static; }
+	bool IsAnimated() { return m_config.m_animType > TextAnimType::Static; }
 	const Colour& GetDefaultColour() { return m_config.m_colour; }
 
 private:

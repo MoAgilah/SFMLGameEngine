@@ -2,12 +2,12 @@
 
 #include "../Resource/SFFont.h"
 #include "../Resource/SFShader.h"
-#include "../../../Engine/Core/NGameManager.h"
+#include "../../../Engine/Core/GameManager.h"
 
 SFText::SFText(const NTextConfig& config)
 	: IText(config)
 {
-	auto font = dynamic_cast<SFFont*>(NGameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName));
+	auto font = dynamic_cast<SFFont*>(GameManager::Get()->GetFontMgr().GetFont(m_config.m_fontName));
 
 	if (font)
 		SetDrawable(std::make_shared<sf::Text>(font->GetNativeFont()));
@@ -69,10 +69,10 @@ SFAnimatedText::SFAnimatedText(const NTextConfig& config)
 {
 	switch (m_config.m_animType)
 	{
-	case NTextAnimType::Flashing:
-	case NTextAnimType::Countdown:
+	case TextAnimType::Flashing:
+	case TextAnimType::Countdown:
 	{
-		auto shader = dynamic_cast<SFShader*>(NGameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
+		auto shader = dynamic_cast<SFShader*>(GameManager::Get()->GetShaderMgr().GetShader("FadeInOutShader"));
 		if (shader)
 			m_textShader = &shader->GetNativeShader();
 		else
@@ -86,11 +86,11 @@ void SFAnimatedText::Update(float deltaTime)
 {
 	switch (m_config.m_animType)
 	{
-	case NTextAnimType::Flashing:
-	case NTextAnimType::Countdown:
+	case TextAnimType::Flashing:
+	case TextAnimType::Countdown:
 		FadeInAndOutUpdate(deltaTime);
 		break;
-	case NTextAnimType::Custom:
+	case TextAnimType::Custom:
 		if (m_updateFunc)
 			m_updateFunc(deltaTime);
 		break;
@@ -101,11 +101,11 @@ void SFAnimatedText::Render(IRenderer* renderer)
 {
 	switch (m_config.m_animType)
 	{
-	case NTextAnimType::Flashing:
-	case NTextAnimType::Countdown:
+	case TextAnimType::Flashing:
+	case TextAnimType::Countdown:
 		FadeInFadeOutRender(renderer);
 		break;
-	case NTextAnimType::Custom:
+	case TextAnimType::Custom:
 		if (m_renderFunc)
 			m_renderFunc(renderer);
 		break;

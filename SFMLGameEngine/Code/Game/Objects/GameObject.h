@@ -2,11 +2,11 @@
 
 #include "../../Engine/Interfaces/IGameObject.h"
 
-class NGameObject : public virtual IGameObject
+class GameObject : public virtual IGameObject
 {
 public:
-	NGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
-	virtual ~NGameObject();
+	GameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
+	virtual ~GameObject();
 
 	virtual void Update(float deltaTime) = 0;
 
@@ -51,10 +51,10 @@ protected:
 	std::shared_ptr<IBoundingVolume> m_volume;
 };
 
-class NDynamicGameObject : public virtual IDynamicGameObject, public NGameObject
+class DynamicGameObject : public virtual IDynamicGameObject, public GameObject
 {
 public:
-	NDynamicGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
+	DynamicGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
 
 	bool Intersects(IGameObject* obj) override;
 
@@ -62,8 +62,8 @@ public:
 
 	void Reset() override;
 
-	IDrawable* GetDrawable() override { return NGameObject::GetDrawable(); }
-	IBoundingVolume* GetVolume() override { return NGameObject::GetVolume(); }
+	IDrawable* GetDrawable() override { return GameObject::GetDrawable(); }
+	IBoundingVolume* GetVolume() override { return GameObject::GetVolume(); }
 
 	void SetPrevPosition(Point pos) { m_previousPos = pos; }
 	void SetPrevPosition(float x, float y) { m_previousPos = Point(x, y); }

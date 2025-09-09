@@ -7,17 +7,17 @@
 #include "../../../Engine/Collisions/BoundingCapsule.h"
 
 SFTile::SFTile()
-	: ITile(std::make_shared<NBoundingBox<SFRect>>(), nullptr, nullptr)
+	: ITile(std::make_shared<BoundingBox<SFRect>>(), nullptr, nullptr)
 {}
 
 SFTile::SFTile(int gX, int gY, sf::Font* font)
-	: ITile(std::make_shared<NBoundingBox<SFRect>>(), std::make_shared<SFText>(), nullptr)
+	: ITile(std::make_shared<BoundingBox<SFRect>>(), std::make_shared<SFText>(), nullptr)
 {}
 
 void SFTile::Render(IRenderer* renderer)
 {
 #if defined _DEBUG
-	if (m_type == NTypes::DIAGU || m_type == NTypes::DIAGD)
+	if (m_type == Types::DIAGU || m_type == Types::DIAGD)
 	{
 		if (m_slope)
 		{
@@ -29,7 +29,7 @@ void SFTile::Render(IRenderer* renderer)
 		}
 	}
 
-	if (m_type == NTypes::LCRN || m_type == NTypes::RCRN)
+	if (m_type == Types::LCRN || m_type == Types::RCRN)
 	{
 		auto* sfRenderer = dynamic_cast<SFRenderer*>(renderer);
 		if (!sfRenderer)
@@ -57,18 +57,18 @@ void SFTile::Render(IRenderer* renderer)
 
 void SFTile::ResolveCollision(IDynamicGameObject* obj)
 {
-	Direction dir = obj->GetFacingDirection();
+	NDirection dir = obj->GetFacingDirection();
 	Line tileTopEdge = m_aabb->GetSide(NSide::Top);
 	Point objBottomPoint = obj->GetVolume()->GetPoint(NSide::Bottom);
 
 	switch (GetType())
 	{
-	case NTypes::OWAY:
+	case Types::OWAY:
 	{
-		if (dir == Direction::DDIR || dir == Direction::LDIR || dir == Direction::RDIR)
+		if (dir == NDirection::DDIR || dir == NDirection::LDIR || dir == NDirection::RDIR)
 		{
-			NBoundingCapsule<SFCapsule> capsule(6, tileTopEdge);
-			NBoundingCircle<SFCircle> circle(4, obj->GetVolume()->GetPoint(NSide::Bottom));
+			BoundingCapsule<SFCapsule> capsule(6, tileTopEdge);
+			BoundingCircle<SFCircle> circle(4, obj->GetVolume()->GetPoint(NSide::Bottom));
 			if (static_cast<IBoundingVolume*>(&capsule)->Intersects(static_cast<IBoundingVolume*>(&circle)))
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
@@ -77,24 +77,24 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 		}
 		return;
 	}
-	case NTypes::GRND:
-		if (dir == Direction::DDIR || dir == Direction::LDIR || dir == Direction::RDIR)
+	case Types::GRND:
+		if (dir == NDirection::DDIR || dir == NDirection::LDIR || dir == NDirection::RDIR)
 		{
 			if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 				ResolveObjectToBoxTop(obj);
 		}
 		return;
-	case NTypes::LCRN:
+	case Types::LCRN:
 		[[fallthrough]];
-	case NTypes::RCRN:
+	case Types::RCRN:
 	{
 		Point seperationVector = obj->GetVolume()->GetSeparationVector(static_cast<IBoundingVolume*>(m_aabb.get()));
-		Direction colDir = GetCollisionDirection(seperationVector, obj->GetVelocity(), Point());
+		NDirection colDir = NDirection::LDIR; /*GetCollisionDirection(seperationVector, obj->GetVelocity(), Point())*/;
 
-		if (dir == Direction::DDIR)
+		if (dir == NDirection::DDIR)
 		{
 			// the collision came from a vertical direction
-			if (colDir == Direction::DDIR)
+			if (colDir == NDirection::DDIR)
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 				{
@@ -105,13 +105,13 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 		}
 
 		// the collision came from a horizontal direction
-		if (colDir == Direction::LDIR || colDir == Direction::RDIR)
+		if (colDir == NDirection::LDIR || colDir == NDirection::RDIR)
 		{
 			ResolveObjectToBoxHorizontally(obj);
 		}
 		else
 		{
-			if (dir == Direction::LDIR || dir == Direction::RDIR)
+			if (dir == NDirection::LDIR || dir == NDirection::RDIR)
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 				{
@@ -123,28 +123,28 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 		}
 		return;
 	}
-	case NTypes::WALL:
+	case Types::WALL:
 		ResolveObjectToBoxHorizontally(obj);
 		return;
-	case NTypes::DIAGU:
+	case Types::DIAGU:
 	{
 		switch (dir)
 		{
-		case Direction::DDIR:
+		case NDirection::DDIR:
 			if (ResolveObjectToSlopeTop(obj))
 			{
 				if (!obj->GetShouldSlideLeft())
 					obj->SetShouldSlideLeft(true);
 			}
 			break;
-		case Direction::RDIR:
+		case NDirection::RDIR:
 			if (ResolveObjectToSlopeIncline(obj, 0, 1))
 			{
 				if (!obj->GetShouldSlideLeft())
 					obj->SetShouldSlideLeft(true);
 			}
 			break;
-		case Direction::LDIR:
+		case NDirection::LDIR:
 			if (ResolveObjectToSlopeDecline(obj, 1, 0))
 			{
 				if (!obj->GetShouldSlideLeft())
@@ -154,25 +154,25 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 		}
 		return;
 	}
-	case NTypes::DIAGD:
+	case Types::DIAGD:
 	{
 		switch (dir)
 		{
-		case Direction::DDIR:
+		case NDirection::DDIR:
 			if (ResolveObjectToSlopeTop(obj))
 			{
 				if (!obj->GetShouldSlideRight())
 					obj->SetShouldSlideRight(true);
 			}
 			break;
-		case Direction::LDIR:
+		case NDirection::LDIR:
 			if (ResolveObjectToSlopeIncline(obj, 1, 0))
 			{
 				if (!obj->GetShouldSlideRight())
 					obj->SetShouldSlideRight(true);
 			}
 			break;
-		case Direction::RDIR:
+		case NDirection::RDIR:
 			if (ResolveObjectToSlopeDecline(obj, 0, 1))
 			{
 				if (!obj->GetShouldSlideRight())
@@ -191,7 +191,7 @@ void SFTile::SetPosition(const Point& pos)
 
 	switch (m_type)
 	{
-	case NTypes::DIAGU:
+	case Types::DIAGU:
 	{
 		auto slope = std::make_shared<SFTriangle>();
 		std::array<Point, 3> points;
@@ -202,7 +202,7 @@ void SFTile::SetPosition(const Point& pos)
 		SetSlope(slope);
 	}
 		break;
-	case NTypes::DIAGD:
+	case Types::DIAGD:
 	{
 		auto slope = std::make_shared<SFTriangle>();
 		std::array<Point, 3> points;
@@ -213,11 +213,11 @@ void SFTile::SetPosition(const Point& pos)
 		SetSlope(slope);
 	}
 		break;
-	case NTypes::LCRN:
+	case Types::LCRN:
 		m_edge.start = m_aabb->GetMin() + Point(m_aabb->GetExtents().x * 2, 0);
 		m_edge.end = m_edge.start - Point(0, GetTileHeight());
 		break;
-	case NTypes::RCRN:
+	case Types::RCRN:
 		m_edge.start = m_aabb->GetMin();
 		m_edge.end = m_edge.start - Point(0, GetTileHeight());
 		break;
@@ -226,7 +226,7 @@ void SFTile::SetPosition(const Point& pos)
 
 void SFTile::SetFillColour(Colour col)
 {
-	auto sfAABB = dynamic_cast<NBoundingBox<SFRect>*>(m_aabb.get());
+	auto sfAABB = dynamic_cast<BoundingBox<SFRect>*>(m_aabb.get());
 	if (sfAABB)
 	{
 		sfAABB->GetShape()->SetFillColour(col);
@@ -235,7 +235,7 @@ void SFTile::SetFillColour(Colour col)
 
 void SFTile::SetOutlineColour(Colour col)
 {
-	auto sfAABB = dynamic_cast<NBoundingBox<SFRect>*>(m_aabb.get());
+	auto sfAABB = dynamic_cast<BoundingBox<SFRect>*>(m_aabb.get());
 	if (sfAABB)
 	{
 		sfAABB->GetShape()->SetOutlineColour(col);

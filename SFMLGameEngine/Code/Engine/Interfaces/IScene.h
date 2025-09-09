@@ -4,7 +4,7 @@
 #include "IText.h"
 #include "IRenderer.h"
 #include "IBoundingVolume.h"
-#include "../../Game/Objects/NGameObject.h"
+#include "../../Game/Objects/GameObject.h"
 #include "../../Game/Objects/Enemy.h"
 #include <array>
 #include <map>
@@ -26,7 +26,7 @@ public:
 	virtual void AddObjects() = 0;
 	virtual void AddForeGroundSprites() = 0;
 
-	[[nodiscard]] NGameObject* GetObjectByName(const std::string& name);
+	[[nodiscard]] GameObject* GetObjectByName(const std::string& name);
 	[[nodiscard]] Enemy* GetEnemyByName(const std::string& name);
 
 protected:
@@ -39,5 +39,5 @@ protected:
 	std::vector<std::shared_ptr<IText>> m_texts;
 	std::vector<std::shared_ptr<ISprite>> m_sprites;
 	std::map<std::string, std::shared_ptr<Enemy>> m_enemies;
-	std::map<std::string, std::shared_ptr<NGameObject>> m_objects;
+	std::map<std::string, std::shared_ptr<GameObject>> m_objects;
 };

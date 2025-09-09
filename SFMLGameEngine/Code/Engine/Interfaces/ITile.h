@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-enum class NTypes
+enum class Types
 {
 	EMPTY, GRND, WALL, DIAGU, DIAGD, LCRN, RCRN, OWAY
 };
@@ -32,8 +32,8 @@ public:
 	int GetRowNum() const { return m_rowNum; }
 	int GetColNum() const { return m_colNum; }
 
-	void SetType(int type) { m_type = (NTypes)type; };
-	NTypes GetType() const { return m_type; }
+	void SetType(int type) { m_type = (Types)type; };
+	Types GetType() const { return m_type; }
 
 	bool GetActive() const { return m_visible; }
 	void SetActive(bool vis) { m_visible = vis; }
@@ -75,7 +75,7 @@ protected:
 	int m_rowNum = -1;
 	bool m_visible = false;
 	bool m_hasFont = false;
-	NTypes m_type = NTypes::EMPTY;
+	Types m_type = Types::EMPTY;
 	std::string m_id;
 	Line m_edge;
 	std::shared_ptr<IDrawable> m_text;
