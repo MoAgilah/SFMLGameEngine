@@ -1,11 +1,15 @@
 #pragma once
 
-#include "../Core/Constants.h"
-#include "../Interfaces/ITile.h"
-#include "../Interfaces/IGrid.h"
-#include "../Interfaces/IGameObject.h"
+#include <memory>
+#include <vector>
 #include <string>
-#include <memory.h>
+#include <limits>
+
+class IGrid;
+class ITile;
+class IRenderer;
+class IGameObject;
+class IDynamicGameObject;
 
 class NCollisionManager
 {

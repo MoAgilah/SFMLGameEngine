@@ -1,19 +1,18 @@
 #pragma once
 
-#include "Object.h"
+#include "NGameObject.h"
 #include "../../Engine/Core/Timer.h"
 #include <SFML/Graphics.hpp>
 
 class Player;
 
-class Enemy : public DynamicObject
+class Enemy : public NDynamicGameObject
 {
 public:
-	Enemy(const std::string& texID, std::unique_ptr<BoundingVolume> volume, int maxLives = 1);
-	Enemy(const std::string& texID, const AnimationData& animData, std::unique_ptr<BoundingVolume> volume, int maxLives = 1);
+	Enemy(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume, int maxLives = 1);
 	~Enemy() override = default;
 
-	bool GetActive() const final { return GetIsAlive() && Object::GetActive(); }
+	bool GetActive() const final { return GetIsAlive() && IGameObject::GetActive(); }
 
 	void Update(float deltaTime) override;
 

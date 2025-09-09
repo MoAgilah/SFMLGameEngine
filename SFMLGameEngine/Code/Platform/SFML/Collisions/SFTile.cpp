@@ -69,7 +69,7 @@ void SFTile::ResolveCollision(IDynamicGameObject* obj)
 		{
 			NBoundingCapsule<SFCapsule> capsule(6, tileTopEdge);
 			NBoundingCircle<SFCircle> circle(4, obj->GetVolume()->GetPoint(NSide::Bottom));
-			if (capsule.Intersects(static_cast<IBoundingVolume*>(&circle)))
+			if (static_cast<IBoundingVolume*>(&capsule)->Intersects(static_cast<IBoundingVolume*>(&circle)))
 			{
 				if (tileTopEdge.IsPointAboveLine(objBottomPoint))
 					ResolveObjectToBoxTop(obj);

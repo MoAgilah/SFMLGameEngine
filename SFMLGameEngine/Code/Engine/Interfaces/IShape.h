@@ -61,17 +61,24 @@ public:
 
 	virtual void Render(IRenderer* renderer) = 0;
 
-	virtual float GetRadius() const = 0;
-	virtual void SetRadius(float radius) = 0;
+	virtual float GetRadius() const { return m_radius; }
+	virtual void SetRadius(float radius) { m_radius = radius; }
 
-	virtual float GetLength() const = 0;
-	virtual void SetLength(float length) = 0;
+	virtual float GetLength() const { return m_length; }
+	virtual void SetLength(float length) { m_length = length; }
 
-	virtual float GetAngle() const = 0;
-	virtual void SetAngle(float angle) = 0;
+	virtual float GetAngle() const { return m_angle; }
+	virtual void SetAngle(float angle) { m_angle = angle; }
 
-	virtual const Line& GetSegment() const = 0;
-	virtual void SetSegment(const Line& segment) = 0;
+	virtual const Line& GetSegment() const { return m_segment; }
+	virtual void SetSegment(const Line& segment) { m_segment = segment; }
+
+protected:
+
+	float m_angle = 0.f;
+	float m_radius = 0.f;
+	float m_length = 0.f;
+	Line m_segment;
 };
 
 class ITriangleShape

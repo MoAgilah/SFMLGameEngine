@@ -99,24 +99,6 @@ public:
     sf::RectangleShape* GetBody();
     sf::CircleShape* GetEndCap1();
     sf::CircleShape* GetEndCap2();
-
-    float GetRadius() const override { return m_radius; }
-    void SetRadius(float radius) override { m_radius = radius; }
-
-    float GetLength() const override { return m_length; }
-    void SetLength(float length) override { m_length = length; }
-
-    float GetAngle() const override { return m_angle; }
-    void SetAngle(float angle) override { m_angle = angle; }
-
-    const Line& GetSegment() const override { return m_segment; }
-    void SetSegment(const Line& segment) { m_segment = segment; }
-
-private:
-    float m_angle = 0.f;
-    float m_radius = 0.f;
-    float m_length = 0.f;
-    Line m_segment;
 };
 
 template <>

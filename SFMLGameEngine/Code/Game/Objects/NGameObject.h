@@ -2,7 +2,7 @@
 
 #include "../../Engine/Interfaces/IGameObject.h"
 
-class NGameObject : public IGameObject
+class NGameObject : public virtual IGameObject
 {
 public:
 	NGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);

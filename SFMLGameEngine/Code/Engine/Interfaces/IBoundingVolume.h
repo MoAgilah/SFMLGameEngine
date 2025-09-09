@@ -128,6 +128,43 @@ public:
 
     PlatformType* GetShape() { return m_shape.get(); }
 
+    bool Intersects(IBoundingVolume* v) override
+    {
+        switch (v->GetType())
+        {
+        case NVolumeType::Box:      if (auto* p = dynamic_cast<IBoundingBox*>(v))     return Intersects(p); break;
+        case NVolumeType::Circle:   if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return Intersects(p); break;
+        case NVolumeType::Capsule:  if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return Intersects(p); break;
+        default: break;
+        }
+        return false;
+    }
+
+    bool IntersectsMoving(IBoundingVolume* v, const Point& va, const Point& vb,
+        float& tfirst, float& tlast) override
+    {
+        switch (v->GetType())
+        {
+        case NVolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+        case NVolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+        case NVolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return IntersectsMoving(p, va, vb, tfirst, tlast); break;
+        default: break;
+        }
+        return false;
+    }
+
+    Point GetSeparationVector(IBoundingVolume* v) override
+    {
+        switch (v->GetType()) {
+        case NVolumeType::Box:     if (auto* p = dynamic_cast<IBoundingBox*>(v))     return GetSeparationVector(p); break;
+        case NVolumeType::Circle:  if (auto* p = dynamic_cast<IBoundingCircle*>(v))  return GetSeparationVector(p); break;
+        case NVolumeType::Capsule: if (auto* p = dynamic_cast<IBoundingCapsule*>(v)) return GetSeparationVector(p); break;
+        default: break;
+        }
+        return {};
+    }
+
+
 protected:
 
     std::shared_ptr<PlatformType> m_shape = nullptr;
@@ -144,6 +181,7 @@ public:
     virtual Line GetSide(NSide side) = 0;
 
 protected:
+
     Point m_min;
     Point m_max;
     Point m_extents;
@@ -162,14 +200,8 @@ public:
     IBoundingCapsule() : IBoundingVolume(NVolumeType::Capsule) {}
     virtual ~IBoundingCapsule() = default;
 
-    virtual float GetRadius() const { return m_radius; }
-    virtual float GetLength() const { return m_length; }
-    virtual float GetAngle()  const { return m_angle; }
-    virtual const Line& GetSegment() const { return m_segment; }
-
-protected:
-    float m_radius = 0.0f;
-    float m_length = 0.0f;
-    float m_angle = 0.0f;
-    Line  m_segment;
+    virtual float GetRadius() const = 0;
+    virtual float GetLength() const = 0;
+    virtual float GetAngle()  const = 0;
+    virtual const Line& GetSegment() const = 0;
 };

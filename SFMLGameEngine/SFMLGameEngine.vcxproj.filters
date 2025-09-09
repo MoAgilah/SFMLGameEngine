@@ -124,12 +124,6 @@
     <Filter Include="Source Files\Code\Engine\Interfaces">
       <UniqueIdentifier>{0bdd0aeb-fa94-4869-b109-b7ba2f4ae528}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Code\Engine\Graphics">
-      <UniqueIdentifier>{98bac442-69a0-4aa6-807e-6c2d9f30a58a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Code\Engine\Graphics">
-      <UniqueIdentifier>{eece3721-ad9e-490c-a2d6-80aa71262b02}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Code\Game">
       <UniqueIdentifier>{b9d66b93-531a-417a-a1d6-9bc437bdca1e}</UniqueIdentifier>
     </Filter>
@@ -332,6 +326,9 @@
     </ClCompile>
     <ClCompile Include="Code\Platform\SFML\UI\SFPaginatedMenu.cpp">
       <Filter>Source Files\Code\Platforms\SFML\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\Interfaces\IScene.cpp">
+      <Filter>Source Files\Code\Engine\Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -610,6 +607,9 @@
     </ClInclude>
     <ClInclude Include="Code\Platform\SFML\UI\SFPaginatedMenu.h">
       <Filter>Header Files\Code\Platform\SFML\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Interfaces\IScene.h">
+      <Filter>Header Files\Code\Engine\Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

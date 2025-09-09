@@ -45,7 +45,7 @@ public:
 	[[nodiscard]] CollisionManager* GetCollisionMgr() noexcept { return m_collisionManager.get(); }
 	[[nodiscard]] GameStateMgr* GetGameStateMgr() noexcept { return &m_stateManager; }
 	[[nodiscard]] IRenderer* GetRenderer() noexcept { return m_renderer.get(); }
-	[[nodiscard]] World* GetWorld() { return m_world.get(); }
+	[[nodiscard]] World* GetScene() { return m_world.get(); }
 
 private:
 

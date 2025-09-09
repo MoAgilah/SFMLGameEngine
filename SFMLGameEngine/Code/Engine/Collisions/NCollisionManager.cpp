@@ -1,6 +1,13 @@
 #include "NCollisionManager.h"
 
+#include "../Interfaces/IGrid.h"
+#include "../Interfaces/ITile.h"
+#include "../Interfaces/IGameObject.h"
+#include "../Interfaces/IRenderer.h"
+
 #include <algorithm>
+#include <ranges>
+#include <utility>
 
 std::vector<std::string> NCollisionManager::s_canCollideWithTile = {};
 
@@ -42,7 +49,8 @@ void NCollisionManager::ProcessCollisions(IGameObject* gobj)
 
 void NCollisionManager::Render(IRenderer* renderer)
 {
-	m_grid->Render(renderer);
+	if (m_grid)
+		m_grid->Render(renderer);
 }
 
 void NCollisionManager::RemoveCollidable(IGameObject* ngo)
@@ -75,7 +83,10 @@ ITile* NCollisionManager::GetTile(int x, int y)
 
 std::vector<std::shared_ptr<ITile>> NCollisionManager::GetGrid()
 {
-	return m_grid->GetGrid();
+	if (m_grid)
+		return m_grid->GetGrid();
+
+	return {};
 }
 
 std::vector<std::shared_ptr<IGameObject>> NCollisionManager::GetCollidables()

@@ -1,0 +1,43 @@
+#pragma once
+
+#include "ISprite.h"
+#include "IText.h"
+#include "IRenderer.h"
+#include "IBoundingVolume.h"
+#include "../../Game/Objects/NGameObject.h"
+#include "../../Game/Objects/Enemy.h"
+#include <array>
+#include <map>
+#include <memory>
+
+class IScene
+{
+public:
+	virtual ~IScene() = default;
+
+	virtual void Update(float deltaTime);
+	virtual void Render(IRenderer* renderer);
+	virtual void ResetScene();
+
+	void CheckIsInView();
+
+	virtual void AddEnemies() = 0;
+	virtual void AddGUI() = 0;
+	virtual void AddObjects() = 0;
+	virtual void AddForeGroundSprites() = 0;
+
+	[[nodiscard]] NGameObject* GetObjectByName(const std::string& name);
+	[[nodiscard]] Enemy* GetEnemyByName(const std::string& name);
+
+protected:
+
+	virtual void UpdateGUI(float deltaTime) = 0;
+	virtual void RenderGUI(IRenderer* renderer) = 0;
+
+	std::shared_ptr<ISprite> m_backgroundSpr;
+	std::shared_ptr<IBoundingBox> m_foregroundBox;
+	std::vector<std::shared_ptr<IText>> m_texts;
+	std::vector<std::shared_ptr<ISprite>> m_sprites;
+	std::map<std::string, std::shared_ptr<Enemy>> m_enemies;
+	std::map<std::string, std::shared_ptr<NGameObject>> m_objects;
+};

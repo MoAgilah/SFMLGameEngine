@@ -22,7 +22,7 @@ class IDynamicGameObject;
 class IGameObject
 {
 public:
-	virtual ~IGameObject() = 0;
+	virtual ~IGameObject() = default;
 
 	std::string GetID() { return m_typeID; }
 	int GetObjectNum() const { return m_objectID; }
@@ -59,7 +59,7 @@ protected:
 class IDynamicGameObject : public virtual IGameObject, public IMoveableWithVelocity
 {
 public:
-	virtual ~IDynamicGameObject() = 0;
+	virtual ~IDynamicGameObject() = default;
 
 	bool IsDynamicObject() override { return true; }
 

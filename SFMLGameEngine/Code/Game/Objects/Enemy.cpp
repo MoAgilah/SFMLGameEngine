@@ -1,19 +1,9 @@
 #include "Enemy.h"
 
-#include "../../Engine/Core/GameManager.h"
+#include "../../Engine/Core/NGameManager.h"
 
-Enemy::Enemy(const std::string& texID, std::unique_ptr<BoundingVolume> volume, int maxLives)
-    : DynamicObject(texID,
-        std::move(volume),
-        std::make_unique<Sprite>(texID)),
-    m_numLives(maxLives), m_maxLives(maxLives),
-    m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
-{}
-
-Enemy::Enemy(const std::string & texID, const AnimationData & animData, std::unique_ptr<BoundingVolume> volume, int maxLives)
-    :DynamicObject(texID, std::move(volume),
-    std::make_unique<AnimatedSprite>(texID, animData.rows, animData.cols, GameConstants::FPS, animData.symmetrical, animData.animationSpeed)),
-    m_numLives(maxLives), m_maxLives(maxLives),
+Enemy::Enemy(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume, int maxLives)
+    : NDynamicGameObject(drawable, volume), m_numLives(maxLives), m_maxLives(maxLives),
     m_airTimer(0), m_resetTimer(0), m_activationTimer(0)
 {
 }
@@ -44,8 +34,9 @@ void Enemy::Update(float deltaTime)
             m_resetTimer.Update(deltaTime);
             if (m_resetTimer.CheckEnd())
             {
-                if (GameManager::Get()->GetCamera().CheckVerticalBounds(GetBoundingBox()))
-                    Reset();
+                // need to make generic
+                /*if (NGameManager::Get()->GetCamera()->CheckVerticalBounds(GetBoundingBox()))
+                    Reset();*/
             }
         }
     }
@@ -53,7 +44,7 @@ void Enemy::Update(float deltaTime)
 
 void Enemy::Reset()
 {
-    DynamicObject::Reset();
+    NDynamicGameObject::Reset();
 
     m_isAlive = true;
     m_numLives = m_maxLives;

@@ -41,7 +41,8 @@ void SFSprite::Move(float x, float y)
 
 void SFSprite::Move(const Point& mov)
 {
-	this->GetPrimaryDrawableAs<sf::Sprite>()->move(mov);
+	for (auto spr : this->GetDrawables())
+		spr->move(mov);
 }
 
 SFAnimatedSprite::SFAnimatedSprite(const std::string& texId, int rows, int columns, float framesPerSec, bool symmetrical, float animSpeed)

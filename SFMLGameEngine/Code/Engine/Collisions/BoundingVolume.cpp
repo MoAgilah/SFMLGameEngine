@@ -780,8 +780,8 @@ void BoundingCapsule::Update(const Point& pos)
 	// Calculate the midpoint of the top side
 	m_circle2.setPosition(Line(corners[1], corners[0]).GetMidPoint());
 
-	m_segment.start = m_circle1.getPosition();
-	m_segment.end = m_circle2.getPosition();
+	GetSegment().start = m_circle1.getPosition();
+	GetSegment().end = m_circle2.getPosition();
 }
 
 bool BoundingCapsule::Intersects(BoundingVolume* volume)
@@ -850,11 +850,11 @@ bool BoundingCapsule::Intersects(BoundingBox* box)
 	Point boxMax = box->GetMax();
 
 	// Check the line segment (capsule core) against the box
-	Point closestToStart = m_segment.start.Clamp(boxMin, boxMax);
-	Point closestToEnd = m_segment.end.Clamp(boxMin, boxMax);
+	Point closestToStart = GetSegment().start.Clamp(boxMin, boxMax);
+	Point closestToEnd = GetSegment().end.Clamp(boxMin, boxMax);
 
-	float distStart = m_segment.SqDistPointSegment(closestToStart);
-	float distEnd = m_segment.SqDistPointSegment(closestToEnd);
+	float distStart = GetSegment().SqDistPointSegment(closestToStart);
+	float distEnd = GetSegment().SqDistPointSegment(closestToEnd);
 
 	float radSq = m_radius * m_radius;
 
@@ -862,8 +862,8 @@ bool BoundingCapsule::Intersects(BoundingBox* box)
 	if (distStart <= radSq || distEnd <= radSq)
 		return true;
 
-	float closestPointStartDistSq = pnt::lengthSquared((closestToStart - m_segment.start));
-	float closestPointEndDistSq = pnt::lengthSquared((closestToEnd - m_segment.end));
+	float closestPointStartDistSq = pnt::lengthSquared((closestToStart - GetSegment().start));
+	float closestPointEndDistSq = pnt::lengthSquared((closestToEnd - GetSegment().end));
 
 	return closestPointStartDistSq <= radSq || closestPointEndDistSq <= radSq;
 }
@@ -872,7 +872,7 @@ bool BoundingCapsule::Intersects(BoundingCircle* circle)
 {
 	float r = circle->GetRadius() + m_radius;
 
-	float dist2 = m_segment.SqDistPointSegment(circle->GetCenter());
+	float dist2 = GetSegment().SqDistPointSegment(circle->GetCenter());
 
 	return dist2 <= r * r;
 }
@@ -883,10 +883,10 @@ bool BoundingCapsule::Intersects(BoundingCapsule* capsule)
 
 	// Compute the shortest distance squared between the two line segments
 	float distanceSquared = std::min({
-		capsule->m_segment.SqDistPointSegment(m_segment.start),
-		capsule->m_segment.SqDistPointSegment(m_segment.end),
-		m_segment.SqDistPointSegment(capsule->m_segment.start),
-		m_segment.SqDistPointSegment(capsule->m_segment.end)
+		capsule->GetSegment().SqDistPointSegment(GetSegment().start),
+		capsule->GetSegment().SqDistPointSegment(GetSegment().end),
+		GetSegment().SqDistPointSegment(capsule->GetSegment().start),
+		GetSegment().SqDistPointSegment(capsule->GetSegment().end)
 		});
 
 	// Check if the distance is within the combined radii
@@ -895,11 +895,11 @@ bool BoundingCapsule::Intersects(BoundingCapsule* capsule)
 
 bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	BoundingCircle circle(m_radius, m_segment.start);
+	BoundingCircle circle(m_radius, GetSegment().start);
 	if (circle.IntersectsMoving(static_cast<BoundingVolume*>(box), va, vb, tfirst, tlast))
 		return true;
 
-	circle.Update(m_segment.end);
+	circle.Update(GetSegment().end);
 	if (circle.IntersectsMoving(static_cast<BoundingVolume*>(box), va, vb, tfirst, tlast))
 		return true;
 
@@ -910,31 +910,31 @@ bool BoundingCapsule::IntersectsMoving(BoundingBox* box, const Point& va, const 
 bool BoundingCapsule::IntersectsMoving(BoundingCircle* circle, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
 	// check the capsule spherical ends
-	BoundingCircle capCircle(circle->GetRadius(), m_segment.start);
+	BoundingCircle capCircle(circle->GetRadius(), GetSegment().start);
 	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
 		return true;
 
-	capCircle.Update(m_segment.end);
-
-	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
-		return true;
-
-	capCircle.Update(m_segment.GetMidPoint());
+	capCircle.Update(GetSegment().end);
 
 	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
 		return true;
 
+	capCircle.Update(GetSegment().GetMidPoint());
+
+	if (static_cast<BoundingVolume*>(&capCircle)->IntersectsMoving(static_cast<BoundingVolume*>(circle), va, vb, tfirst, tlast))
+		return true;
+
+	//return GetSegment().IntersectsMoving(circle, va, vb, tfirst, tlast);
 	return false;
-	//return m_segment.IntersectsMoving(circle, va, vb, tfirst, tlast);
 }
 
 bool BoundingCapsule::IntersectsMoving(BoundingCapsule* capsule, const Point& va, const Point& vb, float& tfirst, float& tlast)
 {
-	BoundingCircle endpoint1(m_radius, m_segment.start);
-	BoundingCircle endpoint2(m_radius, m_segment.end);
+	BoundingCircle endpoint1(m_radius, GetSegment().start);
+	BoundingCircle endpoint2(m_radius, GetSegment().end);
 
-	BoundingCircle otherEndpoint1(m_radius, m_segment.start);
-	BoundingCircle otherEndpoint2(m_radius, m_segment.end);
+	BoundingCircle otherEndpoint1(m_radius, GetSegment().start);
+	BoundingCircle otherEndpoint2(m_radius, GetSegment().end);
 
 	if (endpoint1.IntersectsMoving(static_cast<BoundingVolume*>(&otherEndpoint2), va, vb, tfirst, tlast))
 		return true;
@@ -966,9 +966,9 @@ Point BoundingCapsule::GetSeparationVector(BoundingCircle* other)
 
 Point BoundingCapsule::GetSeparationVector(BoundingCapsule* other)
 {
-	Point closest1 = m_segment.ClosestPointOnLineSegment(other->GetSegment().start);
+	Point closest1 = GetSegment().ClosestPointOnLineSegment(other->GetSegment().start);
 	Point closest2 = other->GetSegment().ClosestPointOnLineSegment(closest1);
-	closest1 = m_segment.ClosestPointOnLineSegment(closest2);
+	closest1 = GetSegment().ClosestPointOnLineSegment(closest2);
 
 	Point displacement = closest2 - closest1;
 	float distance = pnt::length(displacement);

@@ -42,7 +42,7 @@ void World::Render(sf::RenderWindow& window)
 		if (!enemy->GetActive())
 			continue;
 
-		enemy->Render(window);
+		//enemy->Render(window);
 	}
 
 	for (const auto& [_, object] : m_objects)
@@ -50,7 +50,7 @@ void World::Render(sf::RenderWindow& window)
 		if (!object->GetActive())
 			continue;
 
-		object->Render(window);
+		//object->Render(window);
 	}
 
 	RenderGUI(window);
@@ -69,11 +69,11 @@ void World::CheckIsInView()
 {
 	auto& camera = GameManager::Get()->GetCamera();
 
-	for (auto& [_, enemy] : m_enemies)
-		enemy->SetActive(camera.IsInView(enemy->GetBoundingBox()));
+	/*for (auto& [_, enemy] : m_enemies)
+		enemy->SetActive(camera.IsInView(enemy->GetBoundingBox()));*/
 
-	for (auto& [_, object] : m_objects)
-		object->SetActive(camera.IsInView(object->GetBoundingBox()));
+	/*for (auto& [_, object] : m_objects)
+		object->SetActive(camera.IsInView(object->GetBoundingBox()));*/
 }
 
 void World::AddEnemies()

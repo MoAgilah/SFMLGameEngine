@@ -11,42 +11,49 @@ SFCamera::SFCamera()
     m_camera.setCenter(center);
     m_camera.setViewport({ {0.f, 0.f}, {1.f, 1.f} });
 
-    m_viewBox.Reset(screenDim);
-    m_viewBox.Update(center);
-    m_viewBox.SetFillColour(sf::Color(255, 0, 0, 128));
+    m_viewBox = std::make_shared<NBoundingBox<SFRect>>(screenDim, Point());
+    m_viewBox->Update(center);
+    m_viewBox->GetShape()->SetFillColour(Colour(255, 0, 0, 128));
 }
 
 void SFCamera::Update()
 {
     const float posX = 0.f;
     m_camera.setCenter({ posX + (GameConstants::ScreenDim.x * 0.5f), m_camera.getCenter().y });
-    m_viewBox.Update(m_camera.getCenter());
+    m_viewBox->Update(m_camera.getCenter());
 }
 
-void SFCamera::Reset(INativeWindow& window)
+void SFCamera::Reset(IRenderer* renderer)
 {
     Update();
 
-    // Downcast to SFML window implementation (safe only if this camera is used with SFML)
-    auto* sfmlWindow = static_cast<sf::RenderWindow*>(window.GetNativeHandle());
-    if (sfmlWindow)
-        sfmlWindow->setView(m_camera);
+    if (renderer)
+    {
+        // Downcast to SFML window implementation (safe only if this camera is used with SFML)
+        auto* sfmlWindow = static_cast<sf::RenderWindow*>(renderer->GetWindow()->GetNativeHandle());
+        if (sfmlWindow)
+            sfmlWindow->setView(m_camera);
+    }
 }
 
-void SFCamera::RenderDebug(INativeWindow& window)
+void SFCamera::RenderDebug(IRenderer* renderer)
 {
-    auto* sfmlWindow = static_cast<sf::RenderWindow*>(window.GetNativeHandle());
-    if (sfmlWindow)
-        m_viewBox.Render(*sfmlWindow);
+    m_viewBox->Render(renderer);
 }
 
-bool SFCamera::IsInView(BoundingVolume* volume)
+bool SFCamera::IsInView(IBoundingVolume* volume)
 {
-    return m_viewBox.Intersects(volume);
+    return true;
 }
 
-bool SFCamera::CheckVerticalBounds(BoundingBox* box)
+bool SFCamera::CheckVerticalBounds(IBoundingVolume* volume)
 {
-    const float cameraBottom = m_camera.getCenter().y + (GameConstants::ScreenDim.y * 0.5f);
-    return box->GetPosition().y > (cameraBottom - (box->GetExtents().y * 2.f));
+    auto box = dynamic_cast<NBoundingBox<SFRect>*>(volume);
+    if (box)
+    {
+        const float cameraBottom = m_camera.getCenter().y + (GameConstants::ScreenDim.y * 0.5f);
+        return box->GetPosition().y > (cameraBottom - (box->GetExtents().y * 2.f));
+    }
+
+    return false;
 }

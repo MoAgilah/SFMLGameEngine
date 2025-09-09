@@ -1,58 +1,32 @@
 ﻿#pragma once
 
-#include "CollisionManager.h"
+#include "NCollisionManager.h"
+#include "../Interfaces/IShape.h"
 #include "../Interfaces/IBoundingVolume.h"
-#include <type_traits>
+#include "../../Utilities/Traits.h"
+#include <algorithm>
 
-template <typename PlatformShape>
-class NBoundingCapsule;
-
-template <typename PlatformType>
-class NBoundingBox : public IBoundingBox, public NBoundingVolume<PlatformType>
+template <typename PlatformBox>
+class NBoundingBox : public IBoundingBox, public NBoundingVolume<PlatformBox>
 {
 public:
     NBoundingBox()
         : IBoundingVolume(NVolumeType::Box)
         , IBoundingBox()
-        , NBoundingVolume<PlatformType>(NVolumeType::Box)
+        , NBoundingVolume<PlatformBox>(NVolumeType::Box)
     {
-        this->m_shape = std::make_shared<PlatformType>();
+        this->m_shape = std::make_shared<PlatformBox>();
     }
 
     // Only call the virtual base constructor here, not in any parent!
     NBoundingBox(const Point& size, const Point& pos)
         : IBoundingVolume(NVolumeType::Box)
         , IBoundingBox()
-        , NBoundingVolume<PlatformType>(NVolumeType::Box)
+        , NBoundingVolume<PlatformBox>(NVolumeType::Box)
     {
-        this->m_shape = std::make_shared<PlatformType>();
+        this->m_shape = std::make_shared<PlatformBox>();
         Reset(size);
         Update(pos);
-    }
-
-    template <typename PlatformShape>
-    NBoundingBox(const NBoundingCapsule<PlatformShape>* capsule)
-        : IBoundingVolume(NVolumeType::Box)
-        , IBoundingBox()
-        , NBoundingVolume<PlatformType>(NVolumeType::Box)
-    {
-        using PlatformBox = typename CapsuleTraits<PlatformShape>::BoxType;
-
-        static_assert(std::is_same_v<PlatformType, PlatformBox>,
-            "PlatformType and CapsuleTraits<PlatformShape>::BoxType must match!");
-
-        this->m_shape = std::make_shared<PlatformType>();
-
-        const float radius = capsule->GetRadius();
-        const auto& seg = capsule->GetSegment();
-
-        const float minX = std::min(seg.start.x, seg.end.x) - radius;
-        const float maxX = std::max(seg.start.x, seg.end.x) + radius;
-        const float minY = std::min(seg.start.y, seg.end.y) - radius;
-        const float maxY = std::max(seg.start.y, seg.end.y) + radius;
-
-        Reset({ maxX - minX, maxY - minY });
-        Update(seg.GetMidPoint());
     }
 
     void Reset(const Point& size)
@@ -65,27 +39,27 @@ public:
     void Update(const Point& pos) override
     {
         this->m_shape->Update(pos);
-        auto center = NBoundingVolume<PlatformType>::GetCenter();
+        auto center = NBoundingVolume<PlatformBox>::GetCenter();
         m_min = center - m_extents;
         m_max = center + m_extents;
     }
 
-    void Render(IRenderer* r) override { NBoundingVolume<PlatformType>::Render(r); }
-    void* GetNativeShape() override { return NBoundingVolume<PlatformType>::GetNativeShape(); }
+    void Render(IRenderer* r) override { NBoundingVolume<PlatformBox>::Render(r); }
+    void* GetNativeShape() override { return NBoundingVolume<PlatformBox>::GetNativeShape(); }
 
-    Point GetCenter() const override { return NBoundingVolume<PlatformType>::GetCenter(); }
-    void SetCenter(const Point& c) override { NBoundingVolume<PlatformType>::SetCenter(c); }
+    Point GetCenter() const override { return NBoundingVolume<PlatformBox>::GetCenter(); }
+    void SetCenter(const Point& c) override { NBoundingVolume<PlatformBox>::SetCenter(c); }
 
-    Point GetPosition() const override { return NBoundingVolume<PlatformType>::GetPosition(); }
-    void SetPosition(const Point& p) override { NBoundingVolume<PlatformType>::SetPosition(p); }
+    Point GetPosition() const override { return NBoundingVolume<PlatformBox>::GetPosition(); }
+    void SetPosition(const Point& p) override { NBoundingVolume<PlatformBox>::SetPosition(p); }
 
-    Point GetOrigin() const override { return NBoundingVolume<PlatformType>::GetOrigin(); }
-    void SetOrigin(const Point& o) override { NBoundingVolume<PlatformType>::SetOrigin(o); }
+    Point GetOrigin() const override { return NBoundingVolume<PlatformBox>::GetOrigin(); }
+    void SetOrigin(const Point& o) override { NBoundingVolume<PlatformBox>::SetOrigin(o); }
 
-    Point GetScale() const override { return NBoundingVolume<PlatformType>::GetScale(); }
+    Point GetScale() const override { return NBoundingVolume<PlatformBox>::GetScale(); }
     void SetScale(const Point& scale) override
     {
-        NBoundingVolume<PlatformType>::SetScale(scale);
+        NBoundingVolume<PlatformBox>::SetScale(scale);
         if (this->m_shape)
             Reset(this->m_shape->GetSize());
     }
@@ -108,24 +82,9 @@ public:
             pnt.y >= m_min.y && pnt.y <= m_max.y);
     }
 
-    bool Intersects(IBoundingVolume* other) override
-    {
-        return this->Intersects(other);
-    }
-
-    bool IntersectsMoving(IBoundingVolume* other, const Point& va, const Point& vb, float& tfirst, float& tlast) override
-    {
-        return this->IntersectsMoving(other, va, vb, tfirst, tlast);
-    }
-
-    Point GetSeparationVector(IBoundingVolume* other) override
-    {
-        return this->GetSeparationVector(other);
-    }
-
     Point GetPoint(NSide side) override
     {
-        auto center = NBoundingVolume<PlatformType>::GetCenter();
+        auto center = NBoundingVolume<PlatformBox>::GetCenter();
         switch (side) {
         case NSide::Top:    return Point(center.x, m_min.y);
         case NSide::Bottom: return Point(center.x, m_max.y);
@@ -200,7 +159,7 @@ protected:
         return closestPointStartDistSq <= radSq || closestPointEndDistSq <= radSq;
     }
 
-    bool IntersectsMoving(IBoundingBox* box, const Point& vb, const Point& va, float& tfirst, float& tlast) override
+    bool IntersectsMoving(IBoundingBox* box, const Point& va, const Point& vb, float& tfirst, float& tlast) override
     {
         if (Intersects(box))
         {
@@ -209,7 +168,7 @@ protected:
         }
 
         Point v = vb - va;
-        if (std::abs(v.x) < CollisionManager::EPSILON && std::abs(v.y) < CollisionManager::EPSILON)
+        if (std::abs(v.x) < NCollisionManager::EPSILON && std::abs(v.y) < NCollisionManager::EPSILON)
             return false;
 
         tfirst = 0.0f;
@@ -217,7 +176,7 @@ protected:
 
         for (int i = 0; i < 2; i++)
         {
-            if (std::abs(v[i]) < CollisionManager::EPSILON)
+            if (std::abs(v[i]) < NCollisionManager::EPSILON)
             {
                 if (box->GetMax()[i] < m_min[i] || box->GetMin()[i] > m_max[i])
                     return false;
@@ -251,7 +210,7 @@ protected:
         Point relativeVelocity = vb - va;
 
         // No movement → fall back to static check
-        if (pnt::lengthSquared(relativeVelocity) < CollisionManager::EPSILON * CollisionManager::EPSILON)
+        if (pnt::lengthSquared(relativeVelocity) < NCollisionManager::EPSILON * NCollisionManager::EPSILON)
             return Intersects(circle);
 
         // Treat the circle as a moving point by expanding the box by the radius
@@ -260,8 +219,8 @@ protected:
         Point boxMax = GetMax() + Point(r, r);
 
         Point invVelocity = {
-            std::abs(relativeVelocity.x) > CollisionManager::EPSILON ? 1.f / relativeVelocity.x : 0.f,
-            std::abs(relativeVelocity.y) > CollisionManager::EPSILON ? 1.f / relativeVelocity.y : 0.f
+            std::abs(relativeVelocity.x) > NCollisionManager::EPSILON ? 1.f / relativeVelocity.x : 0.f,
+            std::abs(relativeVelocity.y) > NCollisionManager::EPSILON ? 1.f / relativeVelocity.y : 0.f
         };
 
         float tEnterX = (boxMin.x - circle->GetPosition().x) * invVelocity.x;
@@ -276,7 +235,7 @@ protected:
         float exitTime = std::min(tExitX, tExitY);
 
         // Reject if exit before entry, or exit is in the past, or entry is too far in future
-        if (entryTime > exitTime || exitTime < -CollisionManager::EPSILON || entryTime > 1.0f)
+        if (entryTime > exitTime || exitTime < -NCollisionManager::EPSILON || entryTime > 1.0f)
             return false;
 
         // ✅ Allow t=0 contact as a valid collision
@@ -299,12 +258,12 @@ protected:
         if (overlap.x < overlap.y)
         {
             float direction = (other->GetPosition().x < GetPosition().x) ? -1.0f : 1.0f;
-            return { (overlap.x + CollisionManager::BUFFER) * direction, 0 };
+            return { (overlap.x + NCollisionManager::BUFFER) * direction, 0 };
         }
         else
         {
             float direction = (other->GetPosition().y < GetPosition().y) ? -1.0f : 1.0f;
-            return { 0, (overlap.y + CollisionManager::BUFFER) * direction };
+            return { 0, (overlap.y + NCollisionManager::BUFFER) * direction };
         }
     }
 
@@ -323,7 +282,7 @@ protected:
         // If overlapping and distance is meaningful
         if (penetrationDepth > 0.f && distance > std::numeric_limits<float>::epsilon())
         {
-            return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
+            return pnt::Normalize(displacement) * (penetrationDepth + NCollisionManager::BUFFER);
         }
 
         // If the circle's center is inside the box (distance ≈ 0), pick an arbitrary direction
@@ -331,7 +290,7 @@ protected:
         {
             // Choose vertical push direction based on position relative to box center
             float pushDir = (circlePos.y < this->GetCenter().y) ? -1.f : 1.f;
-            return Point(0.f, pushDir * (other->GetRadius() + CollisionManager::BUFFER));
+            return Point(0.f, pushDir * (other->GetRadius() + NCollisionManager::BUFFER));
         }
 
         // No collision
@@ -351,15 +310,15 @@ protected:
         float penetrationDepth = other->GetRadius() - distance;
 
         if (penetrationDepth > 0.0f && distance > std::numeric_limits<float>::epsilon())
-            return pnt::Normalize(displacement) * (penetrationDepth + CollisionManager::BUFFER);
+            return pnt::Normalize(displacement) * (penetrationDepth + NCollisionManager::BUFFER);
 
         if (distance <= std::numeric_limits<float>::epsilon())
         {
             Point centerDelta = other->GetPosition() - this->GetCenter();
             if (std::abs(centerDelta.y) > std::abs(centerDelta.x))
-                return { 0.f, (centerDelta.y > 0.f ? 1.f : -1.f) * (other->GetRadius() + CollisionManager::BUFFER) };
+                return { 0.f, (centerDelta.y > 0.f ? 1.f : -1.f) * (other->GetRadius() + NCollisionManager::BUFFER) };
             else
-                return { (centerDelta.x > 0.f ? 1.f : -1.f) * (other->GetRadius() + CollisionManager::BUFFER), 0.f };
+                return { (centerDelta.x > 0.f ? 1.f : -1.f) * (other->GetRadius() + NCollisionManager::BUFFER), 0.f };
         }
 
         return Point();

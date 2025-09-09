@@ -1,7 +1,10 @@
 #pragma once
 
 #include "../../../Engine/Interfaces/ICamera.h"
-#include <SFML/Graphics.hpp>
+#include "../../../Engine/Collisions/BoundingBox.h"
+#include "../Drawables/SFShape.h"
+#include <SFML/Graphics/View.hpp>
+#include <memory>
 
 class SFCamera : public ICamera
 {
@@ -10,15 +13,15 @@ public:
     ~SFCamera() override = default;
 
     void Update() override;
-    void Reset(INativeWindow& window) override;
-    void RenderDebug(INativeWindow& window) override;
+    void Reset(IRenderer* renderer) override;
+    void RenderDebug(IRenderer* renderer) override;
 
-    bool IsInView(BoundingVolume* volume) override;
-    bool CheckVerticalBounds(BoundingBox* box) override;
+    bool IsInView(IBoundingVolume* volume) override;
+    bool CheckVerticalBounds(IBoundingVolume* volume) override;
 
     sf::View GetView() const { return m_camera; }
 
 private:
     sf::View m_camera;
-    BoundingBox m_viewBox;
+    std::shared_ptr<NBoundingBox<SFRect>> m_viewBox;
 };

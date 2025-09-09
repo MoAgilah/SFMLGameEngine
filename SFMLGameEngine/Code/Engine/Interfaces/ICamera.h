@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IWindow.h"
-#include "../Collisions/BoundingVolume.h"
+#include "IRenderer.h"
+#include "IBoundingVolume.h"
 
 class ICamera
 {
@@ -9,9 +9,9 @@ public:
     virtual ~ICamera() = default;
 
     virtual void Update() = 0;
-    virtual void Reset(INativeWindow& window) = 0;
-    virtual void RenderDebug(INativeWindow& window) = 0;
+    virtual void Reset(IRenderer* renderer) = 0;
+    virtual void RenderDebug(IRenderer* renderer) = 0;
 
-    virtual bool IsInView(BoundingVolume* volume) = 0;
-    virtual bool CheckVerticalBounds(BoundingBox* box) = 0;
+    virtual bool IsInView(IBoundingVolume* volume) = 0;
+    virtual bool CheckVerticalBounds(IBoundingVolume* volume) = 0;
 };

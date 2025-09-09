@@ -35,6 +35,7 @@
     <ClCompile Include="Code\Engine\Interfaces\IGameObject.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IMenu.cpp" />
     <ClCompile Include="Code\Engine\Interfaces\IText.cpp" />
+    <ClCompile Include="Code\Engine\Interfaces\IScene.cpp" />
     <ClCompile Include="Code\Engine\Resources\FontManager.cpp" />
     <ClCompile Include="Code\Engine\Resources\ShaderManager.cpp" />
     <ClCompile Include="Code\Engine\Resources\SoundManager.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Code\Engine\Interfaces\ITransforms.h" />
     <ClInclude Include="Code\Engine\Interfaces\IUpdatable.h" />
     <ClInclude Include="Code\Engine\Interfaces\IWindow.h" />
+    <ClInclude Include="Code\Engine\Interfaces\IScene.h" />
     <ClInclude Include="Code\Engine\Resources\FontManager.h" />
     <ClInclude Include="Code\Engine\Resources\ShaderManager.h" />
     <ClInclude Include="Code\Engine\Resources\SoundManager.h" />
