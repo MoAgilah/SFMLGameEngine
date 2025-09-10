@@ -278,3 +278,10 @@ sf::CircleShape* SFCapsule::GetEndCap2()
         return dynamic_cast<sf::CircleShape*>(this->GetDrawables()[2].get());
     return nullptr;
 }
+
+void SFCapsule::Move(float x, float y)
+{
+    GetBody()->move(Point(x, y));
+    GetEndCap1()->move(Point(x, y));
+    GetEndCap2()->move(Point(x, y));
+}

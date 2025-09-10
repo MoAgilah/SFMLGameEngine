@@ -10,8 +10,8 @@ template<typename TShape>
 class SFShape : public SFDrawables<TShape>, public IShape, public IMoveable
 {
 public:
-    void Move(float x, float y) override { this->Move(Point(x, y)); }
-    void Move(const Point& pos) override { this->SetPosition(this->GetPosition() + pos); }
+    void Move(float x, float y) override { this->GetPrimaryDrawableAs<TShape>()->move(Point(x, y)); }
+    void Move(const Point& vel) override { this->Move(vel.x, vel.y); }
 
     Colour GetFillColour() override { return this->GetPrimaryDrawableAs<TShape>()->getFillColor(); }
     void SetFillColour(const Colour& col) override { this->GetPrimaryDrawableAs<TShape>()->setFillColor(col); }
@@ -99,6 +99,10 @@ public:
     sf::RectangleShape* GetBody();
     sf::CircleShape* GetEndCap1();
     sf::CircleShape* GetEndCap2();
+
+    void Move(float x, float y) override;
+
+    void SetSize(const Point& size) override { GetBody()->setSize(size); }
 };
 
 template <>

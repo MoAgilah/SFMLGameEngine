@@ -11,7 +11,7 @@ SFCamera::SFCamera()
     m_camera.setCenter(center);
     m_camera.setViewport({ {0.f, 0.f}, {1.f, 1.f} });
 
-    m_viewBox = std::make_shared<BoundingBox<SFRect>>(screenDim, Point());
+    m_viewBox = std::make_shared<BoundingBox<SFRect>>(screenDim, center);
     m_viewBox->Update(center);
     m_viewBox->GetShape()->SetFillColour(Colour(255, 0, 0, 128));
 }
