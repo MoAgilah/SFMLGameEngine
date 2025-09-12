@@ -19,7 +19,7 @@ CollisionManager::CollisionManager(std::shared_ptr<IGrid> grid)
 		for (auto& tile : m_grid->GetGrid())
 		{
 			if (tile->GetType() != Types::EMPTY)
-				m_tiles.push_back(tile);
+				m_tiles.push_back(tile.get());
 		}
 	}
 }
@@ -43,7 +43,7 @@ void CollisionManager::ProcessCollisions(IGameObject* gobj)
 		if (gobj->GetObjectNum() == collidable->GetObjectNum())
 			continue;
 
-		ObjectToObjectCollisions(gobj, collidable.get());
+		ObjectToObjectCollisions(gobj, collidable);
 	}
 }
 
@@ -55,12 +55,10 @@ void CollisionManager::Render(IRenderer* renderer)
 
 void CollisionManager::RemoveCollidable(IGameObject* ngo)
 {
-	// Use remove_if and compare underlying raw pointers
 	m_collidables.erase(
 		std::remove_if(m_collidables.begin(), m_collidables.end(),
-			[ngo](const std::shared_ptr<IGameObject>& ptr)
-			{
-				return ptr.get() == ngo;
+			[ngo](IGameObject* ptr) {
+				return ptr == ngo;
 			}),
 		m_collidables.end());
 }
@@ -73,7 +71,7 @@ void CollisionManager::RemoveLastAdded()
 
 IGameObject* CollisionManager::GetLastAdded()
 {
-	return m_collidables.empty() ? nullptr : m_collidables.back().get();
+	return m_collidables.empty() ? nullptr : m_collidables.back();
 }
 
 ITile* CollisionManager::GetTile(int x, int y)
@@ -81,15 +79,25 @@ ITile* CollisionManager::GetTile(int x, int y)
 	return m_grid->GetTile(x, y);
 }
 
-std::vector<std::shared_ptr<ITile>> CollisionManager::GetGrid()
+std::vector<ITile*> CollisionManager::GetGrid()
 {
 	if (m_grid)
-		return m_grid->GetGrid();
+	{
+		auto stripShared = [](const std::vector<std::shared_ptr<ITile>>& src) {
+			std::vector<ITile*> result;
+			result.reserve(src.size());
+			std::transform(src.begin(), src.end(), std::back_inserter(result),
+				[](const std::shared_ptr<ITile>& sp) { return sp.get(); });
+			return result;
+			};
+
+		return stripShared(m_grid->GetGrid());
+	}
 
 	return {};
 }
 
-std::vector<std::shared_ptr<IGameObject>> CollisionManager::GetCollidables()
+std::vector<IGameObject*> CollisionManager::GetCollidables()
 {
 	return m_collidables;
 }
@@ -99,7 +107,7 @@ bool CollisionManager::CanCollideWithTile(const std::string& texID)
 	return std::find(s_canCollideWithTile.begin(), s_canCollideWithTile.end(), texID) != s_canCollideWithTile.end();
 }
 
-void CollisionManager::SortCollidedTiles(std::vector<std::shared_ptr<ITile>> collidedWith)
+void CollisionManager::SortCollidedTiles(std::vector<ITile*> collidedWith)
 {
 	std::ranges::sort(collidedWith, [](const auto& a, const auto& b)
 		{
@@ -115,7 +123,7 @@ void CollisionManager::DynamicObjectToTileCollisions(IDynamicGameObject* obj)
 	if (!obj)
 		return;
 
-	std::vector<std::shared_ptr<ITile>> collidedWith;
+	std::vector<ITile*> collidedWith;
 	for (const auto& tile : m_tiles)
 	{
 		if (!tile->GetActive())

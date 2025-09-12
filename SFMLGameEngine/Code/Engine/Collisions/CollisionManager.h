@@ -15,7 +15,7 @@ class CollisionManager
 {
 public:
 	CollisionManager(std::shared_ptr<IGrid> grid);
-	~CollisionManager() = default;
+	virtual ~CollisionManager() = default;
 
 	void ProcessCollisions(IGameObject* object);
 	void Render(IRenderer* renderer);
@@ -27,8 +27,8 @@ public:
 	IGameObject* GetLastAdded();
 
 	ITile* GetTile(int x, int y);
-	std::vector<std::shared_ptr<ITile>> GetGrid();
-	std::vector<std::shared_ptr<IGameObject>> GetCollidables();
+	std::vector<ITile*> GetGrid();
+	std::vector<IGameObject*> GetCollidables();
 
 	static std::vector<std::string> s_canCollideWithTile;
 	inline static const float EPSILON = std::numeric_limits<float>::epsilon() * 100;
@@ -37,7 +37,7 @@ public:
 protected:
 
 	bool CanCollideWithTile(const std::string& texID);
-	void SortCollidedTiles(std::vector<std::shared_ptr<ITile>> collidedWith);
+	void SortCollidedTiles(std::vector<ITile*> collidedWith);
 
 	void DynamicObjectToTileCollisions(IDynamicGameObject* obj);
 
@@ -54,6 +54,6 @@ protected:
 	virtual void DynamicObjectToDynamicObjectResolution(IDynamicGameObject* obj1, IDynamicGameObject* obj2, float time);
 
 	std::shared_ptr<IGrid> m_grid;
-	std::vector<std::shared_ptr<ITile>> m_tiles;
-	std::vector< std::shared_ptr<IGameObject>> m_collidables;
+	std::vector<ITile*> m_tiles;
+	std::vector<IGameObject*> m_collidables;
 };
