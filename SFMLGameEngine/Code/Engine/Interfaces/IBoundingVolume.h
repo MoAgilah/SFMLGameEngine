@@ -166,5 +166,5 @@ public:
     virtual float GetRadius() const = 0;
     virtual float GetLength() const = 0;
     virtual float GetAngle()  const = 0;
-    virtual const Line& GetSegment() const = 0;
+    virtual const Line GetSegment() const = 0;
 };

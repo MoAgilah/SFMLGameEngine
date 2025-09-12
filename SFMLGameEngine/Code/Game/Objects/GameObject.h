@@ -8,19 +8,11 @@ public:
 	GameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
 	virtual ~GameObject();
 
-	virtual void Update(float deltaTime) = 0;
-
 	void Render(IRenderer* renderer) override;
 
 	bool Intersects(IGameObject* obj) override;
 
 	bool Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast) override;
-
-	void OnCollisionEnter(IGameObject* obj) override;
-	void OnCollisionStay(IGameObject* obj) override;
-	void OnCollisionExit(IGameObject* obj) override;
-
-	void ResolveCollisions(float time, const Point& separationVector, float relativeHitPosition) override;
 
 	void Reset() override;
 
@@ -51,10 +43,12 @@ protected:
 	std::shared_ptr<IBoundingVolume> m_volume;
 };
 
-class DynamicGameObject : public virtual IDynamicGameObject, public GameObject
+class DynamicGameObject : public GameObject, public virtual IDynamicGameObject
 {
 public:
 	DynamicGameObject(std::shared_ptr<IDrawable> drawable, std::shared_ptr<IBoundingVolume> volume);
+
+	void Render(IRenderer* renderer) override { GameObject::Render(renderer); }
 
 	bool Intersects(IGameObject* obj) override;
 
@@ -64,6 +58,8 @@ public:
 
 	IDrawable* GetDrawable() override { return GameObject::GetDrawable(); }
 	IBoundingVolume* GetVolume() override { return GameObject::GetVolume(); }
+
+	bool IsDynamicObject() override { return IDynamicGameObject::IsDynamicObject(); }
 
 	void SetPrevPosition(Point pos) { m_previousPos = pos; }
 	void SetPrevPosition(float x, float y) { m_previousPos = Point(x, y); }

@@ -36,25 +36,6 @@ bool GameObject::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast
 	return m_volume->IntersectsMoving(obj->GetVolume(), Point(0, 0), obj->GetVelocity(), tFirst, tLast);
 }
 
-void GameObject::OnCollisionEnter(IGameObject* obj)
-{
-	// actions to commit on collision enter
-}
-
-void GameObject::OnCollisionStay(IGameObject* obj)
-{
-	// actions to commit whilst collision continues
-}
-
-void GameObject::OnCollisionExit(IGameObject* obj)
-{
-	// actions to commit on collision exit
-}
-
-void GameObject::ResolveCollisions(float time, const Point& separationVector, float relativeHitPosition)
-{
-}
-
 void GameObject::Reset()
 {
 	constexpr float ResetYOffset = 3.5f;

@@ -113,7 +113,7 @@ public:
 		return 0.f;
 	}
 
-	const Line& GetSegment() const override
+	const Line GetSegment() const override
 	{
 		if (this->m_shape)
 			return this->m_shape->GetSegment();
