@@ -38,11 +38,10 @@ bool GameObject::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast
 
 void GameObject::Reset()
 {
-	constexpr float ResetYOffset = 3.5f;
 	SetActive(m_active);
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
-	m_volume->Update({ GetPosition().x, GetPosition().y + ResetYOffset });
+	m_volume->Update(GetPosition());
 }
 
 void GameObject::SetScale(const Point& scale)
